@@ -37,6 +37,10 @@ assets/scss/_styles_project.scss
 // Main-page specific customizations
 .lead-text {
   line-height: 1.8;
+
+  a {
+    color: gray;
+  }
 }
 
 .trustedby-row {
