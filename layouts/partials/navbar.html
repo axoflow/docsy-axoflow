@@ -26,6 +26,7 @@
   <ul class="navbar-nav">
     {{ $p := . -}}
     {{ range .Site.Menus.main -}}
+    {{ if not .HasChildren }}
     <li class="nav-item">
       {{ $active := or ($p.IsMenuCurrent "main" .) ($p.HasMenuCurrent "main" .) -}}
       {{ $href := "" -}}
@@ -46,7 +47,11 @@
           {{- .Post -}}
       </a>
     </li>
+    {{ else }}
+      {{ partial "navbar-dropdown.html" . }}
     {{ end -}}
+    {{ end }}
+
     {{ if .Site.Params.versions -}}
     <li class="nav-item dropdown d-none d-lg-block">
       {{ partial "navbar-version-selector.html" . -}}
