@@ -40,6 +40,7 @@
       <a {{/**/ -}}
         class="nav-link {{- if $active }} active {{- end }}" {{/**/ -}}
         href="{{ $href }}"
+        {{ with .Identifier }}id="{{ . }}"{{ end -}}
         {{- if $isExternal }} target="_blank" rel="noopener" {{- end -}}
       >
           {{- .Pre -}}
