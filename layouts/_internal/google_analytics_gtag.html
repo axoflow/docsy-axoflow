@@ -30,7 +30,7 @@ if (!doNotTrack) {
 	window.dataLayer = window.dataLayer || [];
 	function gtag(){dataLayer.push(arguments);}
 	gtag('js', new Date());
-	gtag('config', '{{ . }}{{ with $.Site.Params.contentGroup -}}, { "content_group": "{{ . }}" }{{- end -}}');
+	gtag('config', '{{ . }}'{{ with $.Site.Params.contentGroup -}}, { "content_group": "{{ . }}" }{{- end -}});
 }
 </script>
 {{- end }}{{ end -}}
