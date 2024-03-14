@@ -68,3 +68,15 @@ ol > li::marker {
 .tab-body {
   padding: 0rem;
 }
+
+// Search icon fixes, ugly
+// sidebar
+.td-sidebar__search > .main-menu-search > a:nth-child(1) > .nav-link {
+  margin-left: 10px;
+  color: black;
+}
+
+//header
+header * .main-menu-search a .nav-link {
+  color: white;
+}
