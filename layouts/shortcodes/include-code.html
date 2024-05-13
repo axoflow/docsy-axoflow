@@ -64,6 +64,6 @@
 <code class="language-{{ $ext }}">{{ $text }}</code>
 </pre>
 {{ else }}
-<pre data-src="{{ $url }}" data-download-link data-download-link-label="Download this file" class='{{ $opts }}'>
-</pre>
+<!-- DO NOT BREAK THIS INTO MULTIPLE LINES (it will mess up the indentation of the first included line)  -->
+<pre data-src="{{ $url }}" data-download-link data-download-link-label="Download this file" class='{{ $opts }}'></pre>
 {{ end }}
