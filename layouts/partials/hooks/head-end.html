@@ -11,3 +11,8 @@
         new PagefindHighlight({ highlightParam: "highlight" });
     </script>
 {{ end -}}
+
+<!-- Enable replacing parameters from URL parameter -->
+{{ if .Params.replaceFromURL }}
+    <script src="/js/replace-from-url.js" type="application/x-javascript" defer></script>
+{{ end }}
