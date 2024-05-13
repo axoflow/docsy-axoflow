@@ -1,21 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Identify the text to be replaced
-    console.log("Hello world!"); 
     const textToReplace = '%placeholder-ip%';
-    console.log(textToReplace); 
 
     // Get the URL parameter value
     const urlParams = new URLSearchParams(window.location.search);
 
     // FIXME loop through URL parameters beginning with replace-, and replace the relevant placeholder
     const replaceValue = urlParams.get('replace-ip');
-    console.log(textToReplace, replaceValue); 
+    // console.log(textToReplace, replaceValue); 
     // If the 'replace-ip' parameter exists in the URL, replace the text
     // FIXME: if it doesn't exist, replace with a default, or optionally with one from the frontmatter
     if (replaceValue) { 
         const contentDiv = document.getElementsByClassName('td-content');
         const replacedText = textToReplace.replace(textToReplace, replaceValue);
-        console.log(replacedText, textToReplace, replaceValue); 
 
         replaceRecursively(document.body, new RegExp(textToReplace, "g"), replaceValue);
 
