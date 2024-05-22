@@ -3,9 +3,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get the URL parameter value
     const urlParams = new URLSearchParams(window.location.search);
 
+    console.log(urlParams);
+
+    if (urlParams.has('product')){
+        console.log("Redirecting to product-specific syslog page");
+        const replaceValue = urlParams.get('replace-ip');
+        // FIXME create a lookup table for product=value to URL
+        const rootdir = `/syslog-collection/`
+        const productdir = urlParams.get('product')
+        urlParams.delete('product');
+        window.location.href = rootdir + productdir + `/?` + urlParams;
+    }
+
     // FIXME loop through URL parameters beginning with replace-, and replace the relevant placeholder
     if (urlParams.has('replace-ip')){
-        console.log("Replacing placeholder IP"); // true
+        console.log("Replacing placeholder IP");
         const replaceValue = urlParams.get('replace-ip');
         // Identify the text to be replaced
         const textToReplace = '%axorouter-ip%';
@@ -19,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
     if (urlParams.has('replace-port')){
-        console.log("Replacing placeholder port"); // true
+        console.log("Replacing placeholder port");
         const replaceValue = urlParams.get('replace-port');
         // Identify the text to be replaced
         const textToReplace = '%axorouter-port%';
