@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Redirecting to product-specific syslog page");
         const replaceValue = urlParams.get('replace-ip');
         // FIXME create a lookup table for product=value to URL
-        const rootdir = `/syslog-collection/`
+        const rootdir = `syslog-collection/`
         const productdir = urlParams.get('product')
         urlParams.delete('product');
         window.location.href = rootdir + productdir + `/?` + urlParams;
