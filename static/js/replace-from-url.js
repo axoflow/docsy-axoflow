@@ -3,16 +3,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get the URL parameter value
     const urlParams = new URLSearchParams(window.location.search);
 
-    console.log(urlParams);
-
     if (urlParams.has('product')){
         console.log("Redirecting to product-specific syslog page");
         const replaceValue = urlParams.get('replace-ip');
         // FIXME create a lookup table for product=value to URL
-        const rootdir = `syslog-collection/`
+        const rootdir = `/syslog-collection/`
         const productdir = urlParams.get('product')
         urlParams.delete('product');
-        window.location.href = rootdir + productdir + `/?` + urlParams;
+        var url = window.location.href
+        // Find the rootdit in the url and delete it and everything afterwards to get the base url, then re-add the rootdir, product dir, and other query params
+        url = url.substring(0, url.indexOf(rootdir)) + rootdir + productdir + `/?` + urlParams; ;
+        // console.log(url);
+        window.location.href = url
     }
 
     // FIXME loop through URL parameters beginning with replace-, and replace the relevant placeholder
