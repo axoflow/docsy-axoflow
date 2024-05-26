@@ -3,15 +3,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get the URL parameter value
     const urlParams = new URLSearchParams(window.location.search);
 
+    // Lookup table for product=value URLs
+    const productLinks = {
+        fortigate: 'fortigate',
+        paloalto: 'paloalto',
+        sonicwall: 'sonicwall',
+        generic: 'generic',
+      };
+
     if (urlParams.has('product')){
         console.log("Redirecting to product-specific syslog page");
         const replaceValue = urlParams.get('replace-address');
-        // FIXME create a lookup table for product=value to URL
         const rootdir = `/syslog-collection/`
-        const productdir = urlParams.get('product')
+        // Lookup product-specific URL, and set productdir to the generic link if not found
+        var productdir = productLinks[urlParams.get('product')] || 'generic'
+
+        console.log('4', productdir)
         urlParams.delete('product');
         var url = window.location.href
-        // Find the rootdit in the url and delete it and everything afterwards to get the base url, then re-add the rootdir, product dir, and other query params
+        // Find the rootdir in the url and delete it and everything afterwards to get the base url, then re-add the rootdir, product dir, and other query params
         url = url.substring(0, url.indexOf(rootdir)) + rootdir + productdir + `/?` + urlParams; ;
         // console.log(url);
         window.location.href = url
@@ -19,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // FIXME loop through URL parameters beginning with replace-, and replace the relevant placeholder
     if (urlParams.has('replace-address')){
-        console.log("Replacing placeholder IP");
+        console.log("Replacing placeholder address");
         const replaceValue = urlParams.get('replace-address');
         // Identify the text to be replaced
         const textToReplace = '%axorouter-ip%';
