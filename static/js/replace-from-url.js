@@ -5,10 +5,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Lookup table for product=value URLs
     const productLinks = {
-        fortigate: 'fortigate',
-        paloalto: 'paloalto',
-        sonicwall: 'sonicwall',
-        generic: 'generic',
+        'aruba': 'hpe/aruba',
+        'azure-event-hub': 'microsoft/azure-event-hub'
+        'checkpoint-quantum': 'checkpoint/checkpoint-quantum',
+        'cisco-ios': 'cisco/cisco-ios',
+        'cisco-meraki': 'cisco/cisco-meraki',
+        'cisco-ngfw': 'cisco/cisco-ngfw',
+        'fortigate': 'fortinet/fortigate',
+        'junos-os': 'juniper/junos-os',
+        'pan-os': 'palo-alto/pan-os',
+        'sonicwall': 'sonicwall/sonicwall',
+        'universal-forwarder': 'splunk/universal-forwarder'
+        'zscaler-ia': 'zscaler/zscaler-ia'
+        'generic': 'generic',
       };
 
     if (urlParams.has('product')){
