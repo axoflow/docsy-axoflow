@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (urlParams.has('product')){
         console.log("Redirecting to product-specific syslog page");
-        const replaceValue = urlParams.get('replace-address');
+        const replaceValue = urlParams.get('address');
         const rootdir = `/syslog-collection/`
         // Lookup product-specific URL, and set productdir to the generic link if not found
         var productdir = productLinks[urlParams.get('product')] || 'generic'
@@ -36,14 +36,13 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = url
     }
 
-    // FIXME loop through URL parameters beginning with replace-, and replace the relevant placeholder
-    if (urlParams.has('replace-address')){
+    if (urlParams.has('address')){
         console.log("Replacing placeholder address");
-        const replaceValue = urlParams.get('replace-address');
+        const replaceValue = urlParams.get('address');
         // Identify the text to be replaced
         const textToReplace = '%axorouter-ip%';
         // console.log(textToReplace, replaceValue);
-        // If the 'replace-address' parameter exists in the URL, replace the text
+        // If the 'address' parameter exists in the URL, replace the text
         // FIXME: if it doesn't exist, replace with a default, or optionally with one from the frontmatter
         const contentDiv = document.getElementsByClassName('td-content');
         const replacedText = textToReplace.replace(textToReplace, replaceValue);
@@ -51,13 +50,13 @@ document.addEventListener('DOMContentLoaded', function() {
         replaceRecursively(document.body, new RegExp(textToReplace, "g"), replaceValue);
 
     }
-    if (urlParams.has('replace-port')){
+    if (urlParams.has('port')){
         console.log("Replacing placeholder port");
-        const replaceValue = urlParams.get('replace-port');
+        const replaceValue = urlParams.get('port');
         // Identify the text to be replaced
         const textToReplace = '%axorouter-port%';
         // console.log(textToReplace, replaceValue);
-        // If the 'replace-port' parameter exists in the URL, replace the text
+        // If the 'port' parameter exists in the URL, replace the text
         // FIXME: if it doesn't exist, replace with a default, or optionally with one from the frontmatter
         const contentDiv = document.getElementsByClassName('td-content');
         const replacedText = textToReplace.replace(textToReplace, replaceValue);
