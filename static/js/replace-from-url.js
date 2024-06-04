@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Lookup table for product=value URLs
     const productLinks = {
         'aruba': 'hpe/aruba',
-        'azure-event-hub': 'microsoft/azure-event-hub'
+        'azure-event-hub': 'microsoft/azure-event-hub',
         'checkpoint-quantum': 'checkpoint/checkpoint-quantum',
         'cisco-ios': 'cisco/cisco-ios',
         'cisco-meraki': 'cisco/cisco-meraki',
@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
         'junos-os': 'juniper/junos-os',
         'pan-os': 'palo-alto/pan-os',
         'sonicwall': 'sonicwall/sonicwall',
-        'universal-forwarder': 'splunk/universal-forwarder'
-        'zscaler-ia': 'zscaler/zscaler-ia'
+        'universal-forwarder': 'splunk/universal-forwarder',
+        'zscaler-ia': 'zscaler/zscaler-ia',
         'generic': 'generic',
       };
 
