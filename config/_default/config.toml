@@ -65,7 +65,7 @@ twitter = "AxoFlowIO"
   # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
   github_repo = "https://github.com/axoflow/axosyslog-docs"
   # An optional link to a related project repo. For example, the sibling repository where your product code lives.
-  github_project_repo = "https://github.com/axoflow/axosyslog-docker"
+  github_project_repo = "https://github.com/axoflow/axosyslog/"
 
   # Specify a value here if your content directory is not in your repo's root directory
   # github_subdir = ""
@@ -133,7 +133,7 @@ twitter = "AxoFlowIO"
   # Developer relevant links. These will show up on right side of footer and in the community page if you have one.
   [[params.links.developer]]
     name = "GitHub"
-    url = "https://github.com/axoflow/axosyslog-docker"
+    url = "https://github.com/axoflow/axosyslog/"
     icon = "fab fa-github"
     desc = "Get involved with Logging operator development"
   #[[params.links.developer]]
