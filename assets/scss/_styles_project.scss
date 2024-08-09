@@ -80,3 +80,9 @@ ol > li::marker {
 header * .main-menu-search a .nav-link {
   color: white;
 }
+
+// Alerts/notes shouldn't be come up in the page level toc
+
+.alert-heading {
+  font-size: 1.35rem;
+}
