@@ -1,6 +1,9 @@
 {{ if not .Params.notoc -}}
     {{/*  Removed with .TableOfContents condition because then generating client-side toc fails if the page has only headings that come from included files */}}
     {{ if ne . `<nav id="TableOfContents"></nav>` -}}
+      <div class="td-toc-header">
+        <span>On This Page</span>
+      </div>
       <div class="td-toc">
         {{ . }}
       </div>
