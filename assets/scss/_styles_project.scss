@@ -102,3 +102,22 @@ header * .main-menu-search a .nav-link {
   margin-right: 2rem;
   margin-left: 0rem;
 }
+
+// Style HTML5 details/summaries used for progressive disclosure
+details > summary {
+    list-style-type: "\21B3";
+}
+
+details[open] > summary {
+    list-style-type: "\21B4";
+}
+
+details {
+    border: 1px solid $blue;
+    border-radius: 0.2rem;
+    padding: 0.5rem;
+}
+
+details[open] > summary {
+    margin-bottom: 0.5rem;
+}
