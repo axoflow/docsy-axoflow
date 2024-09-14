@@ -135,4 +135,16 @@ window.markmap = {
 {{ partial "hubspot.html" . }}
 {{ end }}
 
+<!-- Lightbox-like zoomable images -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+  const lightbox = GLightbox({
+    selector: '.td-content * img',
+    touchNavigation: true,
+    loop: true,
+    autoplayVideos: true
+});
+</script>
+
 {{ partial "hooks/body-end.html" . -}}
