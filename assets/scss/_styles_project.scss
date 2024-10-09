@@ -105,11 +105,21 @@ header * .main-menu-search a .nav-link {
 
 // Style HTML5 details/summaries used for progressive disclosure
 details > summary {
-    list-style-type: "\21B3";
+  list-style-type: "\21B3";
+}
+details > summary::after {
+    content: "\a Show details";
+    color: gray;
+    white-space: pre;
 }
 
 details[open] > summary {
-    list-style-type: "\21B4";
+  list-style-type: "\21B4";
+}
+details[open] > summary::after {
+    content: "\a Hide details";
+    color: gray;
+    white-space: pre;
 }
 
 details {
