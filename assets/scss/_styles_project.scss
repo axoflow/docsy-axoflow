@@ -108,7 +108,7 @@ details > summary {
   list-style-type: "\21B3";
 }
 details > summary::after {
-    content: "\a Show details";
+    content: "\a     Show details";
     color: gray;
     white-space: pre;
 }
@@ -117,7 +117,7 @@ details[open] > summary {
   list-style-type: "\21B4";
 }
 details[open] > summary::after {
-    content: "\a Hide details";
+    content: "\a     Hide details";
     color: gray;
     white-space: pre;
 }
