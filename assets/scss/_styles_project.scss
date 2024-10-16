@@ -134,8 +134,16 @@ details[open] > summary {
 
 .screenshot-medium {
   width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
 .screenshot-small {
   width: 33%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
 }
