@@ -101,6 +101,10 @@ header * .main-menu-search a .nav-link {
 .td-toc {
   padding-top: 1rem;
 }
+// On this page toc elements
+.toc-list-item {
+  padding: .25rem;
+}
 
 .pageinfo {
   // Align box with content text on the
@@ -160,4 +164,5 @@ details[open] > summary {
   font-size: 12px;
   line-height: 22px;
   background-color: $light-background;
+  padding: .5rem 1rem;
 }
