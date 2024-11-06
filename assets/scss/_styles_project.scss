@@ -169,4 +169,8 @@ code {
   background-color: #C8E8E9 !important;
 }
 
+// Underline links in the body text
+.td-content * a {
+  text-decoration: underline;
+}
 }
