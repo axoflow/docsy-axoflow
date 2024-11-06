@@ -15,8 +15,8 @@
           </aside>
           <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none"{{ if .Site.Params.offlineSearchPagefind }} data-pagefind-ignore{{ end }}>
             {{ partial "hooks/custom-right-sidebar-elements-top.html" . }}
-            {{ partial "page-meta-links.html" . }}
             {{ partial "toc.html" . }}
+            {{ partial "page-meta-links.html" . }}
             {{ partial "taxonomy_terms_clouds.html" . }}
             {{ partial "hooks/custom-right-sidebar-elements-bottom.html" . }}
             <!-- Adds a hook to add custom sidebar elements -->
