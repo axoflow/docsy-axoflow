@@ -165,4 +165,13 @@ details[open] > summary {
   line-height: 22px;
   background-color: $light-background;
   padding: .5rem 1rem;
+
+// Breadcrumb customizations
+.breadcrumb-item a {
+  color: #010A22;
+}
+.breadcrumb-item.active {
+    font-weight: 800;
+}
+
 }
