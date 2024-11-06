@@ -116,31 +116,21 @@ header * .main-menu-search a .nav-link {
 
 // Style HTML5 details/summaries used for progressive disclosure
 details > summary {
-  list-style-type: "\21B3";
-}
-details > summary::after {
-    content: "\a     Show details";
-    color: gray;
-    white-space: pre;
+  list-style-image: url("/icons/closed.svg");
+  padding: 1rem;
 }
 
 details[open] > summary {
-  list-style-type: "\21B4";
+  list-style-image: url("/icons/open.svg");
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
 }
-details[open] > summary::after {
-    content: "\a     Hide details";
-    color: gray;
-    white-space: pre;
 }
 
 details {
-    border: 1px solid $blue;
-    border-radius: 0.2rem;
+    border-radius: 8px;
     padding: 0.5rem;
-}
-
-details[open] > summary {
-    margin-bottom: 0.5rem;
+    background: #EDFCFE;
 }
 
 .screenshot-medium {
