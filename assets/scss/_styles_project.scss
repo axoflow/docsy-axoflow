@@ -146,3 +146,11 @@ details[open] > summary {
   display: block;
 }
 
+// Right-hand meta-link (print, view source, etc.) styling
+.td-page-meta a {
+  color: black;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 22px;
+  background-color: #EDFCFE;
+}
