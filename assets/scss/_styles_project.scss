@@ -8,8 +8,8 @@ assets/scss/_styles_project.scss
 @import "tocbot";
 
 .warning-block {
-    border-left: 6px solid red;
-    background: #FFFFFF;
+    border-left: 8px solid #F4B942;
+    background-color: inherit;
     padding: 16px;
   }
 .property-optional::after {
@@ -82,10 +82,24 @@ header * .main-menu-search a .nav-link {
 }
 
 // Alerts/notes shouldn't be come up in the page level toc
-
 .alert-heading {
   font-size: 1.35rem;
   display: block;
+  padding-bottom: 1rem;
+  color: black !important;
+  font-weight: 700;
+}
+.alert-info {
+  border-left: 8px solid #24D5FC;
+  background-color: inherit;
+  padding-top: unset;
+  padding-bottom: unset;
+}
+.alert-warning {
+  border-left: 8px solid #F4B942;
+  background-color: inherit;
+  padding-top: unset;
+  padding-bottom: unset;
 }
 
 // On this page toc header
