@@ -88,12 +88,18 @@ header * .main-menu-search a .nav-link {
   display: block;
 }
 
+// On this page toc header
 .td-toc-header {
 	font-weight: 700;
   border-bottom: 1px #313671 solid;
   margin-top: 1rem;
 	padding-top: 0.5rem;
   padding-bottom: 1rem;
+}
+
+// On this page toc div
+.td-toc {
+  padding-top: 1rem;
 }
 
 .pageinfo {
