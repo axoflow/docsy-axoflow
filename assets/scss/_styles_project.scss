@@ -80,6 +80,11 @@ ol > li::marker {
   background-color: unset;
   border-right: unset;
 }
+// Left-sidebar active element background
+ .active  {
+  background-color: $light-background;
+}
+
 //header
 header * .main-menu-search a .nav-link {
   color: white;
