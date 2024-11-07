@@ -80,6 +80,12 @@ ol > li::marker {
 header * .main-menu-search a .nav-link {
   color: white;
 }
+// Makes the contact link look like a button
+#menu-contact {
+  box-sizing: border-box;
+  border: 1px solid #FFFFFF;
+  border-radius: 8px;
+}
 
 // Alerts/notes shouldn't be come up in the page level toc
 .alert-heading {
