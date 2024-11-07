@@ -76,6 +76,10 @@ ol > li::marker {
   color: black;
 }
 
+.td-sidebar {
+  background-color: unset;
+  border-right: unset;
+}
 //header
 header * .main-menu-search a .nav-link {
   color: white;
