@@ -143,7 +143,11 @@ details > summary {
 details[open] > summary {
   list-style-image: url("/icons/open.svg");
   margin-bottom: 0.5rem;
-  padding-left: 1rem;
+  margin-left: -3rem;
+}
+
+details[open] {
+  padding-left: 3.5rem;
 }
 
 details {
