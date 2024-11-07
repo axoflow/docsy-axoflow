@@ -210,6 +210,7 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
   text-decoration: none !important;
 }
 
+// Make line above the section-menu black
 .panel-line {
-  border: 1px solid #010A22;
+  opacity: unset;
 }
