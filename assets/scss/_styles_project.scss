@@ -192,6 +192,10 @@ code {
 .td-content * a {
   text-decoration: underline;
 }
+// Don't underline links in headings (otherwise a small line will be visible when hovering over the heading)
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+  text-decoration: none !important;
+}
 
 .panel-line {
   border: 1px solid #010A22;
