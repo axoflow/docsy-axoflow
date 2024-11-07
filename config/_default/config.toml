@@ -131,11 +131,11 @@ twitter = "AxoFlowIO"
     icon = "fab fa-linkedin"
     desc = "Follow us on Linkedin to get the latest news!"
   # Developer relevant links. These will show up on right side of footer and in the community page if you have one.
-  [[params.links.developer]]
-    name = "GitHub"
-    url = "https://github.com/axoflow/axosyslog/"
-    icon = "fab fa-github"
-    desc = "Get involved with Logging operator development"
+  #[[params.links.developer]]
+  #  name = "GitHub"
+  #  url = "https://github.com/axoflow/axosyslog/"
+  #  icon = "fab fa-github"
+  #  desc = "Get involved with Logging operator development"
   #[[params.links.developer]]
   #  name = "Slack"
   #  url = "https://banzaicloud.com/invite-slack/"
