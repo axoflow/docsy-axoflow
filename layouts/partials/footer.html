@@ -16,11 +16,13 @@
         {{ template "footer-links-block"  . }}
         {{ end }}
         {{ end }}
+        {{ if not .Site.Params.ui.footer_left_logo_disable }}
         <div class="row">
-          {{ with resources.Get "icons/logo.svg" -}}
+          {{ with resources.Get .Site.Params.ui.footer_left_logo_file -}}
           <div class="col-6"><img src="{{ .RelPermalink }}"/></div>
           {{ end }}
         </div>
+        {{ end }}
       </div>
       <div class="col-6 col-sm-4 text-end text-xs-center order-sm-3 row">
         <div class="col">
@@ -52,8 +54,10 @@
             {{ end }}
           </div>
         </div>
-        {{ with resources.Get "icons/iso27001_badge01.svg" -}}
+        {{ if not .Site.Params.ui.footer_right_logo_disable }}
+        {{ with resources.Get .Site.Params.ui.footer_right_logo_file -}}
           <div class="col-3"><img src="{{ .RelPermalink }}"/></div>
+        {{ end }}
         {{ end }}
         <!-- Right part 
           privacy link iso image 

@@ -102,6 +102,12 @@ twitter = "AxoFlowIO"
   breadcrumb_disable = false
   # Set to true to disable the About link in the site footer
   footer_about_disable = false
+  # footer in the left part of the logo
+  footer_left_logo_disable = false
+  footer_left_logo_file = "icons/logo.svg"
+  # footer in the right part of the logo
+  footer_right_logo_disable = false
+  footer_right_logo_file = "icons/iso27001_badge01.svg"
   # Set to false if you don't want to display a logo (/assets/icons/logo.svg) in the top navbar
   navbar_logo = true
   # Set to true if you don't want the top navbar to be translucent when over a `block/cover`, like on the homepage.
