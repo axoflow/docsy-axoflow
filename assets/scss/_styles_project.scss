@@ -80,6 +80,9 @@ ol > li::marker {
   background-color: unset;
   border-right: unset;
 }
+.td-sidebar-toc {
+  border-left: unset;
+}
 // Left-sidebar active element background
 a:has(.td-sidebar-nav-active-item) {
   background-color: $light-background;
