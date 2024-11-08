@@ -81,7 +81,7 @@ ol > li::marker {
   border-right: unset;
 }
 // Left-sidebar active element background
- .active  {
+a:has(.td-sidebar-nav-active-item) {
   background-color: $light-background;
 }
 
