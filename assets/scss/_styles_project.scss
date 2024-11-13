@@ -87,6 +87,7 @@ ol > li::marker {
   color: black;
 }
 
+// Left-sidebar toc
 .td-sidebar {
   background-color: unset;
   border-right: unset;
@@ -94,9 +95,18 @@ ol > li::marker {
 .td-sidebar-toc {
   border-left: unset;
 }
+.td-sidebar-link {
+  font-size: 12px;
+}
+nav.foldable-nav * li {
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
+
 // Left-sidebar active element background
 a:has(.td-sidebar-nav-active-item) {
   background-color: $light-background;
+  padding-left: 0.75rem !important;
 }
 // Adds border to open toc items
 ul .foldable {
