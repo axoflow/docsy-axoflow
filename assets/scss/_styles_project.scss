@@ -123,6 +123,10 @@ header * .main-menu-search a .nav-link {
   border: 1px solid #FFFFFF;
   border-radius: 8px;
 }
+.navbar-nav .nav-item {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
 
 // Alerts/notes shouldn't be come up in the page level toc
 .alert-heading {
