@@ -55,6 +55,11 @@ ol > li::marker {
   font-weight: bold;
 }
 
+// Doc pages main element
+.td-main main {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
 // Style overrides for tabbed cards and tabpanes
 
 .tab-content {
