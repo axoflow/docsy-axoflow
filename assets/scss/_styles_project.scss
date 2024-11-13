@@ -60,6 +60,12 @@ ol > li::marker {
   padding-left: 2rem;
   padding-right: 2rem;
 }
+.td-max-width-on-larger-screens {
+  @include media-breakpoint-up(lg) {
+    max-width: 100%;
+  }
+}
+
 // Style overrides for tabbed cards and tabpanes
 
 .tab-content {
