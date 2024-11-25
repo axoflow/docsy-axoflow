@@ -19,7 +19,7 @@
         {{ if not .Site.Params.ui.footer_left_logo_disable }}
         <div class="row">
           {{ with resources.Get .Site.Params.ui.footer_left_logo_file -}}
-          <div class="col-6"><img class="footer-left-logo" alt="left-logo" src="{{ .RelPermalink }}"/></div>
+          <div class="col-5"><img class="footer-left-logo" alt="left-logo" src="{{ .RelPermalink }}"/></div>
           {{ end }}
         </div>
         {{ end }}
