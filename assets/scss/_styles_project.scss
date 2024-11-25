@@ -136,6 +136,13 @@ ul .foldable {
 header * .main-menu-search a .nav-link {
   color: white;
 }
+// Change menu dropdown icon
+.dropdown-toggle::after {
+  border: none !important;
+  content: "\f107" !important;
+  font-family: var(--fa-style-family, "Font Awesome 6 Free");
+  vertical-align: inherit;
+}
 // Makes the contact link look like a button
 #menu-contact {
   box-sizing: border-box;
