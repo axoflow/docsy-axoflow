@@ -130,9 +130,13 @@ nav.foldable-nav .td-sidebar-nav__section {
 }
 
 // Left-sidebar active element background
+.td-sidebar-nav .td-sidebar-link {
+  padding-bottom: unset;
+}
 a:has(.td-sidebar-nav-active-item) {
   background-color: $light-background;
   padding-left: 0.75rem !important;
+  border-radius: 8px;
 }
 // Adds border to open toc items
 ul .foldable {
