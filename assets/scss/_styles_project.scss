@@ -103,6 +103,19 @@ nav.foldable-nav .td-sidebar-nav__section {
   padding-top: 0.5rem;
 }
 
+// Change open/close icon in left sidebar
+.ul-1 .with-child > label:before {
+  position: absolute;
+  left: -0.88rem !important;
+  top: 10px;
+  content: "\f107" !important;
+}
+
+.ul-1 .with-child > input:checked ~ label:before {
+  content: "\f107" !important;
+  rotate: 90deg;
+}
+
 // Left-sidebar active element background
 a:has(.td-sidebar-nav-active-item) {
   background-color: $light-background;
