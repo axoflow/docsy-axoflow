@@ -86,6 +86,13 @@ ol > li::marker {
   margin-left: 10px;
   color: black;
 }
+.td-sidebar__search {
+  border: 1px solid;
+  border-radius: 8px;
+  border-color: #BFC2C8;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
 
 // Left-sidebar toc
 .td-sidebar {

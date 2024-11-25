@@ -117,7 +117,8 @@ twitter = "AxoFlowIO"
   # Enable to make the side bar menu foldable.
   sidebar_menu_foldable = true
   # Set to true to hide the sidebar search box (the top nav search box will still be displayed if search is enabled)
-  sidebar_search_disable = false
+  sidebar_search_disable = true
+  sidebar_search_below_title = true # Enables search box below the doc title in the left sidebar
 
   [params.links]
   # End user relevant links. These will show up on left side of footer and in the community page if you have one.
