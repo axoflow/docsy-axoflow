@@ -98,6 +98,12 @@ ol > li::marker {
 .td-sidebar-link {
   font-size: 12px;
 }
+
+// Version number under the product name in the sidebar
+.td-sidebar-nav-doc-version {
+  font-weight: 400;
+}
+
 nav.foldable-nav .td-sidebar-nav__section {
   padding-bottom: 0.5rem;
   padding-top: 0.5rem;
