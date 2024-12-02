@@ -5,6 +5,8 @@
 <nav aria-label="breadcrumb" class="td-breadcrumbs
     {{- if $isSingle }} td-breadcrumbs__single {{- end }}">
   <ol class="breadcrumb">
+    <!-- Adds customizable breadcrumbs -->
+    {{ partial "hooks/breadcrumb-lead.html" . }}
     {{- template "breadcrumbnav" (dict "p1" . "p2" .) }}
   </ol>
 </nav>

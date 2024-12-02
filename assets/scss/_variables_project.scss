@@ -1,10 +1,21 @@
 $navbar-dark-color: white; // Set navbar text to white to increase contrast
 $blue: #496bb8 !default; // Override breadcrumb and sidebar text color to increase contrast
-$primary: #313671 !default;
+$primary: #010A22 !default;
 
 $dark: black;
 
+$warning: #F4B942 !default;
+
 $success: #1f224b !default;
+
+$light-background: #EDFCFE;
+
+$navbar-padding-y: 27px; // Increases navbar size. Also requires to increase top margins (mt-5) on the main and aside elements, otherwise they overlap
+
+$breadcrumb-divider: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M15.4 12L9.4 18L8 16.6L12.6 12L8 7.4L9.4 6L15.4 12Z' fill='currentColor'/%3E%3C/svg%3E");
+$breadcrumb-active-color: #010A22;
+
+$link-color: #010A22;
 
 $google_font_name: "Montserrat";
 $google_font_family: "Montserrat:300,300i,400,400i,700,700i";

@@ -8,8 +8,8 @@ assets/scss/_styles_project.scss
 @import "tocbot";
 
 .warning-block {
-    border-left: 6px solid red;
-    background: #FFFFFF;
+    border-left: 8px solid #F4B942;
+    background-color: inherit;
     padding: 16px;
   }
 .property-optional::after {
@@ -55,18 +55,20 @@ ol > li::marker {
   font-weight: bold;
 }
 
-// Style overrides for tabbed cards and tabpanes
-
-.tab-content {
-  max-width: 80%;
+// Doc pages main element
+.td-main main {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+.td-max-width-on-larger-screens {
+  @include media-breakpoint-up(lg) {
+    max-width: 100%;
+  }
 }
 
+// Style overrides for tabbed cards and tabpanes
 .tab-content .tab-pane {
   max-width: 100%;
-}
-
-.tab-body {
-  padding: 0rem;
 }
 
 // Search icon fixes, ugly
@@ -75,25 +77,127 @@ ol > li::marker {
   margin-left: 10px;
   color: black;
 }
+.td-sidebar__search {
+  border: 1px solid;
+  border-radius: 8px;
+  border-color: #BFC2C8;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+// Left-sidebar toc
+.td-sidebar {
+  background-color: unset;
+  border-right: unset;
+}
+.td-sidebar-toc {
+  border-left: unset;
+}
+.td-sidebar-link {
+  font-size: 12px;
+}
+
+// Version number under the product name in the sidebar
+.td-sidebar-nav-doc-version {
+  font-weight: 400;
+}
+
+nav.foldable-nav .td-sidebar-nav__section {
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+// Change open/close icon in left sidebar
+.ul-1 .with-child > label:before {
+  position: absolute;
+  left: -0.88rem !important;
+  top: 10px;
+  content: "\f107" !important;
+}
+
+.ul-1 .with-child > input:checked ~ label:before {
+  content: "\f107" !important;
+  rotate: 90deg;
+}
+
+// Left-sidebar active element background
+.td-sidebar-nav .td-sidebar-link {
+  padding-bottom: unset;
+}
+a:has(.td-sidebar-nav-active-item) {
+  background-color: $light-background;
+  padding-left: 0.75rem !important;
+  border-radius: 8px;
+}
+// Adds border to open toc items
+ul .foldable {
+  border-left: solid 1px rgba(1, 10, 34, 0.2);
+}
 
 //header
 header * .main-menu-search a .nav-link {
   color: white;
 }
+// Change menu dropdown icon
+.dropdown-toggle::after {
+  border: none !important;
+  content: "\f107" !important;
+  font-family: var(--fa-style-family, "Font Awesome 6 Free");
+  vertical-align: inherit;
+}
+// Makes the contact link look like a button
+#menu-contact {
+  box-sizing: border-box;
+  border: 1px solid #FFFFFF;
+  border-radius: 8px;
+}
+.navbar-nav .nav-item {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
 
 // Alerts/notes shouldn't be come up in the page level toc
-
 .alert-heading {
   font-size: 1.35rem;
   display: block;
+  padding-bottom: 1rem;
+  color: black !important;
+  font-weight: 700;
+}
+.alert-info {
+  border-left: 8px solid #24D5FC;
+  background-color: inherit;
+  padding-top: unset;
+  padding-bottom: unset;
+}
+.alert-warning {
+  border-left: 8px solid #F4B942;
+  background-color: inherit;
+  padding-top: unset;
+  padding-bottom: unset;
 }
 
+// On this page toc header
 .td-toc-header {
 	font-weight: 700;
-  border-top: 1px #313671 solid;
+  border-bottom: 1px #313671 solid;
   margin-top: 1rem;
 	padding-top: 0.5rem;
+  padding-bottom: 1rem;
 }
+
+// On this page toc div
+.td-toc {
+  padding-top: 1rem;
+}
+// On this page toc elements
+.toc-list-item {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 12px;
+}
+
+// Active right-side toc element .toc-list-item .is-active-li is set in themes/docsy-axoflow/assets/scss/tocbot.css
 
 .pageinfo {
   // Align box with content text on the
@@ -105,31 +209,24 @@ header * .main-menu-search a .nav-link {
 
 // Style HTML5 details/summaries used for progressive disclosure
 details > summary {
-  list-style-type: "\21B3";
-}
-details > summary::after {
-    content: "\a     Show details";
-    color: gray;
-    white-space: pre;
+  list-style-image: url("/icons/closed.svg");
+  padding: 1rem;
 }
 
 details[open] > summary {
-  list-style-type: "\21B4";
+  list-style-image: url("/icons/open.svg");
+  margin-bottom: 0.5rem;
+  margin-left: -3rem;
 }
-details[open] > summary::after {
-    content: "\a     Hide details";
-    color: gray;
-    white-space: pre;
+
+details[open] {
+  padding-left: 3.5rem;
 }
 
 details {
-    border: 1px solid $blue;
-    border-radius: 0.2rem;
+    border-radius: 8px;
     padding: 0.5rem;
-}
-
-details[open] > summary {
-    margin-bottom: 0.5rem;
+    background: #EDFCFE;
 }
 
 .screenshot-medium {
@@ -146,3 +243,52 @@ details[open] > summary {
   display: block;
 }
 
+// Right-hand meta-link (print, view source, etc.) styling
+.td-page-meta a {
+  color: black;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 22px;
+  background-color: $light-background;
+  padding: .5rem 1rem;
+  border-radius: 8px;
+}
+// Breadcrumb customizations
+.breadcrumb-item a {
+  color: #010A22;
+}
+.breadcrumb-item.active {
+    font-weight: 800;
+}
+
+// Inline code
+code {
+  background-color: #C8E8E9 !important;
+}
+
+// Underline links in the body text
+.td-content * a {
+  text-decoration: underline;
+}
+
+.td-content p {
+  line-height: 1.62rem;
+}
+.td-content li, span {
+  line-height: 1.62rem;
+}
+
+// Don't underline links in headings (otherwise a small line will be visible when hovering over the heading)
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+  text-decoration: none !important;
+}
+
+// Make line above the section-menu black
+.panel-line {
+  opacity: unset;
+}
+
+// Footer-specific stuff
+.footer-link {
+  color: #24D5FD !important;
+}
