@@ -244,14 +244,16 @@ details {
 }
 
 // Right-hand meta-link (print, view source, etc.) styling
+.td-page-meta {
+  border-radius: 8px;
+  background-color: $light-background;
+}
 .td-page-meta a {
   color: black;
   font-weight: 600;
   font-size: 12px;
   line-height: 22px;
-  background-color: $light-background;
   padding: .5rem 1rem;
-  border-radius: 8px;
 }
 // Breadcrumb customizations
 .breadcrumb-item a {
