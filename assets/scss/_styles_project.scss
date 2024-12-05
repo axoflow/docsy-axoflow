@@ -163,6 +163,38 @@ header * .main-menu-search a .nav-link {
   padding-right: 1.5rem;
 }
 
+// CSS for multi-level dropdown menu
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  border-radius: 8px;
+  display: none;
+  background-color: #FFFFFF;
+  border-color: #f7f7f7;
+}
+.dropdown-submenu:hover .dropdown-menu {
+  display: block;
+}
+.dropdown-menu.show {
+  display: block;
+  background-color: #FFFFFF;
+  border-color: #f7f7f7;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+.dropdown-item {
+  font-weight: 700;
+  color: #010a22;
+}
+.dropdown-item:hover {
+  color: unset;
+  background-color: unset;
+  background-image: unset;
+}
+
 // Alerts/notes shouldn't be come up in the page level toc
 .alert-heading {
   font-size: 1.35rem;
