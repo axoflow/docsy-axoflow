@@ -145,15 +145,22 @@ header * .main-menu-search a .nav-link {
   font-family: var(--fa-style-family, "Font Awesome 6 Free");
   vertical-align: inherit;
 }
-// Makes the contact link look like a button
-#menu-contact {
+
+// Makes the menu entry with identifier menu-button look like a button
+#menu-button, #menu-contact {
   box-sizing: border-box;
   border: 1px solid #FFFFFF;
   border-radius: 8px;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 .navbar-nav .nav-item {
-  padding-left: 3rem;
-  padding-right: 3rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+.navbar-nav .dropdown {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 // Alerts/notes shouldn't be come up in the page level toc
