@@ -166,6 +166,7 @@ header * .main-menu-search a .nav-link {
 // CSS for multi-level dropdown menu
 .dropdown-submenu {
   position: relative;
+  width: 240px;
 }
 .dropdown-submenu .dropdown-menu {
   top: 0;
@@ -188,6 +189,10 @@ header * .main-menu-search a .nav-link {
 .dropdown-item {
   font-weight: 700;
   color: #010a22 !important;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 .dropdown-item:hover {
   color: unset;
