@@ -16,3 +16,8 @@
 {{ if .Params.replaceFromURL }}
     <script src="{{ "js/replace-from-url.js" | relURL }}" type="application/x-javascript" defer></script>
 {{ end }}
+
+<!-- Load material icons if needed. Use it like this: <span class="material-icons">face</span>-->
+{{ if .Site.Params.useMaterialIcons -}}
+<link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+{{ end }}

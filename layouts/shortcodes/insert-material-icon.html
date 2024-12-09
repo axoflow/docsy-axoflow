@@ -1,0 +1,11 @@
+{{- $color := .Get "color" | default "dark" -}}
+{{- $bg := .Get "bg" | default "white" -}}
+{{- $icon := .Get "icon" -}}
+{{- $style := .Get "style" -}}
+
+{{ with $icon }}<span class="material-icons{{ with $style }}-{{ . }}{{ end }} text-{{ $color }} bg-{{ $bg }}">{{- . -}}</span>{{ end }}
+{{ if eq .Page.File.Ext "md" }}
+    {{ .Inner | markdownify }}
+{{ else }}
+    {{ .Inner | htmlUnescape | safeHTML }}
+{{ end }}
