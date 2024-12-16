@@ -4,7 +4,7 @@
 {{- $style := .Get "style" -}}
 {{- $classes := .Get "classes" -}}
 
-{{ with $icon }}<span class="material-icons{{ with $style }}-{{ . }}{{ end }} text-{{ $color }} bg-{{ $bg }}{{ with $classes }} {{ . }}{{ end }}">{{- . -}}</span>{{ end }}
+{{ with $icon }}<span class="material-icons{{ with $style }}-{{ . }}{{ end }} text-{{ $color }} bg-{{ $bg }} inline-icon{{ with $classes }} {{ . }}{{ end }}">{{- . -}}</span>{{ end }}
 {{ if eq .Page.File.Ext "md" }}
     {{ .Inner | markdownify }}
 {{ else }}
