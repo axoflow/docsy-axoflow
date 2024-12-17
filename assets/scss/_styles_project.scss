@@ -343,3 +343,11 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 .inline-icon {
   vertical-align: middle;
 }
+
+// For randomizing sidebar CTAs
+.hidden {
+  display: none;
+}
+.cta-sidebar {
+  width: 154px;
+}

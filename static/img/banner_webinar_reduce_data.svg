@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   sodipodi:docname="banner_webinar_reduce_data.svg"
+   id="svg953"
+   version="1.1"
+   viewBox="0 0 153 345"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <metadata
+     id="metadata957">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:current-layer="svg953"
+     inkscape:window-maximized="0"
+     inkscape:window-y="25"
+     inkscape:window-x="0"
+     inkscape:cy="156.33067"
+     inkscape:cx="73.958136"
+     inkscape:zoom="2.2580342"
+     showgrid="true"
+     id="namedview955"
+     inkscape:window-height="965"
+     inkscape:window-width="1392"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     inkscape:showpageshadow="2"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1">
+    <inkscape:grid
+       originy="0"
+       originx="0"
+       id="grid1395"
+       type="xygrid"
+       spacingy="1"
+       spacingx="1"
+       units="px"
+       visible="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs906">
+    <style
+       id="style858">
+            .cls-1, .cls-5 {
+            fill: #7d7995;
+            }
+
+            .cls-2 {
+            fill: #efefef;
+            }
+
+            .cls-3 {
+            fill: #143176;
+            }
+
+            .cls-3, .cls-5 {
+            font-size: 16px;
+            font-family: 'Lato', sans-serif;
+            }
+
+            .cls-4 {
+            font-size: 22px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 800;
+            }
+
+            .cls-6 {
+            fill: url(#linear-gradient);
+            }
+
+            .cls-7 {
+            fill: url(#linear-gradient-2);
+            }
+
+            .cls-8 {
+            fill: url(#linear-gradient-3);
+            }
+
+            .cls-9 {
+            fill: url(#linear-gradient-4);
+            }
+
+            .cls-10 {
+            fill: url(#linear-gradient-5);
+            }
+
+            .cls-11 {
+            fill: url(#linear-gradient-6);
+            }
+
+            .cls-12 {
+            fill: url(#linear-gradient-7);
+            }
+
+            .cls-13 {
+            fill: #0d185c;
+            }
+
+            .cls-14 {
+            fill: #061e5c;
+            }
+
+            .cls-15 {
+            fill: #040f42;
+            }
+
+            .cls-16 {
+            fill: none;
+            stroke: #bcbcbc;
+            }
+
+            .cls-17 {
+            filter: url(#bg_btn);
+            }
+        </style>
+    <filter
+       filterUnits="userSpaceOnUse"
+       height="345"
+       width="153"
+       y="0"
+       x="0"
+       id="bg_btn">
+      <feOffset
+         id="feOffset860"
+         input="SourceAlpha"
+         dy="1" />
+      <feGaussianBlur
+         id="feGaussianBlur862"
+         result="blur"
+         stdDeviation="1.5" />
+      <feFlood
+         id="feFlood864"
+         flood-opacity="0.2" />
+      <feComposite
+         result="result1"
+         id="feComposite866"
+         in2="blur"
+         operator="in" />
+      <feComposite
+         id="feComposite868"
+         in2="result1"
+         in="SourceGraphic" />
+    </filter>
+    <linearGradient
+       gradientTransform="scale(1.4990761,0.66707755)"
+       gradientUnits="userSpaceOnUse"
+       y2="373.66956"
+       x2="-152.69312"
+       y1="437.80762"
+       x1="-169.20795"
+       id="linear-gradient">
+      <stop
+         id="stop871"
+         stop-color="#3c8ecd"
+         offset="0.403" />
+      <stop
+         id="stop873"
+         stop-color="#82cef2"
+         offset="0.994" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="scale(1.4990616,0.66708401)"
+       gradientUnits="userSpaceOnUse"
+       y2="388.67807"
+       x2="-2005.5715"
+       y1="443.32742"
+       x1="-2019.6433"
+       id="linear-gradient-2">
+      <stop
+         id="stop876"
+         stop-color="#c18dbe"
+         offset="0.403" />
+      <stop
+         id="stop878"
+         stop-color="#9db4dd"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="scale(1.4991642,0.66703834)"
+       gradientUnits="userSpaceOnUse"
+       y2="356.06949"
+       x2="-2179.8611"
+       y1="431.33954"
+       x1="-2199.1943"
+       id="linear-gradient-3">
+      <stop
+         id="stop881"
+         stop-color="#454494"
+         offset="0.403" />
+      <stop
+         id="stop883"
+         stop-color="#76a1d6"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="scale(1.4989186,0.66714765)"
+       gradientUnits="userSpaceOnUse"
+       y2="401.43228"
+       x2="-110.34173"
+       y1="447.99799"
+       x1="-122.3022"
+       id="linear-gradient-4">
+      <stop
+         id="stop886"
+         stop-color="#56bdc1"
+         offset="0.403" />
+      <stop
+         id="stop888"
+         stop-color="#82cef2"
+         offset="0.994" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="scale(1.841948,0.5429035)"
+       gradientUnits="userSpaceOnUse"
+       y2="506.92178"
+       x2="92.48259"
+       y1="561.4809"
+       x1="101.7562"
+       id="linear-gradient-5">
+      <stop
+         id="stop891"
+         stop-color="#13287a"
+         offset="0.006" />
+      <stop
+         id="stop893"
+         stop-color="#1a3d8e"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="scale(1.4003716,0.71409618)"
+       gradientUnits="userSpaceOnUse"
+       y2="411.60397"
+       x2="117.13309"
+       y1="360.90884"
+       x1="102.19788"
+       id="linear-gradient-6">
+      <stop
+         id="stop896"
+         stop-color="#466bb3"
+         offset="0" />
+      <stop
+         id="stop898"
+         stop-color="#3c3079"
+         offset="0.727" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="scale(1.2583247,0.79470743)"
+       gradientUnits="userSpaceOnUse"
+       y2="341.31741"
+       x2="195.21815"
+       y1="374.01331"
+       x1="183.30569"
+       id="linear-gradient-7">
+      <stop
+         id="stop901"
+         stop-color="#1972a0"
+         offset="0.192" />
+      <stop
+         id="stop903"
+         stop-color="#3b9fd9"
+         offset="1" />
+    </linearGradient>
+  </defs>
+  <g
+     class="cls-17"
+     id="g909">
+    <path
+       id="bg_btn-2"
+       data-name="bg_btn"
+       class="cls-2"
+       d="M 24,0 H 144 V 336 H 24 A 24,24 0 0 1 0,312 V 24 A 24,24 0 0 1 24,0 Z"
+       transform="translate(4.5,3.5)" />
+  </g>
+  <line
+     id="Line_36"
+     data-name="Line 36"
+     class="cls-16"
+     x2="140.03191"
+     x1="21"
+     y1="181"
+     y2="181"
+     style="stroke-width:1.03091" />
+  <text
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:15.3333px;font-family:Lato, sans-serif;-inkscape-font-specification:'Lato, sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#143176;fill-opacity:1"
+     class="cls-5"
+     data-name="Our providers:"
+     id="Our_providers:-8"
+     x="22.021317"
+     y="116.01717"><tspan
+       y="116.01717"
+       x="22.021317"
+       sodipodi:role="line"
+       id="tspan2"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3333px;font-family:Lato, sans-serif;-inkscape-font-specification:'Lato, sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#24d5fd;fill-opacity:1">Feed your SIEM</tspan><tspan
+       y="135.18379"
+       x="22.021317"
+       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3333px;font-family:Lato, sans-serif;-inkscape-font-specification:'Lato, sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#24d5fd;fill-opacity:1"
+       id="tspan3">Reduced and</tspan><tspan
+       y="154.35042"
+       x="22.021317"
+       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3333px;font-family:Lato, sans-serif;-inkscape-font-specification:'Lato, sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#24d5fd;fill-opacity:1"
+       id="tspan6">Actionable</tspan><tspan
+       y="173.51704"
+       x="22.021317"
+       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3333px;font-family:Lato, sans-serif;-inkscape-font-specification:'Lato, sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#24d5fd;fill-opacity:1"
+       id="tspan11">Security Data</tspan></text>
+  <text
+     y="202.26956"
+     x="24.350552"
+     id="Our_providers:-8-7"
+     data-name="Our providers:"
+     class="cls-5"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:Lato, sans-serif;-inkscape-font-specification:'Lato, sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#7d7995"><tspan
+       y="202.26956"
+       x="24.350552"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Lato, sans-serif;-inkscape-font-specification:'Lato, sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
+       id="tspan1383"
+       sodipodi:role="line">LIVE WEBINAR</tspan><tspan
+       y="222.26956"
+       x="24.350552"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Lato, sans-serif;-inkscape-font-specification:'Lato, sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
+       sodipodi:role="line"
+       id="tspan9">with</tspan><tspan
+       y="242.26956"
+       x="24.350552"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.3333px;font-family:Lato, sans-serif;-inkscape-font-specification:'Lato, sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
+       sodipodi:role="line"
+       id="tspan5">Balázs Scheidler</tspan><tspan
+       y="262.26956"
+       x="24.350552"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.3333px;font-family:Lato, sans-serif;-inkscape-font-specification:'Lato, sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
+       sodipodi:role="line"
+       id="tspan12" /><tspan
+       y="282.26956"
+       x="24.350552"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Lato, sans-serif;-inkscape-font-specification:'Lato, sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
+       sodipodi:role="line"
+       id="tspan7">January 22</tspan><tspan
+       y="302.26956"
+       x="24.350552"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.3333px;font-family:Lato, sans-serif;-inkscape-font-specification:'Lato, sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
+       sodipodi:role="line"
+       id="tspan4" /></text>
+  <text
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Lato, sans-serif;-inkscape-font-specification:'Lato, sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#143176;fill-opacity:1"
+     class="cls-5"
+     data-name="Our providers:"
+     id="Our_providers:-8-7-1"
+     x="23.066826"
+     y="314.79047"><tspan
+       y="314.79047"
+       x="23.066826"
+       id="tspan1389"
+       sodipodi:role="line">SIGN UP NOW</tspan></text>
+  <g
+     id="Group_2144"
+     data-name="Group 2144"
+     transform="matrix(0.25655185,0,0,0.25655185,35.227592,16.839864)">
+    <path
+       id="Path_4415"
+       data-name="Path 4415"
+       d="m 160.111,16.63 19.657,34.05 a 13.239,13.239 0 0 1 0,13.327 l -56.168,97.352 -19.657,-34.05 a 13.239,13.239 0 0 1 0,-13.327 z"
+       transform="translate(3.141,-16.63)"
+       fill="#2f3772" />
+    <path
+       id="Path_4416"
+       data-name="Path 4416"
+       d="m 165.591,26.12 19.657,34.05 a 13.239,13.239 0 0 1 0,13.327 L 156.4,123.405 a 13.239,13.239 0 0 0 0,13.327 l 62.9,108.946 h -39.316 a 13.347,13.347 0 0 1 -11.528,-6.663 L 109.419,136.732 a 13.239,13.239 0 0 1 0,-13.327 z"
+       transform="translate(34.177,37.115)"
+       fill="#2f3772" />
+    <path
+       id="Path_4417"
+       data-name="Path 4417"
+       d="m 139.979,35.62 90.289,156.389 h -39.314 a 13.347,13.347 0 0 1 -11.528,-6.663 L 120.389,83.063 a 13.239,13.239 0 0 1 0,-13.327 z"
+       transform="translate(96.304,90.918)"
+       fill="#cccccc" />
+    <path
+       id="Path_4418"
+       data-name="Path 4418"
+       d="m 176.562,35.62 19.657,34.05 a 13.239,13.239 0 0 1 0,13.327 l -59.037,102.282 a 13.347,13.347 0 0 1 -11.528,6.663 H 86.34 Z"
+       transform="translate(-86.34,90.918)"
+       fill="#cccccc" />
+    <path
+       id="Path_4419"
+       data-name="Path 4419"
+       d="m 151.007,45.11 19.657,34.05 a 13.239,13.239 0 0 1 0,13.327 l -22.522,39.047 a 13.347,13.347 0 0 1 -11.528,6.663 H 97.3 Z"
+       transform="translate(-24.269,144.663)"
+       fill="#cccccc" />
+  </g>
+</svg>
