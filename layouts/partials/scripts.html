@@ -151,6 +151,11 @@ for (let c of containers) {
 {{ partial "hubspot.html" . }}
 {{ end }}
 
+<!-- load the adblockanalytics js if adblockanalytics id is set -->
+{{ if .Site.Params.adblockanalyticsId }}
+{{ partial "adblockanalytics.html" . }}
+{{ end }}
+
 <!-- Lightbox-like zoomable images -->
 {{ if not .Params.disable_image_zoom }}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
