@@ -30,9 +30,9 @@ assets/scss/_styles_project.scss
   text-transform: uppercase;
 }
 
-// .td-navbar .navbar-brand__name {
-//   display: none;
-// }
+.td-navbar .navbar-brand__name {
+    font-size: 0.9rem;
+}
 
 // Main-page specific customizations
 .lead-text {
@@ -157,10 +157,12 @@ header * .main-menu-search a .nav-link {
 .navbar-nav .nav-item {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+  font-size: 0.9rem;
 }
 .navbar-nav .dropdown {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+  font-size: 0.9rem;
 }
 
 // CSS for multi-level dropdown menu
@@ -188,6 +190,7 @@ header * .main-menu-search a .nav-link {
 }
 .dropdown-item {
   font-weight: 700;
+  font-size: 0.9rem;
   color: #010a22 !important;
   margin-left: 2rem;
   margin-right: 2rem;
@@ -337,6 +340,9 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 // Footer-specific stuff
 .footer-link {
   color: #24D5FD !important;
+}
+.text-end {
+  font-size: 0.9rem;
 }
 
 // Used for inline material/pictogrammer icons
