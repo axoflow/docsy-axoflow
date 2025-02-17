@@ -294,6 +294,7 @@ details {
 .td-page-meta {
   border-radius: 8px;
   background-color: $light-background;
+  margin-top: 16px; // Adds a margin because the announcements banner is too close
 }
 .td-page-meta a {
   color: black;
@@ -356,4 +357,21 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 }
 .cta-sidebar {
   width: 154px;
+}
+
+// Styling for announcement banner
+.menu-banner {
+  @include media-breakpoint-up(md) {
+    width: 100%;
+    position: fixed;
+    z-index: 31;
+    top: 5rem;
+  }
+
+  background: #27fcdd !important;
+  color: black !important;
+
+  text-align: center;
+  height: 24px;
+
 }
