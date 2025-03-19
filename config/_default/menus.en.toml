@@ -1,0 +1,161 @@
+###############################################################################
+# Hugo - Top-level navigation (horizontal)
+###############################################################################
+# top level [menus] key is omitted because we use a separate file
+
+[[menus.main]]
+    name = "Case Studies"
+    weight = -200
+    url = "/"
+    identifier = "case-studies"
+    [[menus.main]]
+      name = "Large Government Organization"
+      weight = 100
+      url = "https://axoflow.com/case-studies/large-government-organization-data-quality-improvement/?utm_source=docs&utm_medium=menu"
+      identifier = "case-study-large-gov-org"
+      parent = "case-studies"
+    [[menus.main]]
+      name = "Global Industrial Concern"
+      weight = 100
+      url = "https://axoflow.com/case-studies/global-industrial-concern-security-data-reduction/?utm_source=docs&utm_medium=menu"
+      identifier = "case-study-global-industrial-concern"
+      parent = "case-studies"
+  [[menus.main]]
+    name = "Product"
+    weight = -130
+    url = "/"
+    identifier = "product"
+    [[menus.main]]
+      name = "Axoflow Platform"
+      weight = -120
+      url = "https://axoflow.com/axoflow-platform/"
+      parent = "product"
+    [[menus.main]]
+      name = "AxoRouter"
+      weight = -100
+      url = "https://axoflow.com/axorouter/"
+      parent = "product"
+
+  [[menus.main]]
+    name = "Resources"
+    weight = -120
+    url = "/"
+    identifier = "resources"
+  [[menus.main]]
+    name = "Blog"
+    weight = -150
+    url = "https://axoflow.com/blog/"
+    parent = "resources"
+  [[menus.main]]
+    name = "Documentation"
+    weight = -120
+    #pre = "<i class='fas fa-book pr-2'></i>"
+    url = "/"
+    identifier = "documentation"
+    parent = "resources"
+    [[menus.main]]
+      name = "Axoflow Platform"
+      weight = -120
+      url = "https://axoflow.com/docs/axoflow/"
+      identifier = "documentation-axoflow"
+      parent = "documentation"
+    [[menus.main]]
+      name = "AxoSyslog"
+      weight = -120
+      url = "https://axoflow.com/docs/axosyslog-core/"
+      identifier = "documentation-axosyslog"
+      parent = "documentation"
+    [[menus.main]]
+      name = "Logging operator"
+      weight = -120
+      url = "https://kube-logging.dev/docs/"
+      identifier = "documentation-logging-operator"
+      parent = "documentation"
+[[menus.main]]
+    name = "Webinars"
+    weight = 120
+    url = "/"
+    identifier = "webinars"
+    parent = "resources"
+    [[menus.main]]
+      name = "Show me your labels"
+      weight = 500
+      url = "https://axoflow.com/webinar-show-me-your-labels/?utm_source=docs&utm_medium=menu"
+      identifier = "webinar-show-me-your-labels"
+      parent = "webinars"
+    [[menus.main]]
+      name = "Solve the Malformed Message Madness"
+      weight = 600
+      url = "https://axoflow.com/webinar-solve-malformed-messages-arriving-siem/?utm_source=docs&utm_medium=menu"
+      identifier = "webinar-solved-malformed-message-madness"
+      parent = "webinars"
+    [[menus.main]]
+      name = "Reduced and Actionable Security Data"
+      weight = 700
+      url = "https://axoflow.com/webinar-feed-siem-reduced-detection-ready-security-data/?utm_source=docs&utm_medium=menu"
+      identifier = "webinar-reduced-actionable-security-data"
+      parent = "webinars"
+    [[menus.main]]
+      name = "Parsing Sucks"
+      weight = 800
+      url = "https://axoflow.com/webinar-parsing-sucks-what-to-do/?utm_source=docs&utm_medium=menu"
+      identifier = "webinar-parsing-sucks"
+      parent = "webinars"
+    [[menus.main]]
+      name = "Resilient Syslog Architectures"
+      weight = 900
+      url = "https://axoflow.com/webinar/?utm_source=docs&utm_medium=menu"
+      identifier = "webinar-resilient-syslog"
+      parent = "webinars"
+[[menus.main]]
+    name = "White Papers"
+    weight = 120
+    url = "/"
+    identifier = "white-papers"
+    parent = "resources"
+    [[menus.main]]
+      name = "Observability Pipeline and Metrics"
+      weight = 10
+      url = "https://axoflow.com/observability-pipeline-metrics-control-telemetry-data/?utm_source=docs&utm_medium=menu"
+      identifier = "white-paper-observability-pipeline-metrics"
+      parent = "white-papers"
+    [[menus.main]]
+      name = "Scalable Syslog Architectures"
+      weight = 50
+      url = "https://axoflow.com/white-paper-scalable-syslog-architecture-best-practices/?utm_source=docs&utm_medium=menu"
+      identifier = "white-paper-scalable-syslog"
+      parent = "white-papers"
+
+  [[menus.main]]
+    name = "About"
+    weight = -80
+    url = "/"
+    identifier = "about"
+  [[menus.main]]
+    name = "News"
+    weight = -105
+    url = "https://axoflow.com/news/"
+    parent = "about"
+  [[menus.main]]
+    name = "About us"
+    weight = -100
+    #pre = "<i class='fas fa-blog pr-2'></i>"
+    url = "https://axoflow.com/about-us/"
+    parent = "about"
+  [[menus.main]]
+    name = "Contact"
+    weight = 100
+    url = "https://axoflow.com/contact/"
+    parent = "about"
+
+  [[menus.main]]
+    name = "Login"
+    weight = 100
+    url = "https://login.axoflow.io/"
+    identifier = "menu-login"
+
+  [[menus.main]]
+    name = "Request Sandbox"
+    weight = 150
+    url = "https://axoflow.com/contact/?subject=sandbox"
+    identifier = "menu-button"
