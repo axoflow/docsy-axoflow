@@ -288,7 +288,7 @@ anchor = "smart"
   [[menus.main]]
     name = "Solve the Malformed Message Madness"
     weight = 600
-    url = "https://axoflow.com/webinars/solve-the-malformed-message-madness/?utm_source=docs&utm_medium=menu"
+    url = "https://axoflow.com/webinars/solve-the-malformed-message-madness?utm_source=docs&utm_medium=menu"
     identifier = "webinar-solved-malformed-message-madness"
     parent = "webinars"
   [[menus.main]]
