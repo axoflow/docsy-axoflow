@@ -201,7 +201,7 @@ anchor = "smart"
   [[menus.main]]
     name = "Axoflow vs Cribl"
     weight = 100
-    url = "/axoflow-platform-vs-cribl?utm_source=docs&utm_medium=menu"
+    url = "https://axoflow.com/axoflow-platform-vs-cribl?utm_source=docs&utm_medium=menu"
     identifier = "cribl"
     parent = "solutions"
   [[menus.main]]
@@ -300,7 +300,7 @@ anchor = "smart"
   [[menus.main]]
     name = "Parsing Sucks"
     weight = 800
-    url = "https://axoflow.com//webinars/parsing-sucks-what-can-you-do-about-it?utm_source=docs&utm_medium=menu"
+    url = "https://axoflow.com/webinars/parsing-sucks-what-can-you-do-about-it?utm_source=docs&utm_medium=menu"
     identifier = "webinar-parsing-sucks"
     parent = "webinars"
   [[menus.main]]
