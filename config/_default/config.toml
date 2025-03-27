@@ -205,6 +205,12 @@ anchor = "smart"
     identifier = "cribl"
     parent = "solutions"
   [[menus.main]]
+    name = "Axoflow vs syslog-ng"
+    weight = 120
+    url = "https://axoflow.com/axoflow-platform-vs-syslog-ng-pe?utm_source=docs&utm_medium=menu"
+    identifier = "syslog-ng-pe"
+    parent = "solutions"
+  [[menus.main]]
     name = "Case Studies"
     weight = 200
     url = "/"
