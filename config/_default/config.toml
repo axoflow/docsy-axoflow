@@ -128,11 +128,6 @@ twitter = "AxoFlowIO"
     icon = "fab fa-discord"
     desc = "Discussion and help from your fellow users"
   [[params.links.user]]
-    name ="Twitter"
-    url = "https://twitter.com/AxoFlowIO"
-    icon = "fab fa-twitter"
-    desc = "Follow us on Twitter to get the latest news!"
-  [[params.links.user]]
     name = "Linkedin"
     url = "https://www.linkedin.com/company/axoflow/"
     icon = "fab fa-linkedin"
