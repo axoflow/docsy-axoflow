@@ -4,6 +4,6 @@
 <div id="search"></div>
 <script>
   window.addEventListener("DOMContentLoaded", (event) => {
-    new PagefindUI({ element: "#search", showSubResults: true, highlightParam: "highlight", pageSize: 10 });
+    new PagefindUI({ element: "#search", showSubResults: true, highlightParam: "highlight", pageSize: 10, autofocus: true{{ if .Site.Params.offlineSearchPagefindHideImages }}, showImages: false{{ end }} });
   });
 </script>
