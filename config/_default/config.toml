@@ -194,17 +194,29 @@ anchor = "smart"
   url = "/"
   identifier = "solutions"
   [[menus.main]]
-    name = "Axoflow vs Cribl"
+    name = "Comparisons"
     weight = 100
-    url = "https://axoflow.com/axoflow-platform-vs-cribl?utm_source=docs&utm_medium=menu"
-    identifier = "cribl"
+    url = "/"
+    identifier = "comparisons"
     parent = "solutions"
-  [[menus.main]]
-    name = "Axoflow vs syslog-ng"
-    weight = 120
-    url = "https://axoflow.com/axoflow-platform-vs-syslog-ng-pe?utm_source=docs&utm_medium=menu"
-    identifier = "syslog-ng-pe"
-    parent = "solutions"
+    [[menus.main]]
+      name = "Axoflow vs Cribl"
+      weight = 100
+      url = "https://axoflow.com/axoflow-platform-vs-cribl?utm_source=docs&utm_medium=menu"
+      identifier = "cribl"
+      parent = "comparisons"
+    [[menus.main]]
+      name = "Axoflow vs syslog-ng PE"
+      weight = 120
+      url = "https://axoflow.com/axoflow-platform-vs-syslog-ng-pe?utm_source=docs&utm_medium=menu"
+      identifier = "syslog-ng-pe"
+      parent = "comparisons"
+    [[menus.main]]
+      name = "Axoflow vs syslog-ng"
+      weight = 150
+      url = "https://axoflow.com/axosyslog-vs-syslog-ng?utm_source=docs&utm_medium=menu"
+      identifier = "syslog-ng"
+      parent = "comparisons"
   [[menus.main]]
     name = "Case Studies"
     weight = 200
