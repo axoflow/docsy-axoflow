@@ -244,6 +244,14 @@ header * .main-menu-search a .nav-link {
   font-size: 12px;
 }
 
+.sidebar-heading {
+  font-size: 1.35rem;
+  display: block;
+  padding-left: 1rem;
+  color: black !important;
+  font-weight: 700;
+}
+
 // Active right-side toc element .toc-list-item .is-active-li is set in themes/docsy-axoflow/assets/scss/tocbot.css
 
 .pageinfo {
