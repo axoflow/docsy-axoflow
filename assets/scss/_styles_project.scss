@@ -390,3 +390,17 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 .section-index-entry {
   @extend h5;
 }
+
+/* Optional: Tweak the light blue background to match AxoFlow's palette more closely */
+.bg-info.bg-opacity-10 {
+  background-color: #e0f7ff !important;
+}
+
+.btn-info {
+  background-color: #00b7ff;
+  border: none;
+}
+
+.btn-info:hover {
+  background-color: #009fd8;
+}
