@@ -212,6 +212,12 @@ anchor = "smart"
       identifier = "syslog-ng-pe"
       parent = "comparisons"
     [[menus.main]]
+      name = "Axoflow vs SC4S"
+      weight = 140
+      url = "https://axoflow.com/axoflow-platform-vs-sc4s"
+      identifier = "sc4s"
+      parent = "comparisons"
+    [[menus.main]]
       name = "Axoflow vs syslog-ng"
       weight = 150
       url = "https://axoflow.com/axosyslog-vs-syslog-ng?utm_source=docs&utm_medium=menu"
