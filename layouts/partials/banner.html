@@ -2,7 +2,7 @@
   {{ $announcements := site.GetPage "announcements" -}}
   {{ if $announcements -}}
     {{ range $announcements.RegularPages }}
-    <div class="menu-banner">
+    <div class="menu-banner d-none d-md-block col-8 col-md-9 col-xl-8">
       <div>{{ .Content }}</div>
     </div>
     {{ end -}}
