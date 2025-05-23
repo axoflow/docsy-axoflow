@@ -154,6 +154,15 @@ header * .main-menu-search a .nav-link {
   padding-left: 2rem;
   padding-right: 2rem;
 }
+
+// Increase menu height so button CTAs fit into the header in small screen
+.td-navbar .td-navbar-nav-scroll {
+  height: 2.5rem;
+  @include media-breakpoint-down(md) {
+  height: 3.5rem;
+  }
+}
+
 .navbar-nav .nav-item {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
