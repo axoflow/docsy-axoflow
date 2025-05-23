@@ -175,10 +175,20 @@ header * .main-menu-search a .nav-link {
   font-size: 0.9rem;
 }
 
+.dropdown {
+  // Needed to make the menu dropdown visible on small screens
+  @include media-breakpoint-down(md) {
+    position: unset;
+  }
+}
+
 // CSS for multi-level dropdown menu
 .dropdown-submenu {
   position: relative;
   width: 240px;
+  @include media-breakpoint-down(md) {
+    width: 200px;
+  }
 }
 .dropdown-submenu .dropdown-menu {
   top: 0;
