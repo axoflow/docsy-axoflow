@@ -216,6 +216,11 @@ header * .main-menu-search a .nav-link {
   margin-right: 2rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
+  @include media-breakpoint-down(md) {
+    margin-left: 0rem;
+    margin-right: 0rem;
+    text-wrap: wrap;
+  }
 }
 .dropdown-item:hover {
   color: unset;
