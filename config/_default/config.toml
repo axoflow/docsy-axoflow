@@ -368,6 +368,11 @@ anchor = "smart"
   weight = 100
   url = "https://axoflow.com/contact?utm_source=docs&utm_medium=menu"
   parent = "about"
+[[menus.main]]
+  name = "Our Partners"
+  weight = 150
+  url = "https://axoflow.com/partners?utm_source=docs&utm_medium=menu"
+  parent = "about"
 
 [[menus.main]]
   name = "Login"
