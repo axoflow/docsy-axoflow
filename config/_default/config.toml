@@ -346,6 +346,11 @@ anchor = "smart"
     url = "https://axoflow.com/white-papers/white-paper-scalable-syslog-architecture-best-practices/?utm_source=docs&utm_medium=menu"
     identifier = "white-paper-scalable-syslog"
     parent = "white-papers"
+[[menus.main]]
+  name = "Podcast"
+  weight = 150
+  url = "https://axoflow.com/data-strikes-back-podcast?utm_source=docs&utm_medium=menu"
+  parent = "resources"
 
 [[menus.main]]
   name = "About"
