@@ -7,6 +7,11 @@ assets/scss/_styles_project.scss
 */
 @import "tocbot";
 
+
+html {
+  scroll-padding-top: 120px;
+}
+
 .warning-block {
     border-left: 8px solid #F4B942;
     background-color: inherit;
