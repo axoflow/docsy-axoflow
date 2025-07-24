@@ -206,6 +206,12 @@ anchor = "smart"
       identifier = "cribl"
       parent = "comparisons"
     [[menus.main]]
+      name = "Axoflow vs NXLog"
+      weight = 110
+      url = "https://axoflow.com/axoflow-platform-vs-nxlog?utm_source=docs&utm_medium=menu"
+      identifier = "nxlog"
+      parent = "comparisons"
+    [[menus.main]]
       name = "Axoflow vs syslog-ng PE"
       weight = 120
       url = "https://axoflow.com/axoflow-platform-vs-syslog-ng-pe?utm_source=docs&utm_medium=menu"
