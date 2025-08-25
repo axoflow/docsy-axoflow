@@ -143,9 +143,18 @@ ul .foldable {
 header * .main-menu-search a .nav-link {
   color: white;
 }
+
+// Main menu on-hover color
+li.nav-item > a > span {
+  &:hover {
+    color: #FF6500; // main color
+  }
+}
+
 // Change menu dropdown icon
 .dropdown-toggle::after {
   border: none !important;
+  color: #FF6500; // main color
   content: "\f107" !important;
   font-family: var(--fa-style-family, "Font Awesome 6 Free");
   vertical-align: inherit;
@@ -154,7 +163,9 @@ header * .main-menu-search a .nav-link {
 // Makes the menu entry with identifier menu-button look like a button
 #menu-button, #menu-contact {
   box-sizing: border-box;
-  border: 1px solid #FFFFFF;
+  border: 1px solid #FF6500; // main color
+  background-color: #FF6500; // main color
+  color: white;
   border-radius: 8px;
   padding-left: 2rem;
   padding-right: 2rem;
