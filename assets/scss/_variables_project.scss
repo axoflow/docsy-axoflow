@@ -1,6 +1,6 @@
-$navbar-dark-color: white; // Set navbar text to white to increase contrast
+$navbar-dark-color: #0F1425; // eerie black // navbar text
 $blue: #496bb8 !default; // Override breadcrumb and sidebar text color to increase contrast
-$primary: #010A22 !default;
+$primary: white !default;
 
 $dark: black;
 
@@ -8,12 +8,12 @@ $warning: #F4B942 !default;
 
 $success: #1f224b !default;
 
-$light-background: #EDFCFE;
+$light-background: #FFF7F2;
 
 $navbar-padding-y: 27px; // Increases navbar size. Also requires to increase top margins (mt-5) on the main and aside elements, otherwise they overlap
 
 $breadcrumb-divider: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M15.4 12L9.4 18L8 16.6L12.6 12L8 7.4L9.4 6L15.4 12Z' fill='currentColor'/%3E%3C/svg%3E");
-$breadcrumb-active-color: #010A22;
+$breadcrumb-active-color: #141D62;  // space cadet
 
 $link-color: #010A22;
 
