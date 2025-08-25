@@ -389,11 +389,15 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 // Make line above the section-menu black
 .panel-line {
   opacity: unset;
+  color: #FF6500; // main color
 }
 
 // Footer-specific stuff
 .footer-link {
-  color: #24D5FD !important;
+  color: #FF6500 !important; // main color
+}
+.text-footer {
+  color: #0F1425; // eerie black
 }
 .text-end {
   font-size: 0.9rem;
