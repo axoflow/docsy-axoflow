@@ -365,6 +365,10 @@ code {
   background-color: #C8E8E9 !important;
 }
 
+.td-content {
+  color: #0F1425; // Change body text color to eerie black (couldn't override $bs-body-color)
+}
+
 // Underline links in the body text
 .td-content * a {
   text-decoration: underline;
