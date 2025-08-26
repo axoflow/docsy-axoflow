@@ -394,7 +394,16 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 }
 
 // Footer-specific stuff
+footer {
+  border-top: #E7E8EF 1px solid;
+}
+.footer-right {
+  border-left: #E7E8EF 1px solid;
+}
 .footer-link {
+  color: #FF6500 !important; // main color
+}
+.footer-social-icons * .text-footer {
   color: #FF6500 !important; // main color
 }
 .text-footer {
