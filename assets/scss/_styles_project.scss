@@ -366,6 +366,11 @@ code {
   background-color: #FFF0E5 !important;
 }
 
+// Set font family for fenced code block
+pre > code {
+  font-family: "Roboto Mono" !important;
+}
+
 .td-content {
   color: #0F1425; // Change body text color to eerie black (couldn't override $bs-body-color)
 }
