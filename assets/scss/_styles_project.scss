@@ -170,6 +170,9 @@ li.nav-item > a > span {
   border-radius: 8px;
   padding-left: 2rem;
   padding-right: 2rem;
+  &:hover {
+    color: #141D62;  // space cadet
+  }
 }
 
 // Increase menu height so button CTAs fit into the header in small screen
