@@ -213,18 +213,19 @@ li.nav-item > a > span {
 .dropdown-submenu .dropdown-menu {
   top: 0;
   left: 100%;
-  border-radius: 8px;
   display: none;
-  background-color: #FFFFFF;
-  border-color: #f7f7f7;
+  background-color: #dddddd;
+  border: 1px solid #FF6500; // primary color
+  border-radius: 0px !important;
 }
 .dropdown-submenu:hover .dropdown-menu {
   display: block;
 }
 .dropdown-menu.show {
   display: block;
-  background-color: #FFFFFF;
-  border-color: #f7f7f7;
+  background-color: #dddddd;
+  border: 1px solid #FF6500; // primary color
+  border-radius: 0px !important;
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
 }
