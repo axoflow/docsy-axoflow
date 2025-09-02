@@ -153,6 +153,28 @@ li.nav-item > a > span {
   }
 }
 
+li.nav-item > a {
+  &:hover {
+    color: #FF6500; // main color
+  }
+  &:active {
+    color: #0F1425, // eerie black
+  }
+}
+
+.navbar-nav * .nav-link.show {
+  color: #0F1425, // eerie black
+  &:active {
+    color: #0F1425, // eerie black
+  }
+}
+
+li.nav-item > a.show {
+  &:hover {
+    color: #FF6500; // main color
+  }
+}
+
 // Change menu dropdown icon
 .dropdown-toggle::after {
   border: none !important;
