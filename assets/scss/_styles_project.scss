@@ -40,6 +40,9 @@ html {
     color: #0F1425; // eerie black
 }
 
+.td-navbar .nav-link {
+    font-weight: 400;
+}
 // Main-page specific customizations
 .lead-text {
   line-height: 1.8;
@@ -193,6 +196,7 @@ li.nav-item > a.show {
   border-radius: 8px;
   padding-left: 2rem;
   padding-right: 2rem;
+  font-weight: 700;
   &:hover {
     color: #141D62;  // space cadet
   }
@@ -211,6 +215,7 @@ li.nav-item > a.show {
   padding-right: 1.5rem;
   font-size: 0.9rem;
   box-sizing: unset;
+  font-weight: 400;
 }
 .navbar-nav .dropdown {
   padding-left: 1.5rem;
@@ -253,7 +258,6 @@ li.nav-item > a.show {
   padding-bottom: 1.25rem;
 }
 .dropdown-item {
-  font-weight: 700;
   font-size: 0.9rem;
   color: #010a22 !important;
   margin-left: 2rem;
