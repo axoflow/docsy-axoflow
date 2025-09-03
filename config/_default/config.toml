@@ -194,6 +194,12 @@ anchor = "smart"
   url = "/"
   identifier = "solutions"
   [[menus.main]]
+    name = "Managed Service Provider Solutions"
+    weight = 50
+    url = "https://axoflow.com/mssp-soc-automation?utm_source=docs&utm_medium=menu"
+    identifier = "mssp-soc-automation"
+    parent = "solutions"
+  [[menus.main]]
     name = "Comparisons"
     weight = 100
     url = "/"
