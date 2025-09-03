@@ -1,59 +1,64 @@
 {{ $links := .Site.Params.links -}}
-<footer class="bg-dark py-5 row d-print-none">
+<footer class="py-5 row d-print-none">
   <div class="container-fluid flex-shrink-1 mx-sm-5">
     <div class="row">
-      <div class="col-6 col-sm-4 text-xs-center order-sm-2 row">
-        <!-- Left part of the footer
-        socials
-        logo -->
-        {{ with $links }}
-        {{ with index . "user" }}
-        {{ template "footer-links-block"  . }}
-        {{ end }}
-        {{ end }}
-        {{ with $links }}
-        {{ with index . "developer" }}
-        {{ template "footer-links-block"  . }}
-        {{ end }}
-        {{ end }}
+
+      <!-- Footer left section -->
+      <div class="col-4 col-sm-4 text-xs-center order-sm-2">
         {{ if not .Site.Params.ui.footer_left_logo_disable }}
-        <div class="row">
+        <div class="row col-md-4 col-xs-12 py-3">
           {{ with resources.Get .Site.Params.ui.footer_left_logo_file -}}
-          <div class="col-md-5 col-xs-12"><img class="footer-left-logo" alt="left-logo" src="{{ .RelPermalink }}"/></div>
+          <img class="footer-left-logo" alt="left-logo" src="{{ .RelPermalink }}"/>
+          <br/>
           {{ end }}
         </div>
         {{ end }}
+        <div class="row col-md-6 col-xs-12 py-4">
+            {{ with .Site.Params.copyright }}<span class="text-footer small">Copyright {{ with $.Site.Params.copyright_from }}{{ . }}-{{ end -}}{{ now.Year}} {{ .}}</span><br/>
+            <span class="text-footer small">{{ T "footer_all_rights_reserved" }}</span>{{ end }}
+            {{ with .Site.Params.privacy_policy }}<small class="ms-1"><a href="{{ . }}" target="_blank" rel="noopener">{{ T "footer_privacy_policy" }}</a></small>{{ end }}
+            {{ if not .Site.Params.ui.footer_about_disable -}}
+                {{ with .Site.GetPage "about" }}<p class="mt-2"><a href="{{ .RelPermalink }}">{{ .Title }}</a></p>{{ end }}
+            {{ end }}
+        </div>
       </div>
-      <div class="col-6 col-sm-4 text-end text-xs-center order-sm-3 row">
-        <div class="col">
-          <div>
+
+      <!-- Footer right section -->
+      <div class="col-4 col-sm-4 text-end text-xs-center order-sm-3 row">
+        <div class="col-1"></div>
+        {{ if not .Site.Params.ui.footer_right_logo_disable }}
+        {{ with resources.Get .Site.Params.ui.footer_right_logo_file -}}
+          <div class="col-2 col-md-6 col-xs-6 footer-right text-end"><img class="footer-right-logo" alt="right-logo" src="{{ .RelPermalink }}"/></div>
+        {{ end }}
+        {{ end }}
+      </div>
+
+      <!-- Footer central section -->
+      <div class="col-4 col-sm-4 text-center py-2 order-sm-2">
+        <div class="col text-end">
+          <div class="row">
             <small class="ms-1">
                 <a class="footer-link" target="_blank" rel="noopener" href="https://axoflow.com/privacy-policy" aria-label="PRIVACY POLICY">Privacy Policy</a>
               <br/>
             </small>
           </div>
           <br/>
-          <div>
-            {{ with .Site.Params.copyright }}<strong class="text-white">Copyright {{ with $.Site.Params.copyright_from }}{{ . }}-{{ end -}}{{ now.Year}} {{ .}}</strong><br/>
-            <span class="text-white">{{ T "footer_all_rights_reserved" }}</span>{{ end }}
-            {{ with .Site.Params.privacy_policy }}<small class="ms-1"><a href="{{ . }}" target="_blank" rel="noopener">{{ T "footer_privacy_policy" }}</a></small>{{ end }}
-            {{ if not .Site.Params.ui.footer_about_disable -}}
-                {{ with .Site.GetPage "about" }}<p class="mt-2"><a href="{{ .RelPermalink }}">{{ .Title }}</a></p>{{ end }}
+          <div class="row">
+            <div class="footer-social-icons">
+            {{ with $links }}
+            {{ with index . "user" }}
+            {{ template "footer-links-block"  . }}
             {{ end }}
+            {{ end }}
+            {{ with $links }}
+            {{ with index . "developer" }}
+            {{ template "footer-links-block"  . }}
+            {{ end }}
+            {{ end }}
+            </div>
           </div>
         </div>
-        {{ if not .Site.Params.ui.footer_right_logo_disable }}
-        {{ with resources.Get .Site.Params.ui.footer_right_logo_file -}}
-          <div class="col-md-3 col-xs-6"><img class="footer-right-logo" alt="right-logo" src="{{ .RelPermalink }}"/></div>
-        {{ end }}
-        {{ end }}
-        <!-- Right part 
-          privacy link iso image 
-          copyright -->
-      </div>
-      <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
         {{ partial "footer/center.html" . }}
-        <!-- Central part, empty -->
       </div>
     </div>
   </div>
@@ -63,7 +68,7 @@
 <ul class="list-inline mb-0">
   {{ range . }}
   <li class="list-inline-item mx-2 h3" data-bs-toggle="tooltip" title="{{ .name }}" aria-label="{{ .name }}">
-    <a class="text-white" target="_blank" rel="noopener" href="{{ .url }}" aria-label="{{ .name }}">
+    <a class="text-footer" target="_blank" rel="noopener" href="{{ .url }}" aria-label="{{ .name }}">
       <i class="{{ .icon }}"></i>
     </a>
   </li>

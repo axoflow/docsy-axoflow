@@ -13,7 +13,7 @@ html {
 }
 
 .warning-block {
-    border-left: 8px solid #F4B942;
+    border-left: 8px solid #FF6500; // main color
     background-color: inherit;
     padding: 16px;
   }
@@ -37,6 +37,7 @@ html {
 
 .td-navbar .navbar-brand__name {
     font-size: 0.9rem;
+    color: #0F1425; // eerie black
 }
 
 // Main-page specific customizations
@@ -117,12 +118,13 @@ nav.foldable-nav .td-sidebar-nav__section {
   position: absolute;
   left: -0.88rem !important;
   top: 10px;
-  content: "\f107" !important;
+  content: "\f105" !important;
+  color: #FF6500 !important;
 }
 
 .ul-1 .with-child > input:checked ~ label:before {
   content: "\f107" !important;
-  rotate: 90deg;
+  rotate: -90deg;
 }
 
 // Left-sidebar active element background
@@ -143,9 +145,40 @@ ul .foldable {
 header * .main-menu-search a .nav-link {
   color: white;
 }
+
+// Main menu on-hover color
+li.nav-item > a > span {
+  &:hover {
+    color: #FF6500; // main color
+  }
+}
+
+li.nav-item > a {
+  &:hover {
+    color: #FF6500; // main color
+  }
+  &:active {
+    color: #0F1425; // eerie black
+  }
+}
+
+.navbar-nav * .nav-link.show {
+  color: #0F1425; // eerie black
+  &:active {
+    color: #0F1425; // eerie black
+  }
+}
+
+li.nav-item > a.show {
+  &:hover {
+    color: #FF6500; // main color
+  }
+}
+
 // Change menu dropdown icon
 .dropdown-toggle::after {
   border: none !important;
+  color: #FF6500; // main color
   content: "\f107" !important;
   font-family: var(--fa-style-family, "Font Awesome 6 Free");
   vertical-align: inherit;
@@ -154,10 +187,15 @@ header * .main-menu-search a .nav-link {
 // Makes the menu entry with identifier menu-button look like a button
 #menu-button, #menu-contact {
   box-sizing: border-box;
-  border: 1px solid #FFFFFF;
+  border: 1px solid #FF6500; // main color
+  background-color: #FF6500; // main color
+  color: white;
   border-radius: 8px;
   padding-left: 2rem;
   padding-right: 2rem;
+  &:hover {
+    color: #141D62;  // space cadet
+  }
 }
 
 // Increase menu height so button CTAs fit into the header in small screen
@@ -198,18 +236,19 @@ header * .main-menu-search a .nav-link {
 .dropdown-submenu .dropdown-menu {
   top: 0;
   left: 100%;
-  border-radius: 8px;
   display: none;
-  background-color: #FFFFFF;
-  border-color: #f7f7f7;
+  background-color: #dddddd;
+  border: 1px solid #FF6500; // primary color
+  border-radius: 0px !important;
 }
 .dropdown-submenu:hover .dropdown-menu {
   display: block;
 }
 .dropdown-menu.show {
   display: block;
-  background-color: #FFFFFF;
-  border-color: #f7f7f7;
+  background-color: #dddddd;
+  border: 1px solid #FF6500; // primary color
+  border-radius: 0px !important;
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
 }
@@ -242,13 +281,13 @@ header * .main-menu-search a .nav-link {
   font-weight: 700;
 }
 .alert-info {
-  border-left: 8px solid #24D5FC;
+  border-left: 8px solid #898EB0; // Blue 50
   background-color: inherit;
   padding-top: unset;
   padding-bottom: unset;
 }
 .alert-warning {
-  border-left: 8px solid #F4B942;
+  border-left: 8px solid #FF6500;
   background-color: inherit;
   padding-top: unset;
   padding-bottom: unset;
@@ -257,7 +296,7 @@ header * .main-menu-search a .nav-link {
 // On this page toc header
 .td-toc-header {
 	font-weight: 700;
-  border-bottom: 1px #313671 solid;
+  border-bottom: 1px #0F1425 solid; // eerie black
   margin-top: 1rem;
 	padding-top: 0.5rem;
   padding-bottom: 1rem;
@@ -311,7 +350,7 @@ details[open] {
 details {
     border-radius: 8px;
     padding: 0.5rem;
-    background: #EDFCFE;
+    background: #FFF7F2;
 }
 
 .screenshot-medium {
@@ -351,7 +390,16 @@ details {
 
 // Inline code
 code {
-  background-color: #C8E8E9 !important;
+  background-color: #FFF0E5 !important;
+}
+
+// Set font family for fenced code block
+pre > code {
+  font-family: "Roboto Mono" !important;
+}
+
+.td-content {
+  color: #0F1425; // Change body text color to eerie black (couldn't override $bs-body-color)
 }
 
 // Underline links in the body text
@@ -374,11 +422,24 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 // Make line above the section-menu black
 .panel-line {
   opacity: unset;
+  color: #FF6500; // main color
 }
 
 // Footer-specific stuff
+footer {
+  border-top: #E7E8EF 1px solid;
+}
+.footer-right {
+  border-left: #E7E8EF 1px solid;
+}
 .footer-link {
-  color: #24D5FD !important;
+  color: #FF6500 !important; // main color
+}
+.footer-social-icons * .text-footer {
+  color: #FF6500 !important; // main color
+}
+.text-footer {
+  color: #0F1425; // eerie black
 }
 .text-end {
   font-size: 0.9rem;
@@ -406,14 +467,14 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
     top: 5rem;
   }
 
-  background: #27fcdd !important;
-  color: black !important;
+  background: #141D62 !important; // space cadet
+  color: white !important;
 
   text-align: center;
   height: 24px;
 
   a {
-    color: black !important;
+    color: white !important;
   }
 }
 
