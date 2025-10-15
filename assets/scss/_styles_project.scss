@@ -358,6 +358,30 @@ details {
 }
 
 .screenshot-medium {
+// CSS for generated message schema
+// Make open/close carets appear in the same line as the heading
+details > summary > h2,
+details > summary > h3,
+details > summary > h4,
+details > summary > h5,
+details > summary > h6 {
+  display: inline;
+}
+
+.property-breadcrumb, .property-description {
+  padding-left: 2.2rem;
+}
+.property-description {
+  padding-left: 2.2rem;
+  padding-top: 1rem;
+}
+
+////
+
+.property-block {
+  border: #898EB0 solid 1px;
+}
+
   width: 50%;
   margin-left: auto;
   margin-right: auto;
