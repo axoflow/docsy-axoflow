@@ -248,12 +248,13 @@ anchor = "smart"
       identifier = "case-study-large-healthcare"
       parent = "case-studies"
     [[menus.main]]
+      name = "Data Quality Case Study – Large Government Organization"
       weight = 100
       url = "https://axoflow.com/case-studies/large-government-organization-data-quality-improvement?utm_source=docs&utm_medium=menu"
       identifier = "case-study-large-gov-org"
       parent = "case-studies"
     [[menus.main]]
-      name = "Global Industrial Concern"
+      name = "Data Reduction Case Study Axoflow – Global Industrial Concern"
       weight = 100
       url = "https://axoflow.com/case-studies/global-industrial-concern-security-data-reduction?utm_source=docs&utm_medium=menu"
       identifier = "case-study-global-industrial-concern"
