@@ -254,12 +254,12 @@ anchor = "smart"
       identifier = "case-study-global-industrial-concern"
       parent = "case-studies"
 [[menus.main]]
-  name = "Product"
+  name = "Axoflow Platform"
   weight = -130
   url = "/"
   identifier = "product"
   [[menus.main]]
-    name = "Axoflow Platform"
+    name = "Overview"
     weight = -120
     url = "https://axoflow.com/axoflow-platform?utm_source=docs&utm_medium=menu"
     parent = "product"
@@ -268,6 +268,30 @@ anchor = "smart"
     weight = -100
     url = "https://axoflow.com/axorouter?utm_source=docs&utm_medium=menu"
     parent = "product"
+  [[menus.main]]
+    name = "Storage"
+    weight = 200
+    url = "/"
+    identifier = "storage"
+    parent = "product"
+    [[menus.main]]
+      name = "Overview"
+      weight = 10
+      url = "https://axoflow.com/storage-solutions-security-data?utm_source=docs&utm_medium=menu"
+      identifier = "storage-overview"
+      parent = "storage"
+    [[menus.main]]
+      name = "AxoLake"
+      weight = 20
+      url = "https://axoflow.com/axolake-petabyte-security-data-storage?utm_source=docs&utm_medium=menu"
+      identifier = "axolake"
+      parent = "storage"
+    [[menus.main]]
+      name = "AxoStore"
+      weight = 30
+      url = "https://axoflow.com/axostore-software-appliance-logstore?utm_source=docs&utm_medium=menu"
+      identifier = "axostore"
+      parent = "storage"
 
 [[menus.main]]
   name = "Resources"
