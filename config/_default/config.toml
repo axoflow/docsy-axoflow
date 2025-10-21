@@ -242,7 +242,12 @@ anchor = "smart"
     identifier = "case-studies"
     parent = "solutions"
     [[menus.main]]
-      name = "Large Government Organization"
+      name = "Observability and Data Filtering Case Study – Large Healthcare Company"
+      weight = 100
+      url = "https://axoflow.com/case-studies/observability-data-filtering-large-healthcare-company?utm_source=docs&utm_medium=menu"
+      identifier = "case-study-large-healthcare"
+      parent = "case-studies"
+    [[menus.main]]
       weight = 100
       url = "https://axoflow.com/case-studies/large-government-organization-data-quality-improvement?utm_source=docs&utm_medium=menu"
       identifier = "case-study-large-gov-org"
