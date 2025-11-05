@@ -377,8 +377,14 @@ anchor = "smart"
   identifier = "white-papers"
   parent = "resources"
   [[menus.main]]
-    name = "Observability Pipeline and Metrics"
+    name = "Optimize Splunk Performance"
     weight = 10
+    url = "https://axoflow.com/white-papers/optimize-splunk-performance-before-gdi/?utm_source=docs&utm_medium=menu"
+    identifier = "white-paper-optimize-splunk"
+    parent = "white-papers"
+  [[menus.main]]
+    name = "Observability Pipeline and Metrics"
+    weight = 20
     url = "https://axoflow.com/white-papers/observability-pipeline-metrics-control-telemetry-data-white-paper/?utm_source=docs&utm_medium=menu"
     identifier = "white-paper-observability-pipeline-metrics"
     parent = "white-papers"
