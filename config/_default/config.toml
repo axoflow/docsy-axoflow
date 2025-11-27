@@ -194,10 +194,16 @@ anchor = "smart"
   url = "/"
   identifier = "solutions"
   [[menus.main]]
-    name = "Managed Service Provider Solutions"
-    weight = 50
+    name = "For Managed Service Providers"
+    weight = 10
     url = "https://axoflow.com/mssp-soc-automation?utm_source=docs&utm_medium=menu"
     identifier = "mssp-soc-automation"
+    parent = "solutions"
+  [[menus.main]]
+    name = "Storage Solutions"
+    weight = 30
+    url = "https://axoflow.com/storage-solutions-security-data?utm_source=docs&utm_medium=menu"
+    identifier = "storage-overview"
     parent = "solutions"
   [[menus.main]]
     name = "Comparisons"
@@ -229,12 +235,6 @@ anchor = "smart"
       url = "https://axoflow.com/axoflow-platform-vs-sc4s"
       identifier = "sc4s"
       parent = "comparisons"
-    [[menus.main]]
-      name = "Axoflow vs syslog-ng"
-      weight = 150
-      url = "https://axoflow.com/axosyslog-vs-syslog-ng?utm_source=docs&utm_medium=menu"
-      identifier = "syslog-ng"
-      parent = "comparisons"
   [[menus.main]]
     name = "Case Studies"
     weight = 200
@@ -260,14 +260,20 @@ anchor = "smart"
       identifier = "case-study-global-industrial-concern"
       parent = "case-studies"
 [[menus.main]]
-  name = "Axoflow Platform"
+  name = "Products"
   weight = -130
   url = "/"
   identifier = "product"
   [[menus.main]]
-    name = "Overview"
+    name = "Axoflow Platform"
     weight = -120
     url = "https://axoflow.com/axoflow-platform?utm_source=docs&utm_medium=menu"
+    parent = "product"
+  [[menus.main]]
+    name = "AxoLake"
+    weight = 20
+    url = "https://axoflow.com/axolake-petabyte-security-data-storage?utm_source=docs&utm_medium=menu"
+    identifier = "axolake"
     parent = "product"
   [[menus.main]]
     name = "AxoRouter"
@@ -275,29 +281,11 @@ anchor = "smart"
     url = "https://axoflow.com/axorouter?utm_source=docs&utm_medium=menu"
     parent = "product"
   [[menus.main]]
-    name = "Storage"
-    weight = 200
-    url = "/"
-    identifier = "storage"
+    name = "Axoflow Locker"
+    weight = 30
+    url = "https://axoflow.com/axostore-software-appliance-logstore?utm_source=docs&utm_medium=menu"
+    identifier = "axostore"
     parent = "product"
-    [[menus.main]]
-      name = "Overview"
-      weight = 10
-      url = "https://axoflow.com/storage-solutions-security-data?utm_source=docs&utm_medium=menu"
-      identifier = "storage-overview"
-      parent = "storage"
-    [[menus.main]]
-      name = "AxoLake"
-      weight = 20
-      url = "https://axoflow.com/axolake-petabyte-security-data-storage?utm_source=docs&utm_medium=menu"
-      identifier = "axolake"
-      parent = "storage"
-    [[menus.main]]
-      name = "AxoStore"
-      weight = 30
-      url = "https://axoflow.com/axostore-software-appliance-logstore?utm_source=docs&utm_medium=menu"
-      identifier = "axostore"
-      parent = "storage"
 
 [[menus.main]]
   name = "Resources"
@@ -321,18 +309,6 @@ anchor = "smart"
     weight = -120
     url = "https://axoflow.com/docs/axoflow/"
     identifier = "documentation-axoflow"
-    parent = "documentation"
-  [[menus.main]]
-    name = "AxoSyslog"
-    weight = -120
-    url = "https://axoflow.com/docs/axosyslog-core/"
-    identifier = "documentation-axosyslog"
-    parent = "documentation"
-  [[menus.main]]
-    name = "Logging operator"
-    weight = -120
-    url = "https://kube-logging.dev/docs/"
-    identifier = "documentation-logging-operator"
     parent = "documentation"
 [[menus.main]]
   name = "Webinars"
@@ -401,8 +377,37 @@ anchor = "smart"
   parent = "resources"
 
 [[menus.main]]
-  name = "About"
+  name = "Open Source"
   weight = -80
+  url = "/"
+  identifier = "opensource"
+  [[menus.main]]
+    name = "AxoSyslog vs syslog-ng"
+    weight = 10
+    url = "https://axoflow.com/axosyslog-vs-syslog-ng?utm_source=docs&utm_medium=menu"
+    identifier = "syslog-ng"
+    parent = "opensource"
+  [[menus.main]]
+    name = "AxoSyslog vs syslog-ng"
+    weight = 20
+    url = "https://axoflow.com/axosyslog-vs-syslog-ng?utm_source=docs&utm_medium=menu"
+    identifier = "syslog-ng"
+    parent = "opensource"
+  [[menus.main]]
+    name = "AxoSyslog"
+    weight = 30
+    url = "https://axoflow.com/docs/axosyslog-core/"
+    identifier = "documentation-axosyslog"
+    parent = "opensource"
+  [[menus.main]]
+    name = "Logging operator"
+    weight = 40
+    url = "https://kube-logging.dev/docs/"
+    identifier = "documentation-logging-operator"
+    parent = "opensource"
+[[menus.main]]
+  name = "About"
+  weight = -50
   url = "/"
   identifier = "about"
 [[menus.main]]
