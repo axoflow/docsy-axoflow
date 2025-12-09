@@ -194,20 +194,32 @@ anchor = "smart"
   url = "/"
   identifier = "solutions"
   [[menus.main]]
-    name = "For Managed Service Providers"
-    weight = 10
-    url = "https://axoflow.com/mssp-soc-automation?utm_source=docs&utm_medium=menu"
-    identifier = "mssp-soc-automation"
+    name = "Case Studies"
+    weight = 100
+    url = "/"
+    identifier = "case-studies"
     parent = "solutions"
-  [[menus.main]]
-    name = "Storage Solutions"
-    weight = 30
-    url = "https://axoflow.com/storage-solutions-security-data?utm_source=docs&utm_medium=menu"
-    identifier = "storage-overview"
-    parent = "solutions"
+    [[menus.main]]
+      name = "Observability and Data Filtering Case Study – Large Healthcare Company"
+      weight = 100
+      url = "https://axoflow.com/case-studies/observability-data-filtering-large-healthcare-company?utm_source=docs&utm_medium=menu"
+      identifier = "case-study-large-healthcare"
+      parent = "case-studies"
+    [[menus.main]]
+      name = "Data Quality Case Study – Large Government Organization"
+      weight = 100
+      url = "https://axoflow.com/case-studies/large-government-organization-data-quality-improvement?utm_source=docs&utm_medium=menu"
+      identifier = "case-study-large-gov-org"
+      parent = "case-studies"
+    [[menus.main]]
+      name = "Data Reduction Case Study Axoflow – Global Industrial Concern"
+      weight = 100
+      url = "https://axoflow.com/case-studies/global-industrial-concern-security-data-reduction?utm_source=docs&utm_medium=menu"
+      identifier = "case-study-global-industrial-concern"
+      parent = "case-studies"
   [[menus.main]]
     name = "Comparisons"
-    weight = 100
+    weight = 200
     url = "/"
     identifier = "comparisons"
     parent = "solutions"
@@ -236,29 +248,47 @@ anchor = "smart"
       identifier = "sc4s"
       parent = "comparisons"
   [[menus.main]]
-    name = "Case Studies"
-    weight = 200
+    name = "Integrations"
+    weight = 300
     url = "/"
-    identifier = "case-studies"
+    identifier = "integrations"
     parent = "solutions"
     [[menus.main]]
-      name = "Observability and Data Filtering Case Study – Large Healthcare Company"
+      name = "Axoflow + Google Cloud"
       weight = 100
-      url = "https://axoflow.com/case-studies/observability-data-filtering-large-healthcare-company?utm_source=docs&utm_medium=menu"
-      identifier = "case-study-large-healthcare"
-      parent = "case-studies"
+      url = "https://axoflow.com/integrations/google-secops-data-optimization?utm_source=docs&utm_medium=menu"
+      identifier = "integration-google"
+      parent = "integrations"
     [[menus.main]]
-      name = "Data Quality Case Study – Large Government Organization"
-      weight = 100
-      url = "https://axoflow.com/case-studies/large-government-organization-data-quality-improvement?utm_source=docs&utm_medium=menu"
-      identifier = "case-study-large-gov-org"
-      parent = "case-studies"
+      name = "Axoflow + Splunk"
+      weight = 200
+      url = "https://axoflow.com/integrations/splunk-ingest-optimization-gdi?utm_source=docs&utm_medium=menu"
+      identifier = "integration-splunk"
+      parent = "integrations"
     [[menus.main]]
-      name = "Data Reduction Case Study Axoflow – Global Industrial Concern"
-      weight = 100
-      url = "https://axoflow.com/case-studies/global-industrial-concern-security-data-reduction?utm_source=docs&utm_medium=menu"
-      identifier = "case-study-global-industrial-concern"
-      parent = "case-studies"
+      name = "Axoflow + Microsoft Sentinel"
+      weight = 300
+      url = "https://axoflow.com/integrations/microsoft-sentinel-data-optimization?utm_source=docs&utm_medium=menu"
+      identifier = "integration-microsoft"
+      parent = "integrations"
+    [[menus.main]]
+      name = "Other integrations"
+      weight = 300
+      url = "https://axoflow.com/docs/axoflow/destinations/?utm_source=docs&utm_medium=menu"
+      identifier = "integration-other"
+      parent = "integrations"
+  [[menus.main]]
+    name = "For Managed Service Providers"
+    weight = 600
+    url = "https://axoflow.com/mssp-soc-automation?utm_source=docs&utm_medium=menu"
+    identifier = "mssp-soc-automation"
+    parent = "solutions"
+  [[menus.main]]
+    name = "Storage Solutions"
+    weight = 700
+    url = "https://axoflow.com/storage-solutions-security-data?utm_source=docs&utm_medium=menu"
+    identifier = "storage-overview"
+    parent = "solutions"
 [[menus.main]]
   name = "Products"
   weight = -130
@@ -305,9 +335,15 @@ anchor = "smart"
   identifier = "documentation"
   parent = "resources"
   [[menus.main]]
+    name = "Overview"
+    weight = -200
+    url = "https://axoflow.com/docs/?utm_source=docs&utm_medium=menu"
+    identifier = "documentation-overview"
+    parent = "documentation"
+  [[menus.main]]
     name = "Axoflow Platform"
     weight = -120
-    url = "https://axoflow.com/docs/axoflow/"
+    url = "https://axoflow.com/docs/axoflow/?utm_source=docs&utm_medium=menu"
     identifier = "documentation-axoflow"
     parent = "documentation"
 [[menus.main]]
