@@ -353,6 +353,12 @@ anchor = "smart"
   identifier = "webinars"
   parent = "resources"
   [[menus.main]]
+    name = "Overview"
+    weight = 0
+    url = "https://axoflow.com/webinars/?utm_source=docs&utm_medium=menu"
+    identifier = "webinar-overview"
+    parent = "webinars"
+  [[menus.main]]
     name = "Show me your labels"
     weight = 500
     url = "https://axoflow.com/webinars/show-me-your-labels-and-ill-tell-you-who-you-are?utm_source=docs&utm_medium=menu"
@@ -388,6 +394,12 @@ anchor = "smart"
   url = "/"
   identifier = "white-papers"
   parent = "resources"
+  [[menus.main]]
+    name = "Overview"
+    weight = 0
+    url = "https://axoflow.com/white-papers/?utm_source=docs&utm_medium=menu"
+    identifier = "white-paper-overview"
+    parent = "white-papers"
   [[menus.main]]
     name = "Optimize Splunk Performance"
     weight = 10
