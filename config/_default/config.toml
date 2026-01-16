@@ -310,12 +310,6 @@ anchor = "smart"
     weight = -100
     url = "https://axoflow.com/axorouter?utm_source=docs&utm_medium=menu"
     parent = "product"
-  [[menus.main]]
-    name = "Axoflow Locker"
-    weight = 30
-    url = "https://axoflow.com/axostore-software-appliance-logstore?utm_source=docs&utm_medium=menu"
-    identifier = "axostore"
-    parent = "product"
 
 [[menus.main]]
   name = "Resources"
