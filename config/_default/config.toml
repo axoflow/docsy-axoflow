@@ -352,12 +352,12 @@ anchor = "smart"
     url = "https://axoflow.com/webinars/?utm_source=docs&utm_medium=menu"
     identifier = "webinar-overview"
     parent = "webinars"
-  [[menus.main]]
-    name = "Federated Storage and Leaner SIEMs"
-    weight = 400
-    url = "https://axoflow.com/webinars/the-future-of-security-data-federated-storage-leaner-siems-and-lower-bills?utm_source=docs&utm_medium=menu"
-    identifier = "webinar-federated-storage"
-    parent = "webinars"
+#  [[menus.main]]
+#    name = "Federated Storage and Leaner SIEMs"
+#    weight = 400
+#    url = "https://axoflow.com/webinars/the-future-of-security-data-federated-storage-leaner-siems-and-lower-bills?utm_source=docs&utm_medium=menu"
+#    identifier = "webinar-federated-storage"
+#    parent = "webinars"
   [[menus.main]]
     name = "Show me your labels"
     weight = 500
