@@ -200,20 +200,26 @@ anchor = "smart"
     identifier = "case-studies"
     parent = "solutions"
     [[menus.main]]
-      name = "Observability and Data Filtering Case Study – Large Healthcare Company"
-      weight = 100
+      name = "Case Study - Migrating to Google SecOps"
+      weight = 1000
+      url = "https://axoflow.com/case-studies/google-secops-migration-government-organization?utm_source=docs&utm_medium=menu"
+      identifier = "case-study-gov-secops"
+      parent = "case-studies"
+    [[menus.main]]
+      name = "Case Study – Cost and MTTR Reduction"
+      weight = 2000
       url = "https://axoflow.com/case-studies/observability-data-filtering-large-healthcare-company?utm_source=docs&utm_medium=menu"
       identifier = "case-study-large-healthcare"
       parent = "case-studies"
     [[menus.main]]
-      name = "Data Quality Case Study – Large Government Organization"
-      weight = 100
+      name = "Case Study – Data Quality Improvement"
+      weight = 4000
       url = "https://axoflow.com/case-studies/large-government-organization-data-quality-improvement?utm_source=docs&utm_medium=menu"
       identifier = "case-study-large-gov-org"
       parent = "case-studies"
     [[menus.main]]
-      name = "Data Reduction Case Study Axoflow – Global Industrial Concern"
-      weight = 100
+      name = "Case Study – Data Reduction"
+      weight = 3000
       url = "https://axoflow.com/case-studies/global-industrial-concern-security-data-reduction?utm_source=docs&utm_medium=menu"
       identifier = "case-study-global-industrial-concern"
       parent = "case-studies"
@@ -237,13 +243,13 @@ anchor = "smart"
       parent = "comparisons"
     [[menus.main]]
       name = "Axoflow vs syslog-ng PE"
-      weight = 120
+      weight = 140
       url = "https://axoflow.com/axoflow-platform-vs-syslog-ng-pe?utm_source=docs&utm_medium=menu"
       identifier = "syslog-ng-pe"
       parent = "comparisons"
     [[menus.main]]
       name = "Axoflow vs SC4S"
-      weight = 140
+      weight = 120
       url = "https://axoflow.com/axoflow-platform-vs-sc4s"
       identifier = "sc4s"
       parent = "comparisons"
@@ -273,7 +279,7 @@ anchor = "smart"
       parent = "integrations"
     [[menus.main]]
       name = "Other integrations"
-      weight = 300
+      weight = 400
       url = "https://axoflow.com/docs/axoflow/destinations/?utm_source=docs&utm_medium=menu"
       identifier = "integration-other"
       parent = "integrations"
@@ -307,8 +313,13 @@ anchor = "smart"
     parent = "product"
   [[menus.main]]
     name = "AxoRouter"
-    weight = -100
+    weight = 100
     url = "https://axoflow.com/axorouter?utm_source=docs&utm_medium=menu"
+    parent = "product"
+  [[menus.main]]
+    name = "Axoflow + AI"
+    weight = 500
+    url = "https://axoflow.com/how-axoflow-really-uses-ai?utm_source=docs&utm_medium=menu"
     parent = "product"
 
 [[menus.main]]
@@ -430,19 +441,13 @@ anchor = "smart"
   url = "/"
   identifier = "opensource"
   [[menus.main]]
-    name = "AxoSyslog vs syslog-ng"
-    weight = 10
-    url = "https://axoflow.com/axosyslog-vs-syslog-ng?utm_source=docs&utm_medium=menu"
-    identifier = "syslog-ng"
-    parent = "opensource"
-  [[menus.main]]
-    name = "AxoSyslog vs syslog-ng"
-    weight = 20
-    url = "https://axoflow.com/axosyslog-vs-syslog-ng?utm_source=docs&utm_medium=menu"
-    identifier = "syslog-ng"
-    parent = "opensource"
-  [[menus.main]]
     name = "AxoSyslog"
+    weight = 10
+    url = "https://axoflow.com/axosyslog?utm_source=docs&utm_medium=menu"
+    identifier = "syslog-ng"
+    parent = "opensource"
+  [[menus.main]]
+    name = "AxoSyslog Documentation"
     weight = 30
     url = "https://axoflow.com/docs/axosyslog-core/"
     identifier = "documentation-axosyslog"
@@ -450,8 +455,8 @@ anchor = "smart"
   [[menus.main]]
     name = "Logging operator"
     weight = 40
-    url = "https://kube-logging.dev/docs/"
-    identifier = "documentation-logging-operator"
+    url = "https://kube-logging.dev/"
+    identifier = "logging-operator"
     parent = "opensource"
 [[menus.main]]
   name = "About"
@@ -460,7 +465,7 @@ anchor = "smart"
   identifier = "about"
 [[menus.main]]
   name = "News"
-  weight = -105
+  weight = -90
   url = "https://axoflow.com/news?utm_source=docs&utm_medium=menu"
   parent = "about"
 [[menus.main]]
