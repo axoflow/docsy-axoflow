@@ -284,8 +284,20 @@ anchor = "smart"
       identifier = "integration-other"
       parent = "integrations"
   [[menus.main]]
-    name = "For Managed Service Providers"
+    name = "Cost Reduction"
+    weight = 500
+    url = "https://axoflow.com/cost-reduction?utm_source=docs&utm_medium=menu"
+    identifier = "cost-reduction"
+    parent = "solutions"
+  [[menus.main]]
+    name = "SIEM Migration"
     weight = 600
+    url = "https://axoflow.com/siem-migration?utm_source=docs&utm_medium=menu"
+    identifier = "siem-migration"
+    parent = "solutions"
+  [[menus.main]]
+    name = "For Managed Service Providers"
+    weight = 800
     url = "https://axoflow.com/mssp-soc-automation?utm_source=docs&utm_medium=menu"
     identifier = "mssp-soc-automation"
     parent = "solutions"
