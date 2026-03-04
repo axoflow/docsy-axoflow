@@ -278,8 +278,14 @@ anchor = "smart"
       identifier = "integration-microsoft"
       parent = "integrations"
     [[menus.main]]
-      name = "Other integrations"
+      name = "Axoflow + Dynatrace"
       weight = 400
+      url = "https://axoflow.com/integrations/dynatrace-solutions?utm_source=docs&utm_medium=menu"
+      identifier = "integration-dynatrace"
+      parent = "integrations"
+    [[menus.main]]
+      name = "Other integrations"
+      weight = 1000
       url = "https://axoflow.com/docs/axoflow/destinations/?utm_source=docs&utm_medium=menu"
       identifier = "integration-other"
       parent = "integrations"
@@ -296,16 +302,28 @@ anchor = "smart"
     identifier = "siem-migration"
     parent = "solutions"
   [[menus.main]]
-    name = "For Managed Service Providers"
-    weight = 800
-    url = "https://axoflow.com/mssp-soc-automation?utm_source=docs&utm_medium=menu"
-    identifier = "mssp-soc-automation"
+    name = "Data Governance"
+    weight = 650
+    url = "https://axoflow.com/security-data-governance?utm_source=docs&utm_medium=menu"
+    identifier = "data-governance"
+    parent = "solutions"
+  [[menus.main]]
+    name = "Pipeline Unification"
+    weight = 680
+    url = "https://axoflow.com/pipeline-unification?utm_source=docs&utm_medium=menu"
+    identifier = "pipeline-unification"
     parent = "solutions"
   [[menus.main]]
     name = "Storage Solutions"
     weight = 700
     url = "https://axoflow.com/storage-solutions-security-data?utm_source=docs&utm_medium=menu"
     identifier = "storage-overview"
+    parent = "solutions"
+  [[menus.main]]
+    name = "For Managed Service Providers"
+    weight = 800
+    url = "https://axoflow.com/mssp-soc-automation?utm_source=docs&utm_medium=menu"
+    identifier = "mssp-soc-automation"
     parent = "solutions"
 [[menus.main]]
   name = "Products"
