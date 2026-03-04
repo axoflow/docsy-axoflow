@@ -290,41 +290,47 @@ anchor = "smart"
       identifier = "integration-other"
       parent = "integrations"
   [[menus.main]]
-    name = "Cost Reduction"
+    name = "Use cases"
     weight = 500
-    url = "https://axoflow.com/cost-reduction?utm_source=docs&utm_medium=menu"
-    identifier = "cost-reduction"
+    url = "/"
+    identifier = "usecases"
     parent = "solutions"
-  [[menus.main]]
-    name = "SIEM Migration"
-    weight = 600
-    url = "https://axoflow.com/siem-migration?utm_source=docs&utm_medium=menu"
-    identifier = "siem-migration"
-    parent = "solutions"
-  [[menus.main]]
-    name = "Data Governance"
-    weight = 650
-    url = "https://axoflow.com/security-data-governance?utm_source=docs&utm_medium=menu"
-    identifier = "data-governance"
-    parent = "solutions"
-  [[menus.main]]
-    name = "Pipeline Unification"
-    weight = 680
-    url = "https://axoflow.com/pipeline-unification?utm_source=docs&utm_medium=menu"
-    identifier = "pipeline-unification"
-    parent = "solutions"
-  [[menus.main]]
-    name = "Storage Solutions"
-    weight = 700
-    url = "https://axoflow.com/storage-solutions-security-data?utm_source=docs&utm_medium=menu"
-    identifier = "storage-overview"
-    parent = "solutions"
-  [[menus.main]]
-    name = "For Managed Service Providers"
-    weight = 800
-    url = "https://axoflow.com/mssp-soc-automation?utm_source=docs&utm_medium=menu"
-    identifier = "mssp-soc-automation"
-    parent = "solutions"
+    [[menus.main]]
+      name = "Cost Reduction"
+      weight = 500
+      url = "https://axoflow.com/cost-reduction?utm_source=docs&utm_medium=menu"
+      identifier = "cost-reduction"
+      parent = "usecases"
+    [[menus.main]]
+      name = "SIEM Migration"
+      weight = 600
+      url = "https://axoflow.com/siem-migration?utm_source=docs&utm_medium=menu"
+      identifier = "siem-migration"
+      parent = "usecases"
+    [[menus.main]]
+      name = "Data Governance"
+      weight = 650
+      url = "https://axoflow.com/security-data-governance?utm_source=docs&utm_medium=menu"
+      identifier = "data-governance"
+      parent = "usecases"
+    [[menus.main]]
+      name = "Pipeline Unification"
+      weight = 680
+      url = "https://axoflow.com/pipeline-unification?utm_source=docs&utm_medium=menu"
+      identifier = "pipeline-unification"
+      parent = "usecases"
+    [[menus.main]]
+      name = "Storage Solutions"
+      weight = 700
+      url = "https://axoflow.com/storage-solutions-security-data?utm_source=docs&utm_medium=menu"
+      identifier = "storage-overview"
+      parent = "usecases"
+    [[menus.main]]
+      name = "For Managed Service Providers"
+      weight = 800
+      url = "https://axoflow.com/mssp-soc-automation?utm_source=docs&utm_medium=menu"
+      identifier = "mssp-soc-automation"
+      parent = "usecases"
 [[menus.main]]
   name = "Products"
   weight = -130
