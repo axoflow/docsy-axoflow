@@ -1,0 +1,3 @@
+{{ if index .Page.Params (.Get 0) }}
+{{- .Inner | markdownify -}}
+{{ end }}
