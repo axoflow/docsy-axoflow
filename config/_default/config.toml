@@ -195,7 +195,7 @@ anchor = "smart"
   identifier = "solutions"
   [[menus.main]]
     name = "Case Studies"
-    weight = 100
+    weight = 800
     url = "/"
     identifier = "case-studies"
     parent = "solutions"
@@ -318,6 +318,12 @@ anchor = "smart"
       weight = 680
       url = "https://axoflow.com/pipeline-unification?utm_source=docs&utm_medium=menu"
       identifier = "pipeline-unification"
+      parent = "usecases"
+    [[menus.main]]
+      name = "AI SOC Data Layer"
+      weight = 690
+      url = "https://axoflow.com/ai-soc-data-layer?utm_source=docs&utm_medium=menu"
+      identifier = "ai-soc-data-layer"
       parent = "usecases"
     [[menus.main]]
       name = "Storage Solutions"
@@ -469,6 +475,11 @@ anchor = "smart"
   name = "Podcast"
   weight = 150
   url = "https://axoflow.com/data-strikes-back-podcast?utm_source=docs&utm_medium=menu"
+  parent = "resources"
+[[menus.main]]
+  name = "Support and Professional Services"
+  weight = 200
+  url = "https://axoflow.com/support?utm_source=docs&utm_medium=menu"
   parent = "resources"
 
 [[menus.main]]
