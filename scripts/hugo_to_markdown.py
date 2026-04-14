@@ -67,7 +67,7 @@ def html_file_to_markdown(
  
     return md
 
-def process_single(html_path: Path, output_path: Path | None, **kwargs) -> None:
+def process_single(html_path: Path, output_path: Path | None, verbose: bool = False, **kwargs) -> None:
     md = html_file_to_markdown(html_path, **kwargs)
     if md is None:
         print(f"[WARN] Selector not found in {html_path}", file=sys.stderr)
@@ -75,7 +75,8 @@ def process_single(html_path: Path, output_path: Path | None, **kwargs) -> None:
     if output_path:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(md, encoding="utf-8")
-        print(f"Written: {output_path}")
+        if verbose:
+            print(f"Written: {output_path}")
     else:
         print(md)
 
@@ -106,10 +107,11 @@ def main():
     parser.add_argument("--output", default=None, help="Output .md file or directory (omit to print to stdout)")
     parser.add_argument("--selector", default="div.td-content", help="CSS selector for content element")
     parser.add_argument("--base-url", default="", help="Base URL to resolve relative links (e.g. https://example.com)")
+    parser.add_argument("--verbose", action="store_true", help="Print each written file path")
     args = parser.parse_args()
 
     input_path = Path(args.input)
-    kwargs = dict(content_selector=args.selector, base_url=args.base_url)
+    kwargs = dict(content_selector=args.selector, base_url=args.base_url, verbose=args.verbose)
 
     if input_path.is_file():
         output_path = Path(args.output) if args.output else None
