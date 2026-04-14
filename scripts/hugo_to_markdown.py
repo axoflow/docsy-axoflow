@@ -86,13 +86,18 @@ def process_directory(input_dir: Path, output_dir: Path, **kwargs) -> None:
         print(f"No index.html files found under {input_dir}", file=sys.stderr)
         return
 
+    converted = 0
     for html_path in html_files:
+        # Skip files inside _print directories
+        if "_print" in html_path.parts:
+            continue
         # Mirror the directory structure, replacing index.html with .md
         relative = html_path.relative_to(input_dir).parent  # e.g. docs/getting-started
         output_path = output_dir / relative / "index.md"
         process_single(html_path, output_path, **kwargs)
+        converted += 1
 
-    print(f"\nDone. Converted {len(html_files)} files.")
+    print(f"\nDone. Converted {converted} files.")
 
 
 def main():
