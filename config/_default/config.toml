@@ -11,9 +11,21 @@ enableMissingTranslationPlaceholders = true
 enableGitInfo = true
 
 [outputs]
-    home = ["HTML", "print"]
+    home = ["HTML", "print", "llms" ]
     # Enable print this section menu item
     section = [ "HTML", "print" ]
+
+[outputFormats.llms]
+  name        = "llms"
+  baseName    = "llms"
+  mediaType   = "text/plain"
+  isPlainText = true
+
+[[server.headers]]
+  for = "**.txt"
+  [server.headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+
 
 [social]
 # Used as twitter:site in page metadata

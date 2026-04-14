@@ -1,0 +1,10 @@
+# {{ .Site.Title }}
+
+> {{ .Site.Params.description }}
+
+{{ .Site.BaseURL }}
+
+## Documentation
+{{ range .Site.Pages }}
+- [{{ .Title }}]({{ .Permalink }}index.md): {{ with .Description }}{{ . | htmlUnescape }}{{ else }}{{ .Summary | plainify | htmlUnescape | truncate 120 }}{{ end }}
+{{- end }}
