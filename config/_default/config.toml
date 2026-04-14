@@ -10,11 +10,16 @@ enableMissingTranslationPlaceholders = true
 
 enableGitInfo = true
 
+# Create a link to the markdown version of the page for llms. Doesn't actually create a markdown output, that's done via a script
+markdownAlternateLink = true
+
 [outputs]
     home = ["HTML", "print", "llms" ]
     # Enable print this section menu item
     section = [ "HTML", "print" ]
+    page = ["HTML"]
 
+# output for llm bots
 [outputFormats.llms]
   name        = "llms"
   baseName    = "llms"

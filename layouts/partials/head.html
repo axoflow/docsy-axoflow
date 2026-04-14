@@ -4,6 +4,18 @@
 <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | safeURL }}">
 {{ end -}}
 
+<!-- Add alternate link for markdown output format if enabled -->
+{{- with .Site.Params.markdownAlternateLink }}
+{{ warnf `alternate link` -}}
+
+<link
+  href="{{ .RelPermalink }}"
+  rel="alternate"
+  type="text/markdown"
+  title="{{ $.Title }}"
+/>
+{{- end }}
+
 {{ $outputFormat := partial "outputformat.html" . -}}
 {{ if and hugo.IsProduction (ne $outputFormat "print") (not .Page.Params.dontIndex) -}}
 <meta name="robots" content="index, follow">
