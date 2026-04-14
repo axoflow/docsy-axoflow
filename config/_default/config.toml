@@ -21,6 +21,11 @@ enableGitInfo = true
   mediaType   = "text/plain"
   isPlainText = true
 
+## For llms.txt/markdown output rendering with `hugo serve`
+[[server.headers]]
+  for = "**.md"
+  [server.headers.values]
+    Content-Type = "text/markdown; charset=utf-8"
 [[server.headers]]
   for = "**.txt"
   [server.headers.values]
