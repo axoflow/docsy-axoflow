@@ -6,12 +6,10 @@
 
 <!-- Add alternate link for markdown output format if enabled -->
 {{- with .Site.Params.markdownAlternateLink }}
-{{ warnf `alternate link` -}}
-
 <link
-  href="{{ .RelPermalink }}"
   rel="alternate"
   type="text/markdown"
+  href="{{ $.Page.Permalink | safeURL }}index.md"
   title="{{ $.Title }}"
 />
 {{- end }}
