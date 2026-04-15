@@ -15,6 +15,8 @@ Dependencies:
 """
 
 import argparse
+import os
+import re
 import sys
 from pathlib import Path
 
@@ -59,19 +61,54 @@ def html_file_to_markdown(
     converter.mark_code = True     # use ``` for code blocks
 
     md = converter.handle(str(content)).strip()
- 
+
     # html2text's mark_code wraps blocks in [code]...[/code] — convert to fences
-    import re
     md = re.sub(r"\[code\]\n?", "```\n", md)
     md = re.sub(r"\n?\[/code\]", "\n```", md)
- 
+
     return md
 
-def process_single(html_path: Path, output_path: Path | None, verbose: bool = False, **kwargs) -> None:
+
+def fix_internal_links(md: str, output_path: Path, output_dir: Path) -> str:
+    """
+    Fix internal links produced by html2text:
+    - Appends 'index.md' to directory paths (ending with '/')
+    - Converts absolute site-root paths to relative paths from output_path
+    """
+    def replace_link(m):
+        url = m.group(1)
+        # Leave external and pure-anchor links unchanged
+        if url.startswith(("http://", "https://", "mailto:")) or url.startswith("#"):
+            return m.group(0)
+
+        # Split anchor
+        if "#" in url:
+            path_part, anchor = url.split("#", 1)
+            anchor = "#" + anchor
+        else:
+            path_part, anchor = url, ""
+
+        # Add index.md to bare directory paths
+        if path_part.endswith("/"):
+            path_part += "index.md"
+
+        # Convert absolute path to relative
+        abs_target = output_dir / path_part.lstrip("/")
+        rel = os.path.relpath(abs_target, output_path.parent)
+        rel = rel.replace("\\", "/")  # normalise on Windows
+
+        return f"]({rel}{anchor})"
+
+    return re.sub(r"\]\(<([^>]+)>\)", replace_link, md)
+
+
+def process_single(html_path: Path, output_path: Path | None, verbose: bool = False, output_dir: Path | None = None, **kwargs) -> None:
     md = html_file_to_markdown(html_path, **kwargs)
     if md is None:
         print(f"[WARN] Selector not found in {html_path}", file=sys.stderr)
         return
+    if output_path is not None and output_dir is not None:
+        md = fix_internal_links(md, output_path, output_dir)
     if output_path:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(md, encoding="utf-8")
@@ -95,7 +132,7 @@ def process_directory(input_dir: Path, output_dir: Path, **kwargs) -> None:
         # Mirror the directory structure, replacing index.html with .md
         relative = html_path.relative_to(input_dir).parent  # e.g. docs/getting-started
         output_path = output_dir / relative / "index.md"
-        process_single(html_path, output_path, **kwargs)
+        process_single(html_path, output_path, output_dir=output_dir, **kwargs)
         converted += 1
 
     print(f"\nDone. Converted {converted} files.")
