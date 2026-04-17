@@ -1,0 +1,56 @@
+AQL
+ASAP
+Axoflow
+Axolet
+AxoSyslog
+Azure Monitor
+COTS
+Cybersecurity
+DNS
+Dynatrace
+eBPF
+ECS
+FilterX
+Fluent Bit
+Fluentd
+FortiGate
+Fortinet
+FortiProxy
+GDPR
+GNU
+gRPC
+hostname
+IAM
+IBM QRadar
+journald
+LEEF
+Microsoft Sentinel
+NGINX
+OCSF
+Omnissa
+OTLP
+Palo Alto
+Palo Alto Networks
+PCRE
+PRI
+Prometheus
+rehydration
+Sankey
+SC4S
+SDATA
+SIEM
+SonicWall
+sourcetype
+Splunk
+Splunk Connect for Syslog
+substring
+syslog
+syslog-ng
+systemd
+Tanium
+TCP
+TLS
+UDP
+unmanaged
+unparseable
+URL
