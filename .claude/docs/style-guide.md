@@ -31,7 +31,7 @@ This is the generic Axoflow style guide. Use it together with the project-specif
 - Do not skip heading levels.
 - Keep headings short (≤ 8 words where possible).
 - Avoid using gerund in the title (`## Do stuff`).
-- For long headings or headings with non-alphabetic characters, include a custom anchor, for example `## <commplex-heading> {#custom-anchor}`
+- For long headings, headings with non-alphabetic characters, or headings that include shortcodes, include a custom anchor, for example `## <complex-heading> {#custom-anchor}`
 
 ## Code and configuration
 
