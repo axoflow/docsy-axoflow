@@ -4,6 +4,8 @@ Axoflow
 Axolet
 AxoSyslog
 Azure Monitor
+backpressure
+Cognito Detect
 COTS
 Cybersecurity
 DNS
