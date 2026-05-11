@@ -1,12 +1,14 @@
 $navbar-dark-color: #0F1425; // eerie black // navbar text
-$blue: #496bb8 !default; // Override breadcrumb and sidebar text color to increase contrast
-$primary: white !default;
+// Docsy 0.15's td/_variables_forward.scss pre-declares Bootstrap color vars
+// with !default, which silently swallows our !default overrides. Hard-assign.
+$blue: #496bb8; // Override breadcrumb and sidebar text color to increase contrast
+$primary: white;
 
 $dark: black;
 
-$warning: #FF6500 !default; // main color
-$light: #FFF7F2 !default; // light orange
-$success: #1f224b !default;
+$warning: #FF6500; // main color
+$light: #FFF7F2; // light orange
+$success: #1f224b;
 
 $light-background: #FFF7F2;
 
