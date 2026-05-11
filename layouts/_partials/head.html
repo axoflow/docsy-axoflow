@@ -30,10 +30,10 @@
     {{ .Site.Title -}}
   {{ end -}}
 </title>
-<meta name="description" content="{{ template "partials/page-description.html" . }}">
-{{ template "_internal/opengraph.html" . -}}
-{{ template "_internal/schema.html" . -}}
-{{ template "_internal/twitter_cards.html" . -}}
+<meta name="description" content="{{ partial "page-description.html" . }}">
+{{ partial "opengraph.html" . -}}
+{{ partial "schema.html" . -}}
+{{ partial "twitter_cards.html" . -}}
 {{ partialCached "head-css.html" . "head-css-cache-key" -}}
 <!-- Added defer and async to jquery, changed url to serve from local source -->
 <script
@@ -58,7 +58,7 @@
 
 {{/* To comply with GDPR, cookie consent scripts places in head-end must execute before Google Analytics is enabled */ -}}
 {{ if hugo.IsProduction -}}
-  {{ template "_internal/google_analytics.html" . -}}
+  {{ partial "google_analytics.html" . -}}
 {{ end -}}
 
 {{ define "algolia/head" -}}
