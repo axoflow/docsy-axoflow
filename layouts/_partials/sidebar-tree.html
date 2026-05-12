@@ -51,7 +51,10 @@
     </div>
     {{ end -}}
     {{ $navRoot := cond (and (ne .Params.toc_root true) (eq .Site.Home.Type "docs")) .Site.Home .FirstSection -}}
-    {{ if $sidebarRoot -}}
+    {{/* Docsy 0.15's sidebar.html always passes a non-nil sidebarRoot (= .FirstSection),
+         which would override the navRoot above and force the sidebar to narrow to FirstSection
+         on every page. Only honor sidebarRoot when the sidebar-root feature is opted in. */ -}}
+    {{ if and $sidebarRoot .Site.Params.ui.sidebar_root_enabled -}}
       {{ $navRoot = $sidebarRoot -}}
     {{ end -}}
     {{ $ulNr := 0 -}}
