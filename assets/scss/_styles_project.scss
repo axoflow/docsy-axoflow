@@ -546,18 +546,18 @@ footer {
 @if $enable-dark-mode {
   // Bootstrap palette under [data-bs-theme="dark"]
   @include color-mode(dark) {
-    --bs-body-bg:           #0b0d12;
-    --bs-body-color:        #e6e6e6;
-    --bs-emphasis-color:    #ffffff;
-    --bs-secondary-color:   #adb5bd;
-    --bs-secondary-bg:      #1a1f2e;
-    --bs-tertiary-bg:       #141923;
-    --bs-tertiary-color:    #c4cae8;
-    --bs-border-color:      #2a3147;
-    --bs-link-color:        #ff8533;
-    --bs-link-hover-color:  #ffa766;
-    --bs-code-color:        #ff9866;
-    --bs-heading-color:     #ffffff;
+    --bs-body-bg:                       #0b0d12;
+    --bs-body-color:                    #e6e6e6;
+    --bs-emphasis-color:                #ffffff;
+    --bs-secondary-color:               #adb5bd;
+    --bs-secondary-bg:                  #1a1f2e;
+    --bs-tertiary-bg:                   #141923;
+    --bs-tertiary-color:                #c4cae8;
+    --bs-border-color:                  #2a3147;
+    --bs-link-color:                    #ff8533;
+    --bs-link-hover-color:              #ffa766;
+    --bs-code-color:                    #ff9866;
+    --bs-heading-color:                 #ffffff;
   }
 
   // Axoflow custom selectors — duplicate just the color/background properties
@@ -589,6 +589,12 @@ footer {
 
     // ---- Breadcrumb ----
     .breadcrumb-item a { color: #c4cae8; }
+    // The active crumb (current page) gets its color from Bootstrap's
+    // --bs-breadcrumb-item-active-color, but Bootstrap redeclares that var
+    // locally on `.breadcrumb` from $breadcrumb-active-color (#141D62),
+    // which overrides any root-level [data-bs-theme="dark"] var override.
+    // Bypass the var indirection — set the color directly on the rule.
+    .breadcrumb-item.active { color: #ffffff; }
 
     // ---- Inline code ----
     code {
