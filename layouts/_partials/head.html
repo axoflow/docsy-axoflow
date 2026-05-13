@@ -66,10 +66,15 @@
 {{ partial "schema.html" . -}}
 {{ partial "twitter_cards.html" . -}}
 {{ partialCached "head-css.html" . "head-css-cache-key" -}}
-<!-- Added defer and async to jquery, changed url to serve from local source -->
+<!-- jQuery loaded with `defer` only (no `async`) so it executes in document
+     order with the deferred main.js at the bottom of <body>. Using `async`
+     here introduced a race: if main.js ran before jQuery (e.g. on Firefox,
+     which schedules async execution later than Chrome), base.js's
+     `}(jQuery));` IIFE threw ReferenceError and the bundle halted before
+     dark-mode.js could attach its click handlers. -->
 <script
   src='{{ "js/jquery-3.7.1.min.js" | relURL }}'
-  defer async
+  defer
   integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
   crossorigin="anonymous"></script>
 {{ if .Site.Params.offlineSearch -}}

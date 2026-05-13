@@ -78,11 +78,18 @@ window.markmap = {
 {{ end -}}
 
 {{ $js := $jsArray | resources.Concat "js/main.js" -}}
+{{/* `defer` here is required: base.js (concatenated into main.js) references
+     the global jQuery, which is itself loaded with `defer` from head.html.
+     Without `defer` here, main.js runs synchronously when the parser reaches
+     this <script> tag during body parsing, BEFORE jQuery's deferred script
+     has executed — base.js then throws ReferenceError and dark-mode.js (later
+     in the bundle) never attaches its click handlers. With `defer` on both,
+     they execute in document order after parsing: jQuery first, then main.js. */ -}}
 {{ if hugo.IsProduction -}}
   {{ $js := $js | minify | fingerprint -}}
-  <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous"></script>
+  <script src="{{ $js.RelPermalink }}" defer integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous"></script>
 {{ else -}}
-  <script src="{{ $js.RelPermalink }}"></script>
+  <script src="{{ $js.RelPermalink }}" defer></script>
 {{ end -}}
 
 {{ if .Site.Params.prism_syntax_highlighting -}}
