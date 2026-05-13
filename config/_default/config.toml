@@ -143,6 +143,9 @@ twitter = "AxoFlowIO"
   sidebar_search_below_title = true # Enables search box below the doc title in the left sidebar
   # Keep displaying the entire toc
   sidebar_root_enabled = false
+  # Enable the light/dark mode toggle in the navbar. Also activates the
+  # dark-mode JS bundle and FOUC-prevention init in head.html / baseof.html.
+  showLightDarkModeMenu = true
 
   [params.links]
   # End user relevant links. These will show up on left side of footer and in the community page if you have one.

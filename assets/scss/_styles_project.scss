@@ -534,3 +534,88 @@ footer {
 .btn-info:hover {
   background-color: #009fd8;
 }
+
+// =============================================================================
+// Dark mode
+// -----------------------------------------------------------------------------
+// All rules in this section take effect only when <html data-bs-theme="dark">.
+// The navbar (in _partials/navbar.html) hard-pins itself to data-bs-theme="light",
+// so the entire <nav> subtree is excluded from these overrides by inheritance.
+// =============================================================================
+
+@if $enable-dark-mode {
+  // Bootstrap palette under [data-bs-theme="dark"]
+  @include color-mode(dark) {
+    --bs-body-bg:           #0b0d12;
+    --bs-body-color:        #e6e6e6;
+    --bs-emphasis-color:    #ffffff;
+    --bs-secondary-color:   #adb5bd;
+    --bs-secondary-bg:      #1a1f2e;
+    --bs-tertiary-bg:       #141923;
+    --bs-tertiary-color:    #c4cae8;
+    --bs-border-color:      #2a3147;
+    --bs-link-color:        #ff8533;
+    --bs-link-hover-color:  #ffa766;
+    --bs-code-color:        #ff9866;
+    --bs-heading-color:     #ffffff;
+  }
+
+  // Axoflow custom selectors — duplicate just the color/background properties
+  // from the light rules above, keeping all other declarations untouched.
+  [data-bs-theme="dark"] {
+
+    // ---- Sidebar (left) ----
+    .td-sidebar__search { border-color: #2a3147; }
+    .td-sidebar__search > .main-menu-search > a:nth-child(1) > .nav-link { color: #e6e6e6; }
+    a:has(.td-sidebar-nav-active-item) { background-color: #1a1f2e; }
+    ul .foldable { border-left-color: rgba(255, 255, 255, 0.18); }
+
+    // ---- Right-hand TOC ----
+    .td-toc-header { border-bottom-color: #c4cae8; }
+
+    // ---- Alerts / warning block ----
+    .alert-heading { color: #ffffff !important; }
+    .alert-info    { border-left-color: #898EB0; }
+    .alert-warning { border-left-color: #FF8533; }
+    .warning-block { border-left-color: #FF8533; }
+
+    // ---- Breadcrumb ----
+    .breadcrumb-item a { color: #c4cae8; }
+
+    // ---- Inline code ----
+    code {
+      background-color: #1a1f2e !important;
+      color: #ff9866 !important;
+    }
+
+    // ---- Body text ----
+    .td-content { color: #e6e6e6; }
+    .sidebar-heading { color: #ffffff !important; }
+
+    // ---- Details / progressive disclosure ----
+    details { background: #141923; }
+
+    // ---- Page meta (right-side action box) ----
+    .td-page-meta { background-color: #1a1f2e; }
+    .td-page-meta a { color: #e6e6e6; }
+
+    // ---- Section-menu separator line ----
+    .panel-line { color: #FF8533; }
+
+    // ---- Footer ----
+    footer        { border-top-color: #2a3147; }
+    .footer-right { border-left-color: #2a3147; }
+    .footer-link,
+    .footer-social-icons * .text-footer { color: #FF8533 !important; }
+    .text-footer  { color: #e6e6e6; }
+
+    // ---- Tweaked utility classes ----
+    .bg-info.bg-opacity-10 { background-color: #1a2733 !important; }
+    .btn-info {
+      background-color: #008abf;
+      &:hover { background-color: #00779e; }
+    }
+
+    // ---- Property labels ----
+    .property-block { border-color: #2a3147; }
+
