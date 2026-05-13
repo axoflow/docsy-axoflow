@@ -573,6 +573,14 @@ footer {
     // ---- Right-hand TOC ----
     .td-toc-header { border-bottom-color: #c4cae8; }
 
+    // Tocbot active item (set in tocbot.css to $light-background / $warning).
+    // The light-orange tint has poor contrast against the dark body; swap for
+    // a dark surface tone and brighten the accent stripe. tocbot.css's rule
+    // doesn't use !important on background-color, so our scoped (0,2,0)
+    // selector wins over its (0,1,0) without needing !important.
+    .is-active-link        { background-color: #2a3147; }
+    .is-active-link::before { background-color: #FF8533; }
+
     // ---- Alerts / warning block ----
     .alert-heading { color: #ffffff !important; }
     .alert-info    { border-left-color: #898EB0; }
