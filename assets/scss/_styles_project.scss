@@ -619,3 +619,88 @@ footer {
     // ---- Property labels ----
     .property-block { border-color: #2a3147; }
 
+    // ---- Prism.js syntax highlighting ----
+    // Overrides Prism's default light palette (from static/css/prism.css, which
+    // is loaded *after* the compiled SCSS in head.html). Wins by specificity:
+    // every selector here carries an extra [data-bs-theme="dark"] ancestor, so
+    // (0,n+1,m) beats Prism's unscoped (0,n,m) regardless of source order.
+    // Palette is "Tomorrow Night"-inspired, tuned for the #141923 surface used
+    // by `pre` and inline `code` in dark mode.
+
+    // Bulletproof `<pre>` background override: targets the .td-content > pre
+    // selector that Docsy sets via var(--td-pre-bg). !important because Prism's
+    // own pre[class*=language-] rule (loaded later in prism.css) tied to ours
+    // on specificity (0,2,1) was winning by source order in some builds.
+    .td-content pre,
+    .td-content pre[class*="language-"] {
+      background-color: #141923 !important;
+      background-image: none !important;
+    }
+
+    code[class*="language-"],
+    pre[class*="language-"] {
+      color: #c5c8c6;
+      text-shadow: none;
+      background: transparent;
+    }
+    :not(pre) > code[class*="language-"],
+    pre[class*="language-"] {
+      background: #141923;
+    }
+    code[class*="language-"] ::selection,
+    code[class*="language-"]::selection,
+    pre[class*="language-"] ::selection,
+    pre[class*="language-"]::selection { background: #2a3147; }
+
+    .token.comment,
+    .token.prolog,
+    .token.doctype,
+    .token.cdata        { color: #7a8499; }
+    .token.punctuation  { color: #c5c8c6; }
+    .token.namespace    { opacity: .7; }
+    .token.property,
+    .token.tag,
+    .token.constant,
+    .token.symbol,
+    .token.deleted      { color: #cc6666; }
+    .token.boolean,
+    .token.number       { color: #de935f; }
+    .token.selector,
+    .token.attr-name,
+    .token.string,
+    .token.char,
+    .token.builtin,
+    .token.inserted     { color: #b5bd68; }
+    .language-css .token.string,
+    .style .token.string,
+    .token.entity,
+    .token.operator,
+    .token.url          { color: #8abeb7; background: transparent; }
+    .token.atrule,
+    .token.attr-value,
+    .token.keyword      { color: #b294bb; }
+    .token.function,
+    .token.class-name   { color: #f0c674; }
+    .token.regex,
+    .token.important,
+    .token.variable     { color: #ffb86c; }
+
+    // Line-numbers plugin gutter
+    .line-numbers .line-numbers-rows         { border-right-color: #2a3147; }
+    .line-numbers-rows > span:before         { color: #7a8499; }
+
+    // Line-highlight plugin
+    .line-highlight                          { background: hsla(35, 30%, 60%, .12); }
+    .line-highlight:before,
+    .line-highlight[data-end]:after          { background-color: hsla(35, 30%, 60%, .35); color: #c5c8c6; text-shadow: none; }
+
+    // Toolbar (copy / download buttons)
+    div.code-toolbar > .toolbar > .toolbar-item > button,
+    div.code-toolbar > .toolbar > .toolbar-item > a {
+      background: #2a3147;
+      color: #c5c8c6;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+      &:hover, &:focus { background: #3a4361; color: #ffffff; }
+    }
+  }
+}
