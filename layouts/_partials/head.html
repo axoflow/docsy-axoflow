@@ -23,9 +23,11 @@
     const themeKey = 'td-color-theme';
     const storedTheme = localStorage.getItem(themeKey);
     let theme = storedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
     if (theme === 'auto') {
       theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
+
     document.documentElement.setAttribute('data-bs-theme', theme);
   })();
 </script>
@@ -100,14 +102,14 @@
 {{ define "algolia/head" -}}
 
 {{ if and .Site.Params.search (isset .Site.Params.search "algolia") -}}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3.6.0"
-  integrity="sha512-AyDFDkYyALC5qoao077IqAOV7UC4oKCBTp+mJfjIt306AIRoBxoEZYDo0kAx/R7RbT+3EYEky1po/F1w1eQt7g=="
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3.8.2"
+  integrity="sha512-l7pkV1dOURFyHCeH8I4fK9lCkQKuqhlsTCqRl3zktifDlB8oTUJ+mJPgYkK9kHpUut8j1iPquTv32t6hvTPv3g=="
   crossorigin="anonymous" />
 {{ end -}}
 
 {{ if ne .Site.Params.algolia_docsearch nil -}}
 {{ warnf `Config 'params.algolia_docsearch' is deprecated: use 'params.search.algolia'
-      For details, see https://www.docsy.dev/docs/adding-content/search/#algolia-docsearch.` -}}
+      For details, see https://www.docsy.dev/docs/content/search/#algolia-docsearch.` -}}
 {{ end -}}
 
 {{ end -}}
