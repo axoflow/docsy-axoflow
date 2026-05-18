@@ -491,6 +491,8 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
   border-top: 1px solid #E7E8EF;
   padding: 2rem 0 1.5rem;
   font-size: 0.9rem;
+  font-weight: 500;
+  font-family: Poppins, Arial, sans-serif;
 
   // Row separators
   &__row {
@@ -504,12 +506,13 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
   &__column-title {
     font-weight: 700;
     font-size: 0.95rem;
+    text-transform: uppercase;
     margin-bottom: 0.75rem;
-    color: #0F1425; // eerie black
+    color: #FF6500; // axoflow orange
   }
   &__list {
     a {
-      color: #FF6500; // axoflow orange
+      color: #0F1425; // eerie black
       text-decoration: none;
       line-height: 1.9;
       &:hover { text-decoration: underline; }
@@ -518,10 +521,10 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 
   // Row-2: logo + about/privacy + badges
   &__site-logo {
-    max-height: 32px;
+    max-height: 48px;
   }
   &__compliance-badge {
-    max-height: 64px;
+    max-height: 96px;
   }
   &__link {
     color: #FF6500;
@@ -534,7 +537,7 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
     color: #0F1425;
   }
   &__social-icons {
-    .list-inline-item { font-size: 1.25rem; }
+    .list-inline-item { font-size: 2rem; }
   }
   &__social-link {
     color: #FF6500;
