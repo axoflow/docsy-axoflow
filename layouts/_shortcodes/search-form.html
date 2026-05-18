@@ -1,9 +1,12 @@
-<link href='{{ "pagefind/pagefind-ui.css" | relURL }}' rel="stylesheet">
-<script src='{{ "pagefind/pagefind-ui.js" | relURL }}' defer type="application/x-javascript"></script>
+{{/*
+  Pagefind 1.5+ Component UI inline searchbox — used by /search/ for users who
+  arrive via direct link or the sidebar trigger when JS is disabled. The
+  Component UI assets (pagefind-component-ui.css / .js) are loaded globally
+  from themes/docsy-axoflow/layouts/_partials/hooks/head-end.html, and the
+  <pagefind-config> with bundle-path is mounted in docs/baseof.html — so this
+  shortcode just needs the one declarative element.
 
-<div id="search"></div>
-<script>
-  window.addEventListener("DOMContentLoaded", (event) => {
-    new PagefindUI({ element: "#search", showSubResults: true, highlightParam: "highlight", pageSize: 10, autofocus: true{{ if .Site.Params.offlineSearchPagefindHideImages }}, showImages: false{{ end }} });
-  });
-</script>
+  Legacy `new PagefindUI({...})` is replaced; per Pagefind docs the old Default
+  UI and new Component UI cannot coexist on the same page.
+*/}}
+<pagefind-searchbox></pagefind-searchbox>

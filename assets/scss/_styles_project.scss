@@ -80,20 +80,6 @@ ol > li::marker {
   max-width: 100%;
 }
 
-// Search icon fixes, ugly
-// sidebar
-.td-sidebar__search > .main-menu-search > a:nth-child(1) > .nav-link {
-  margin-left: 10px;
-  color: black;
-}
-.td-sidebar__search {
-  border: 1px solid;
-  border-radius: 8px;
-  border-color: #BFC2C8;
-  margin-bottom: 0.5rem;
-  margin-top: 0.5rem;
-}
-
 // Left-sidebar toc
 .td-sidebar {
   background-color: unset;
@@ -700,6 +686,21 @@ footer {
 
     // ---- Section-menu separator line ----
     .panel-line { color: #FF8533; }
+
+    // ---- Pagefind 1.5+ Component UI ----
+    // Bridge axoflow's [data-bs-theme="dark"] toggle to Pagefind's --pf-* CSS
+    // variables. Pagefind also supports a `data-pf-theme="dark"` attribute, but
+    // overriding the vars directly avoids needing JS to mirror the attribute.
+    pagefind-modal,
+    pagefind-modal-trigger,
+    pagefind-searchbox {
+      --pf-background:   #141923;
+      --pf-text:         #e6e6e6;
+      --pf-border:       #2a3147;
+      --pf-input-bg:     #1a1f2e;
+      --pf-result-hover: #2a3147;
+      --pf-accent:       #FF8533;
+    }
 
     // ---- Footer ----
     // New td-footer__* selectors (preferred)

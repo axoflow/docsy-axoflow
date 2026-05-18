@@ -37,5 +37,16 @@
       {{ partial "footer.html" . }}
     </div>
     {{ partial "scripts.html" . }}
+    {{ if .Site.Params.offlineSearchPagefind -}}
+      {{/* Pagefind 1.5+ Component UI: the modal is hidden until triggered by
+           <pagefind-modal-trigger> (in the sidebar) or the Cmd/Ctrl+K shortcut.
+           Mounted at the end of <body> so DOM is fully built when the web
+           component auto-connects. */ -}}
+      <pagefind-modal></pagefind-modal>
+      <pagefind-config
+        bundle-path="{{ "pagefind/" | relURL }}"
+        highlight-param="highlight"
+      ></pagefind-config>
+    {{ end -}}
   </body>
 </html>

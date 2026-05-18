@@ -1,7 +1,10 @@
 {{ if .Site.Params.offlineSearchPagefind }}
-  <div class="main-menu-search">
-      <a href="{{ "search/index.html" | relURL }}">
-        <span class="nav-link"><i class="fa fa-search" aria-hidden="true"></i> Search</span>
-      </a>
-  </div>
+  {{/* Pagefind 1.5+ Component UI: <pagefind-modal-trigger> is a <button> that
+       opens the <pagefind-modal> mounted in docs/baseof.html. The component
+       auto-binds Cmd/Ctrl+K too, so users can open search from any page
+       without clicking. The inner <span> is slotted into the trigger's
+       default slot, preserving the existing FA icon + "Search" label. */}}
+    <pagefind-modal-trigger>
+      <span class="nav-link"><i class="fa fa-search" aria-hidden="true"></i> Search</span>
+    </pagefind-modal-trigger>
 {{ end }}

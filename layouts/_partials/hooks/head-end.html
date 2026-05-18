@@ -1,6 +1,12 @@
 {{ with .Page.Params.redirect }} <meta http-equiv="refresh" content="0;URL='{{ . }}'" /> {{ end }}
 
 {{ if .Site.Params.offlineSearchPagefind -}}
+<!-- Pagefind 1.5+ Component UI (replaces the legacy PagefindUI / pagefind-ui.js).
+     Web components auto-register from these assets — see <pagefind-modal>,
+     <pagefind-modal-trigger>, <pagefind-searchbox>, <pagefind-config>. -->
+<link rel="stylesheet" href="{{ "pagefind/pagefind-component-ui.css" | relURL }}">
+<script type="module" src="{{ "pagefind/pagefind-component-ui.js" | relURL }}"></script>
+
 <!-- Needed to highlight search keyword on the result page -->
 {{ $pagefind_highlight_url := "pagefind/pagefind-highlight.js" | relURL }}
 <script
