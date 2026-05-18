@@ -464,7 +464,89 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
   color: #FF6500; // main color
 }
 
-// Footer-specific stuff
+// =============================================================================
+// Footer — new td-footer__* BEM structure
+// -----------------------------------------------------------------------------
+// Markup is in themes/docsy-axoflow/layouts/_partials/footer.html plus the
+// three split sub-partials under _partials/footer/. The footer has three rows:
+//   row-1  categorized link columns (Products / Solutions / etc.)
+//   row-2  logo + About/Privacy + compliance badges
+//   row-3  copyright + social icons
+// Light-mode rules below; dark-mode overrides live in the [data-bs-theme="dark"]
+// block further down in this file.
+// =============================================================================
+
+.td-footer {
+  // Override upstream Docsy 0.15's `@extend .td-box--dark` on .td-footer
+  // (themes/docsy/assets/scss/td/_footer.scss:6 — the upstream maintainers
+  // even tagged this with a "TODO: don't impose .td-box--dark"). Without
+  // these overrides, the footer renders with the dark-box palette in light
+  // mode. Bind to Bootstrap body variables so the footer follows the page
+  // theme — light on light pages, dark on dark pages — via the existing
+  // [data-bs-theme] cascade.
+  background-color: var(--bs-body-bg);
+  background-image: none;
+  color: var(--bs-body-color);
+
+  border-top: 1px solid #E7E8EF;
+  padding: 2rem 0 1.5rem;
+  font-size: 0.9rem;
+
+  // Row separators
+  &__row {
+    margin: 0;
+  }
+  &__row-2 {
+    border-top-color: #E7E8EF;
+  }
+
+  // Row-1: column titles + link lists
+  &__column-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    color: #0F1425; // eerie black
+  }
+  &__list {
+    a {
+      color: #FF6500; // axoflow orange
+      text-decoration: none;
+      line-height: 1.9;
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  // Row-2: logo + about/privacy + badges
+  &__site-logo {
+    max-height: 32px;
+  }
+  &__compliance-badge {
+    max-height: 64px;
+  }
+  &__link {
+    color: #FF6500;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+
+  // Row-3: copyright + social icons
+  &__copyright-text {
+    color: #0F1425;
+  }
+  &__social-icons {
+    .list-inline-item { font-size: 1.25rem; }
+  }
+  &__social-link {
+    color: #FF6500;
+    &:hover { color: #FF8533; }
+  }
+}
+
+// =============================================================================
+// Footer — legacy aliases (kept for one cycle for project-level overrides
+// that may extend these class names). Remove once consumers migrate to the
+// td-footer__* selectors above.
+// =============================================================================
 footer {
   border-top: #E7E8EF 1px solid;
 }
@@ -617,6 +699,21 @@ footer {
     .panel-line { color: #FF8533; }
 
     // ---- Footer ----
+    // New td-footer__* selectors (preferred)
+    .td-footer {
+      border-top-color: #2a3147;
+      &__row-2        { border-top-color: #2a3147; }
+      &__column-title { color: #e6e6e6; }
+      &__list a       { color: #FF8533; }
+      &__link         { color: #FF8533; }
+      &__copyright-text { color: #c4cae8; }
+      &__social-link  {
+        color: #FF8533;
+        &:hover { color: #ffa766; }
+      }
+    }
+
+    // Legacy aliases (kept until downstream sites migrate)
     footer        { border-top-color: #2a3147; }
     .footer-right { border-left-color: #2a3147; }
     .footer-link,
