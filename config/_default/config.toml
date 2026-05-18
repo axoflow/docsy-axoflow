@@ -579,3 +579,201 @@ anchor = "smart"
   weight = 150
   url = "https://axoflow.com/request-sandbox?utm_source=docs&utm_medium=menu"
   identifier = "menu-button"
+
+###############################################################################
+# Hugo - Footer row-1 menu (categorized link columns)
+###############################################################################
+# Sourced verbatim from https://axoflow.com/ row-1 footer. Intentionally
+# independent from [[menus.main]] so footer and top navbar can drift on their
+# own. Iterated by themes/docsy-axoflow/layouts/_partials/footer/row-1.html.
+
+# ----- Products column -----
+[[menus.footer]]
+  identifier = "products"
+  name       = "Products"
+  weight     = 100
+
+  [[menus.footer]]
+    identifier = "products-platform"
+    name       = "Axoflow Platform"
+    url        = "https://axoflow.com/axoflow-platform?utm_source=docs&utm_medium=footer"
+    parent     = "products"
+    weight     = 110
+
+  [[menus.footer]]
+    identifier = "products-axolake"
+    name       = "AxoLake"
+    url        = "https://axoflow.com/axolake-petabyte-security-data-storage?utm_source=docs&utm_medium=footer"
+    parent     = "products"
+    weight     = 120
+
+  [[menus.footer]]
+    identifier = "products-axorouter"
+    name       = "AxoRouter"
+    url        = "https://axoflow.com/axorouter?utm_source=docs&utm_medium=footer"
+    parent     = "products"
+    weight     = 130
+
+  [[menus.footer]]
+    identifier = "products-ai"
+    name       = "Axoflow + AI"
+    url        = "https://axoflow.com/how-axoflow-really-uses-ai?utm_source=docs&utm_medium=footer"
+    parent     = "products"
+    weight     = 140
+
+  [[menus.footer]]
+    identifier = "products-integrations"
+    name       = "Integrations"
+    url        = "https://axoflow.com/docs/axoflow/destinations/?utm_source=docs&utm_medium=footer"
+    parent     = "products"
+    weight     = 150
+
+  [[menus.footer]]
+    identifier = "products-capabilities"
+    name       = "Capabilities"
+    url        = "https://axoflow.com/capabilities?utm_source=docs&utm_medium=footer"
+    parent     = "products"
+    weight     = 160
+
+# ----- Solutions column -----
+[[menus.footer]]
+  identifier = "solutions"
+  name       = "Solutions"
+  weight     = 200
+
+  [[menus.footer]]
+    identifier = "solutions-comparisons"
+    name       = "Comparisons"
+    url        = "https://axoflow.com/comparisons?utm_source=docs&utm_medium=footer"
+    parent     = "solutions"
+    weight     = 210
+
+  [[menus.footer]]
+    identifier = "solutions-use-cases"
+    name       = "Use Cases"
+    url        = "https://axoflow.com/use-cases?utm_source=docs&utm_medium=footer"
+    parent     = "solutions"
+    weight     = 220
+
+  [[menus.footer]]
+    identifier = "solutions-case-studies"
+    name       = "Case Studies"
+    url        = "https://axoflow.com/case-studies?utm_source=docs&utm_medium=footer"
+    parent     = "solutions"
+    weight     = 230
+
+# ----- Resources column -----
+[[menus.footer]]
+  identifier = "resources"
+  name       = "Resources"
+  weight     = 300
+
+  [[menus.footer]]
+    identifier = "resources-blog"
+    name       = "Blog"
+    url        = "https://axoflow.com/blog?utm_source=docs&utm_medium=footer"
+    parent     = "resources"
+    weight     = 310
+
+  [[menus.footer]]
+    identifier = "resources-documentation"
+    name       = "Documentation"
+    url        = "https://axoflow.com/docs?utm_source=docs&utm_medium=footer"
+    parent     = "resources"
+    weight     = 320
+
+  [[menus.footer]]
+    identifier = "resources-webinars"
+    name       = "Webinars"
+    url        = "https://axoflow.com/webinars?utm_source=docs&utm_medium=footer"
+    parent     = "resources"
+    weight     = 330
+
+  [[menus.footer]]
+    identifier = "resources-white-papers"
+    name       = "White papers"
+    url        = "https://axoflow.com/white-papers?utm_source=docs&utm_medium=footer"
+    parent     = "resources"
+    weight     = 340
+
+  [[menus.footer]]
+    identifier = "resources-podcast"
+    name       = "Podcast"
+    url        = "https://axoflow.com/data-strikes-back-podcast?utm_source=docs&utm_medium=footer"
+    parent     = "resources"
+    weight     = 350
+
+  [[menus.footer]]
+    identifier = "resources-support"
+    name       = "Support & Professional Services"
+    url        = "https://axoflow.com/support?utm_source=docs&utm_medium=footer"
+    parent     = "resources"
+    weight     = 360
+
+# ----- Open Source column -----
+[[menus.footer]]
+  identifier = "opensource"
+  name       = "Open Source"
+  weight     = 400
+
+  [[menus.footer]]
+    identifier = "opensource-axosyslog"
+    name       = "AxoSyslog"
+    url        = "https://axoflow.com/axosyslog?utm_source=docs&utm_medium=footer"
+    parent     = "opensource"
+    weight     = 410
+
+  [[menus.footer]]
+    identifier = "opensource-axosyslog-docs"
+    name       = "AxoSyslog Documentation"
+    url        = "https://axoflow.com/docs/axosyslog-core/"
+    parent     = "opensource"
+    weight     = 420
+
+  [[menus.footer]]
+    identifier = "opensource-logging-operator"
+    name       = "Logging Operator Documentation"
+    url        = "https://kube-logging.dev/docs/"
+    parent     = "opensource"
+    weight     = 430
+
+  [[menus.footer]]
+    identifier = "opensource-syslogopedia"
+    name       = "Syslogopedia"
+    url        = "https://axoflow.com/syslogopedia?utm_source=docs&utm_medium=footer"
+    parent     = "opensource"
+    weight     = 440
+
+# ----- About column -----
+[[menus.footer]]
+  identifier = "about"
+  name       = "About"
+  weight     = 500
+
+  [[menus.footer]]
+    identifier = "about-us"
+    name       = "About us"
+    url        = "https://axoflow.com/about-us?utm_source=docs&utm_medium=footer"
+    parent     = "about"
+    weight     = 510
+
+  [[menus.footer]]
+    identifier = "about-news"
+    name       = "News"
+    url        = "https://axoflow.com/news?utm_source=docs&utm_medium=footer"
+    parent     = "about"
+    weight     = 520
+
+  [[menus.footer]]
+    identifier = "about-contact"
+    name       = "Contact"
+    url        = "https://axoflow.com/contact?utm_source=docs&utm_medium=footer"
+    parent     = "about"
+    weight     = 530
+
+  [[menus.footer]]
+    identifier = "about-partners"
+    name       = "Our Partners"
+    url        = "https://axoflow.com/partners?utm_source=docs&utm_medium=footer"
+    parent     = "about"
+    weight     = 540

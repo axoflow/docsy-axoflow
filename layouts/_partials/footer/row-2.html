@@ -1,0 +1,60 @@
+{{/*
+  Footer row-2: site logo + about/privacy links + compliance badges.
+  Bootstrap grid; plain <div>s (this row isn't navigation in the WAI-ARIA sense).
+
+  Region order on tablet+:
+    left   col — site logo
+    center col — About link + Privacy Policy link
+    right  col — compliance badges (ISO 27001, plus future SOC2)
+
+  On mobile, columns stack via responsive grid breakpoints.
+
+  Config knobs:
+    params.ui.footer_left_logo_disable    — hide left logo
+    params.ui.footer_left_logo_file       — path under assets/ for left logo
+    params.ui.footer_right_logo_disable   — hide right badges
+    params.ui.footer_right_logo_file      — path under assets/ for primary badge
+    params.ui.footer_about_disable        — hide the About link
+    params.privacy_policy                 — privacy policy URL
+*/ -}}
+<div class="td-footer__row td-footer__row-2 row align-items-center py-3 border-top">
+
+  <!-- Left: site logo -->
+  <div class="td-footer__row-2-left col-12 col-md-4 py-2">
+    {{ if not .Site.Params.ui.footer_left_logo_disable -}}
+      {{ with resources.Get .Site.Params.ui.footer_left_logo_file -}}
+        <img class="td-footer__site-logo" alt="{{ $.Site.Title }} logo"
+             src="{{ .RelPermalink }}"/>
+      {{ end -}}
+    {{ end -}}
+  </div>
+
+  <!-- Center: About + Privacy -->
+  <div class="td-footer__row-2-center col-12 col-md-4 py-2 text-center">
+    {{ if not .Site.Params.ui.footer_about_disable -}}
+      {{ with .Site.GetPage "about" -}}
+        <a class="td-footer__link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+      {{ end -}}
+    {{ end -}}
+    {{ with .Site.Params.privacy_policy -}}
+      <a class="td-footer__link ms-3" href="{{ . }}"
+         target="_blank" rel="noopener">{{ T "footer_privacy_policy" }}</a>
+    {{ else -}}
+      <a class="td-footer__link ms-3" href="https://axoflow.com/privacy-policy"
+         target="_blank" rel="noopener">{{ T "footer_privacy_policy" }}</a>
+    {{ end -}}
+  </div>
+
+  <!-- Right: compliance badges -->
+  <div class="td-footer__row-2-right col-12 col-md-4 py-2 text-md-end">
+    {{ if not .Site.Params.ui.footer_right_logo_disable -}}
+      {{ with resources.Get .Site.Params.ui.footer_right_logo_file -}}
+        <img class="td-footer__compliance-badge" alt="ISO 27001 certification"
+             src="{{ .RelPermalink }}"/>
+      {{ end -}}
+    {{ end -}}
+    {{/* SOC2 badge: add when themes/docsy-axoflow/assets/icons/soc2*.svg exists.
+         See the footer plan's "Out of scope / follow-ups" section. */ -}}
+  </div>
+
+</div>
