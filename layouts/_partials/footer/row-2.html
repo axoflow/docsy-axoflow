@@ -23,8 +23,13 @@
   <div class="td-footer__row-2-left col-12 col-md-4 py-2">
     {{ if not .Site.Params.ui.footer_left_logo_disable -}}
       {{ with resources.Get .Site.Params.ui.footer_left_logo_file -}}
+        {{/* Explicit width/height to reserve layout space (avoid CLS). The
+             project's assets/icons/logo.svg has viewBox 477x120 (aspect 3.975).
+             At the CSS max-height of 32px, the natural width is ~127px.
+             CSS `.td-footer__site-logo { max-height: 32px }` still controls
+             rendered size — these attrs only set intrinsic dimensions. */ -}}
         <img class="td-footer__site-logo" alt="{{ $.Site.Title }} logo"
-             src="{{ .RelPermalink }}"/>
+             src="{{ .RelPermalink }}" width="127" height="32"/>
       {{ end -}}
     {{ end -}}
   </div>
@@ -49,8 +54,13 @@
   <div class="td-footer__row-2-right col-12 col-md-4 py-2 text-md-end">
     {{ if not .Site.Params.ui.footer_right_logo_disable -}}
       {{ with resources.Get .Site.Params.ui.footer_right_logo_file -}}
+        {{/* Explicit width/height to reserve layout space (avoid CLS). The
+             ISO 27001 SVG has viewBox 229x137 (aspect 1.671). At the CSS
+             max-height of 64px, the natural width is ~107px. CSS
+             `.td-footer__compliance-badge { max-height: 64px }` still
+             controls rendered size — these attrs only set intrinsic dims. */ -}}
         <img class="td-footer__compliance-badge" alt="ISO 27001 certification"
-             src="{{ .RelPermalink }}"/>
+             src="{{ .RelPermalink }}" width="107" height="64"/>
       {{ end -}}
     {{ end -}}
     {{/* SOC2 badge: add when themes/docsy-axoflow/assets/icons/soc2*.svg exists.

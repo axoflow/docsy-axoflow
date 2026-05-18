@@ -65,7 +65,10 @@ window.markmap = {
 {{ end -}}
 
 {{ if .Site.Params.prism_syntax_highlighting -}}
-  <script src='{{ "js/prism.js" | relURL }}'></script>
+  {{/* `defer` keeps prism.js out of the render-blocking path; Prism's
+       auto-highlight runs on DOMContentLoaded, which still fires after
+       deferred scripts execute. */ -}}
+  <script src='{{ "js/prism.js" | relURL }}' defer></script>
 {{ else if ( not .Site.Params.disable_click2copy_chroma ) -}}
   {{ $c2cJS := resources.Get "js/click-to-copy.js" -}}
   {{ if hugo.IsProduction -}}
