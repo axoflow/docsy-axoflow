@@ -286,15 +286,19 @@ anchor = "smart"
     [[menus.main]]
       name = "Axoflow vs SC4S"
       weight = 120
-      url = "https://axoflow.com/axoflow-platform-vs-sc4s"
+      url = "https://axoflow.com/axoflow-platform-vs-sc4s?utm_source=docs&utm_medium=menu"
       identifier = "sc4s"
       parent = "comparisons"
+  # NOTE: Integrations is logically under Products (parent = "products") to
+  # match axoflow.com's top-nav and footer. It remains in the [[menus.main]]
+  # array near the Solutions block only because TOML order doesn't matter for
+  # menu hierarchy — Hugo resolves nesting by the `parent` identifier.
   [[menus.main]]
     name = "Integrations"
-    weight = 300
+    weight = 600
     url = "/"
     identifier = "integrations"
-    parent = "solutions"
+    parent = "products"
     [[menus.main]]
       name = "Axoflow + Google Cloud"
       weight = 100
@@ -326,7 +330,7 @@ anchor = "smart"
       identifier = "integration-other"
       parent = "integrations"
   [[menus.main]]
-    name = "Use cases"
+    name = "Use Cases"
     weight = 500
     url = "/"
     identifier = "usecases"
@@ -377,28 +381,36 @@ anchor = "smart"
   name = "Products"
   weight = -130
   url = "/"
-  identifier = "product"
+  identifier = "products"
   [[menus.main]]
     name = "Axoflow Platform"
     weight = -120
     url = "https://axoflow.com/axoflow-platform?utm_source=docs&utm_medium=menu"
-    parent = "product"
+    parent = "products"
   [[menus.main]]
     name = "AxoLake"
     weight = 20
     url = "https://axoflow.com/axolake-petabyte-security-data-storage?utm_source=docs&utm_medium=menu"
     identifier = "axolake"
-    parent = "product"
+    parent = "products"
   [[menus.main]]
     name = "AxoRouter"
     weight = 100
     url = "https://axoflow.com/axorouter?utm_source=docs&utm_medium=menu"
-    parent = "product"
+    parent = "products"
   [[menus.main]]
     name = "Axoflow + AI"
     weight = 500
     url = "https://axoflow.com/how-axoflow-really-uses-ai?utm_source=docs&utm_medium=menu"
-    parent = "product"
+    parent = "products"
+  # Integrations (weight 600) is also a child of "products" — see the
+  # [[menus.main]] entry near the Solutions block.
+  [[menus.main]]
+    name = "Capabilities"
+    weight = 700
+    url = "https://axoflow.com/capabilities?utm_source=docs&utm_medium=menu"
+    identifier = "capabilities"
+    parent = "products"
 
 [[menus.main]]
   name = "Resources"
@@ -513,7 +525,7 @@ anchor = "smart"
   url = "https://axoflow.com/data-strikes-back-podcast?utm_source=docs&utm_medium=menu"
   parent = "resources"
 [[menus.main]]
-  name = "Support and Professional Services"
+  name = "Support & Professional Services"
   weight = 200
   url = "https://axoflow.com/support?utm_source=docs&utm_medium=menu"
   parent = "resources"
@@ -536,10 +548,16 @@ anchor = "smart"
     identifier = "documentation-axosyslog"
     parent = "opensource"
   [[menus.main]]
-    name = "Logging operator"
+    name = "Logging Operator Documentation"
     weight = 40
-    url = "https://kube-logging.dev/"
+    url = "https://kube-logging.dev/docs/"
     identifier = "logging-operator"
+    parent = "opensource"
+  [[menus.main]]
+    name = "Syslogopedia"
+    weight = 50
+    url = "https://axoflow.com/syslogopedia?utm_source=docs&utm_medium=menu"
+    identifier = "syslogopedia"
     parent = "opensource"
 [[menus.main]]
   name = "About"
