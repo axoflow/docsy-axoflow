@@ -30,3 +30,10 @@ $google_font_family: "Poppins:300,300i,400,400i,700,700i|Roboto+Mono";
 
 $font-family-monospace: "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas,
   "Liberation Mono", "Courier New", monospace !default; // TODO: consider moving into UG SCSS or namespace the var (td-)
+
+// FontAwesome ships with `font-display: block` by default, which causes the
+// "Font display" Lighthouse audit to fail and produces an invisible FOIT
+// window on slow connections. `swap` paints fallback text immediately and
+// switches to the icon font once it arrives. Must be declared before the
+// FA scss is @imported in docsy/scss/td/_main.scss.
+$fa-font-display: swap;

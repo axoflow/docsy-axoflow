@@ -696,6 +696,12 @@ footer {
     pagefind-searchbox {
       --pf-background:   #141923;
       --pf-text:         #e6e6e6;
+      // --pf-text-muted is Pagefind's color for the trigger button label
+      // ("Search" placeholder text). Its default #767676 hits only 3.87:1
+      // against the dark #141923 background — below WCAG AA 4.5:1. Bumping to
+      // #adb5bd (matches our --bs-secondary-color above) yields ~7.7:1.
+      --pf-text-muted:   #adb5bd;
+      --pf-text-secondary: #c4cae8;
       --pf-border:       #2a3147;
       --pf-input-bg:     #1a1f2e;
       --pf-result-hover: #2a3147;
