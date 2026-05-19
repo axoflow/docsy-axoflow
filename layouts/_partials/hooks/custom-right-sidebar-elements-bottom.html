@@ -14,6 +14,11 @@
     function displayRandomDiv() {
       // Select all div elements with class 'cta-sidebar'
       const divs = document.querySelectorAll('.cta-sidebar');
+      // Nothing to randomize — all CTAs above are currently commented out.
+      // Without this guard, divs[randomIndex] is undefined and the .classList
+      // access throws "Cannot read properties of undefined", which surfaces as
+      // an errors-in-console audit failure on every page.
+      if (divs.length === 0) return;
       // Generate a random index
       const randomIndex = Math.floor(Math.random() * divs.length);
       // Display the randomly selected div
