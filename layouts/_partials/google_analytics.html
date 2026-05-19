@@ -9,13 +9,44 @@
     {{- if strings.HasPrefix (lower .) "ua-" }}
       {{- warnf "Google Analytics 4 (GA4) replaced Google Universal Analytics (UA) effective 1 July 2023. See https://support.google.com/analytics/answer/11583528. Create a GA4 property and data stream, then replace the Google Analytics ID in your site configuration with the new value." }}
     {{- else if strings.HasPrefix (lower .) "gtm-" }}
-      <!-- Google tagmanager, GTM-123456 -->
-      <!-- Google Tag Manager -->
-      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','{{ . }}');</script>
+      <!-- Google Tag Manager — deferred load.
+           The standard GTM snippet runs its IIFE synchronously during parse,
+           which fires every downstream tag (Warmly, Vector, LinkedIn Insight,
+           Usercentrics CMP, HubSpot conversations) before the page is
+           interactive. The May 2026 Lighthouse audit attributed >500 KB of
+           unused JS, CORS errors, and most third-party-cookie violations to
+           tags loaded by GTM during initial paint. We delay the GTM bootstrap
+           until either the first real user interaction OR `load` + a short
+           idle window (whichever comes first), pushing the third-party cost
+           out of the critical-path metrics window without disabling tracking.
+           dataLayer is created eagerly so `dataLayer.push(...)` calls made by
+           any script before GTM loads are still replayed by GTM on init. -->
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+        (function(w, d, gtmId) {
+          var loaded = false;
+          function loadGTM() {
+            if (loaded) return; loaded = true;
+            var s = d.getElementsByTagName('script')[0];
+            var j = d.createElement('script');
+            j.async = true;
+            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + gtmId;
+            s.parentNode.insertBefore(j, s);
+          }
+          var ev = ['scroll', 'mousemove', 'touchstart', 'keydown', 'click'];
+          function onInteraction() {
+            ev.forEach(function(e) { w.removeEventListener(e, onInteraction); });
+            loadGTM();
+          }
+          ev.forEach(function(e) { w.addEventListener(e, onInteraction, { passive: true, once: true }); });
+          // Fallback: load after `load` event + 3s idle, so tracking still
+          // fires for users who never interact (e.g. closed tabs).
+          function deferredLoad() { setTimeout(loadGTM, 3000); }
+          if (d.readyState === 'complete') { deferredLoad(); }
+          else { w.addEventListener('load', deferredLoad, { once: true }); }
+        })(window, document, '{{ . }}');
+      </script>
         <!-- End Google Tag Manager -->
     {{- else }}
       <!-- Google analytics tag G-123456 -->

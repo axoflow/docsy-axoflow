@@ -3,19 +3,28 @@
 {{ if .Site.Params.offlineSearchPagefind -}}
 <!-- Pagefind 1.5+ Component UI (replaces the legacy PagefindUI / pagefind-ui.js).
      Web components auto-register from these assets — see <pagefind-modal>,
-     <pagefind-modal-trigger>, <pagefind-searchbox>, <pagefind-config>. -->
-<link rel="stylesheet" href="{{ "pagefind/pagefind-component-ui.css" | relURL }}">
+     <pagefind-modal-trigger>, <pagefind-searchbox>, <pagefind-config>.
+     Loaded non-render-blocking: the stylesheet uses the print-media trick
+     (load is async, applied to "all" once available); the module script is
+     auto-deferred by `type="module"`. Lighthouse audit (May 2026) showed the
+     CSS as render-blocking with ~86% unused rules. -->
+<link rel="preload" href="{{ "pagefind/pagefind-component-ui.css" | relURL }}" as="style">
+<link rel="stylesheet" href="{{ "pagefind/pagefind-component-ui.css" | relURL }}" media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="{{ "pagefind/pagefind-component-ui.css" | relURL }}"></noscript>
 <script type="module" src="{{ "pagefind/pagefind-component-ui.js" | relURL }}"></script>
 
-<!-- Needed to highlight search keyword on the result page -->
+<!-- Needed to highlight search keyword on the result page.
+     The module script below is what actually wires up PagefindHighlight; the
+     legacy classic-script tag has been removed because it loaded the same file
+     a second time under a different MIME (~44 KB duplicate fetch, 36% unused).
+     pagefind-highlight.js exposes `window.PagefindHighlight` as a side effect
+     of module evaluation, and module scripts execute in document order, so
+     the second module can rely on the global being set. -->
 {{ $pagefind_highlight_url := "pagefind/pagefind-highlight.js" | relURL }}
-<script
-  src='{{ $pagefind_highlight_url }}' defer
-    type="application/x-javascript"></script>
-    <script type="module">
-        await import({{ $pagefind_highlight_url }});
-        new PagefindHighlight({ highlightParam: "highlight" });
-    </script>
+<script type="module" src="{{ $pagefind_highlight_url }}"></script>
+<script type="module">
+  new window.PagefindHighlight({ highlightParam: "highlight" });
+</script>
 {{ end -}}
 
 <!-- Enable replacing parameters from URL parameter -->

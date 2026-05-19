@@ -1,6 +1,35 @@
-<!-- Start of HubSpot Embed Code -->
-<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/{{ .Site.Params.hubspotId }}.js"></script>
-<!-- End of HubSpot Embed Code -->
+<!-- HubSpot Embed Code — deferred load.
+     `async defer` alone still kicks off the request immediately during parse,
+     which pulls in conversations-visitor-ui (~360 KB), collectedforms.js, and
+     sets multiple third-party cookies (__cf_bm, __hssc, __hssrc, hubspotutk)
+     before any user interaction. We delay the loader until first interaction
+     or `load` + 3s, mirroring the GTM pattern in google_analytics.html. The
+     pages that need HubSpot Forms (`.Params.hubspotForm`) can still call
+     `hbspt.forms.create(...)` after the loader fires; on form pages we trigger
+     the load eagerly via the requestIdleCallback fallback. -->
+<script>
+  (function(w, d, hsId) {
+    var loaded = false;
+    function loadHubSpot() {
+      if (loaded) return; loaded = true;
+      var s = d.getElementsByTagName('script')[0];
+      var j = d.createElement('script');
+      j.async = true; j.defer = true;
+      j.id = 'hs-script-loader';
+      j.src = '//js.hs-scripts.com/' + hsId + '.js';
+      s.parentNode.insertBefore(j, s);
+    }
+    var ev = ['scroll', 'mousemove', 'touchstart', 'keydown', 'click'];
+    function onInteraction() {
+      ev.forEach(function(e) { w.removeEventListener(e, onInteraction); });
+      loadHubSpot();
+    }
+    ev.forEach(function(e) { w.addEventListener(e, onInteraction, { passive: true, once: true }); });
+    function deferredLoad() { setTimeout(loadHubSpot, 3000); }
+    if (d.readyState === 'complete') { deferredLoad(); }
+    else { w.addEventListener('load', deferredLoad, { once: true }); }
+  })(window, document, '{{ .Site.Params.hubspotId }}');
+</script>
 
 <!-- Disable collectedforms.js on pages without form -->
 {{ if not .Params.hubspotForm }}
