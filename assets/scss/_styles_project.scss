@@ -704,7 +704,14 @@ footer {
       --pf-text-secondary: #c4cae8;
       --pf-border:       #2a3147;
       --pf-input-bg:     #1a1f2e;
-      --pf-result-hover: #2a3147;
+      // --pf-hover is the background of result-row hover state AND the kbd
+      // shortcut chip inside the trigger button (`.pf-trigger-key`). Pagefind
+      // does not define a `--pf-result-hover` variable, so the previous
+      // override under that name was a no-op and the chip stayed at the
+      // light-mode default #f5f5f5 even in dark mode — combined with our
+      // light --pf-text-secondary text, that produced a 1.48:1 contrast
+      // failure flagged by the color-contrast audit.
+      --pf-hover:        #2a3147;
       --pf-accent:       #FF8533;
     }
 
