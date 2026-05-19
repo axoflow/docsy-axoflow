@@ -93,6 +93,73 @@ Hugo checks only that the referenced file exists, it doesn’t check the anchor,
 - If the same image is used in multiple pages, place it in the `/assets/img/` directory, and link to it as `![image title](/img/<filename>)`.
 - Use descriptive `alt` text.
 - Prefer SVG for diagrams; PNG for screenshots.
+- Use plain markdown `![alt](src)` syntax — **do not** wrap images in `<img>` HTML, `figure` shortcodes, or `imgproc` shortcodes unless you need a class. The theme's markdown image render hook (`layouts/_markup/render-image.html`) does the heavy lifting automatically.
+
+### What the render hook does for you
+
+Every `![alt](src)` in markdown is rewritten by the render hook into a responsive `<img>` element. You don't need to set anything yourself — Hugo derives it all from the source file:
+
+- **WebP conversion** of raster sources (PNG / JPEG / GIF) at build time. SVGs pass through unchanged.
+- **Responsive `srcset`** at 400 / 800 / 1200 / 1600 px widths (widths larger than the natural width are skipped, so we never upscale).
+- **`sizes` attribute** aligned with the Docsy content column: `(min-width: 992px) 720px, 100vw`.
+- **Explicit `width` and `height`** from the natural image dimensions — kills CLS and the `unsized-images` Lighthouse audit.
+- **`loading="lazy"`** on every image except the first one on the page.
+- **`decoding="async"`** on every image.
+
+### Above-the-fold prioritization
+
+The render hook treats the **first** markdown image on a page as the likely LCP candidate and emits `loading="eager" fetchpriority="high"` instead of `loading="lazy"` for it. On most doc pages this is correct — Docsy's content column starts a couple hundred pixels in, intros are short, and the first screenshot or diagram lands at or just below the fold.
+
+When the heuristic is wrong, override it from the page's front matter:
+
+```yaml
+---
+title: My page
+weight: 200
+# The first markdown image is a small icon, not the LCP — disable the hint:
+no_priority_image: true
+---
+```
+
+```yaml
+---
+title: My page
+weight: 200
+# The LCP is actually the third image on the page — name it explicitly. Match
+# is by exact .Destination string equality (the value inside the ![](…) parens).
+priority_image: /img/topology/topology.png
+---
+```
+
+Rules of thumb for when to set these:
+
+| Page shape | What to set |
+| --- | --- |
+| Short intro → first image is a screenshot or diagram | nothing (default is correct) |
+| First image is a small status badge / icon | `no_priority_image: true` |
+| First image is an SVG diagram that's small | `no_priority_image: true` |
+| Long intro pushes the first image below the fold | `no_priority_image: true` |
+| The LCP is the third image, not the first | `priority_image: "<exact src string>"` |
+
+### Captions
+
+If you supply a markdown title (the quoted string after the URL), the render hook wraps the image in `<figure><figcaption>…</figcaption></figure>`:
+
+```markdown
+![Alt text for screen readers](deployment-diagram.svg "Caption that's visible under the image.")
+```
+
+Reserve captions for images that genuinely need explanatory text below them. Most screenshots don't.
+
+### When to bypass the render hook
+
+The render hook only touches plain markdown `![]()` syntax. If you need something it can't express, use one of the existing escape hatches:
+
+- **Need a CSS class** (`screenshot-medium`, `screenshot-small`, etc.) — use an inline HTML `<img>` tag. The render hook leaves HTML alone.
+- **Need precise sizing or cropping** — use the `imgproc` shortcode (`{{< imgproc src "Resize 600x" >}}`).
+- **Need `<picture>` with format fallbacks** — also use inline HTML or `imgproc`.
+
+In all other cases, write plain `![alt](src)` and let the hook do its job.
 
 ## Versioning notes
 
