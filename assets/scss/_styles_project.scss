@@ -832,3 +832,47 @@ footer {
     }
   }
 }
+
+// =============================================================================
+// View Transitions API — cross-document navigations
+// -----------------------------------------------------------------------------
+// Opt every same-origin navigation into a smooth cross-document transition.
+// The browser captures the outgoing page, navigates, and crossfades into the
+// incoming page. Elements that carry a `view-transition-name` are matched
+// across the two snapshots and animated as a single element — so the navbar,
+// the left sidebar, and the footer (which look near-identical between pages)
+// glide in place instead of crossfading from blank.
+//
+// This is a progressive enhancement. Browsers without support (Firefox as of
+// 2026 Q1) get a normal page navigation — no fallback code needed.
+//
+// What it doesn't do: it does NOT reduce the per-page wire cost of the
+// duplicated nav HTML (each page still ships its full `<nav id="td-section-
+// nav">`). It only makes navigations feel instantaneous. The "make the nav
+// only ship once" rewrite was considered separately and rejected for
+// first-paint / accessibility reasons.
+// =============================================================================
+
+@view-transition {
+  navigation: auto;
+}
+
+// Name the chrome elements that persist across pages. The browser uses these
+// names to pair the outgoing snapshot with the incoming one and animate the
+// transition as a single morph instead of a crossfade-from-blank.
+//
+// IMPORTANT: each `view-transition-name` must be unique on a given page —
+// the browser refuses to start the transition if two elements claim the same
+// name. The selectors below target single-instance landmarks; if a future
+// theme change duplicates any of them on a page, this block needs updating.
+header > .td-navbar { view-transition-name: site-navbar; }
+aside.td-sidebar    { view-transition-name: site-sidebar; }
+.td-footer          { view-transition-name: site-footer; }
+
+// Respect the user's motion preference. With navigation: none, browsers fall
+// back to instant page swaps — no animation, but also no crossfade flash.
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
