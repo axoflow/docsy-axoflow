@@ -1,9 +1,0 @@
-<link href='{{ "pagefind/pagefind-ui.css" | relURL }}' rel="stylesheet">
-<script src='{{ "pagefind/pagefind-ui.js" | relURL }}' defer type="application/x-javascript"></script>
-
-<div id="search"></div>
-<script>
-  window.addEventListener("DOMContentLoaded", (event) => {
-    new PagefindUI({ element: "#search", showSubResults: true, highlightParam: "highlight", pageSize: 10, autofocus: true{{ if .Site.Params.offlineSearchPagefindHideImages }}, showImages: false{{ end }} });
-  });
-</script>

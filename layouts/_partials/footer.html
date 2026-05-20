@@ -1,0 +1,27 @@
+{{/*
+  Top-level footer orchestrator.
+
+  The footer is split into three rows to mirror the marketing site
+  (https://axoflow.com/) footer structure:
+
+    row-1  categorized link columns (Products / Solutions / Resources /
+           Open Source / About) — sourced from [[menus.footer]]
+    row-2  site logo + About/Privacy text + compliance badges
+    row-3  copyright text + social icons
+
+  This pattern follows Docsy 0.15's split-file footer architecture
+  (themes/docsy/layouts/_partials/footer/{left,right,center,…}.html)
+  but uses axoflow-specific row-1/row-2/row-3 naming that matches the
+  marketing site's CSS structure for visual parity.
+
+  The previous monolithic 78-line footer.html had its inline
+  `footer-links-block` define moved into row-3.html, where it's the
+  only consumer.
+*/ -}}
+<footer class="td-footer d-print-none">
+  <div class="container-fluid">
+    {{ partial "footer/row-1.html" . }}
+    {{ partial "footer/row-2.html" . }}
+    {{ partial "footer/row-3.html" . }}
+  </div>
+</footer>

@@ -1,12 +1,20 @@
+// IMPORTANT: do NOT put dark-mode rules (e.g. @include color-mode(dark) blocks
+// or [data-bs-theme="dark"] selectors) in this file. It is imported BEFORE
+// Bootstrap loads, so the color-mode mixin is not defined here yet, and any
+// CSS rules placed here run at variables-declaration time rather than after
+// Bootstrap composes its tokens. Dark-mode rules belong in _styles_project.scss.
+
 $navbar-dark-color: #0F1425; // eerie black // navbar text
-$blue: #496bb8 !default; // Override breadcrumb and sidebar text color to increase contrast
-$primary: white !default;
+// Docsy 0.15's td/_variables_forward.scss pre-declares Bootstrap color vars
+// with !default, which silently swallows our !default overrides. Hard-assign.
+$blue: #496bb8; // Override breadcrumb and sidebar text color to increase contrast
+$primary: white;
 
 $dark: black;
 
-$warning: #FF6500 !default; // main color
-$light: #FFF7F2 !default; // light orange
-$success: #1f224b !default;
+$warning: #FF6500; // main color
+$light: #FFF7F2; // light orange
+$success: #1f224b;
 
 $light-background: #FFF7F2;
 
@@ -22,3 +30,10 @@ $google_font_family: "Poppins:300,300i,400,400i,700,700i|Roboto+Mono";
 
 $font-family-monospace: "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas,
   "Liberation Mono", "Courier New", monospace !default; // TODO: consider moving into UG SCSS or namespace the var (td-)
+
+// FontAwesome ships with `font-display: block` by default, which causes the
+// "Font display" Lighthouse audit to fail and produces an invisible FOIT
+// window on slow connections. `swap` paints fallback text immediately and
+// switches to the icon font once it arrives. Must be declared before the
+// FA scss is @imported in docsy/scss/td/_main.scss.
+$fa-font-display: swap;

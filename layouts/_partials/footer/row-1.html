@@ -1,0 +1,33 @@
+{{/*
+  Footer row-1: categorized link columns.
+  Data source: [[menus.footer]] in themes/docsy-axoflow/config/_default/config.toml.
+  Each top-level menu entry becomes a <nav> column; its children become links.
+  Intentionally one level deep (footer columns are flat).
+
+  Accessibility:
+    - Each column is a <nav aria-label="{name}"> landmark so AT users
+      can enumerate them distinctly from the top-of-page <header><nav>.
+    - The visible column title uses <p class="td-footer__column-title">
+      rather than <h4> to avoid polluting the page heading outline
+      (five extra headings per page would dilute the real document structure
+      for SEO and screen-reader heading navigation).
+*/ -}}
+<div class="td-footer__row td-footer__row-1 row py-4">
+  {{ range .Site.Menus.footer -}}
+    <nav class="td-footer__column col-6 col-md col-lg-2 py-2"
+         aria-label="{{ .Name }}">
+      <p class="td-footer__column-title">{{ .Name }}</p>
+      <ul class="list-unstyled td-footer__list mb-0">
+        {{ range .Children -}}
+          {{ $external := hasPrefix .URL "http" -}}
+          <li>
+            <a href="{{ .URL }}"
+               {{- if $external }} target="_blank" rel="noopener"{{ end -}}>
+              {{- .Name -}}
+            </a>
+          </li>
+        {{ end -}}
+      </ul>
+    </nav>
+  {{ end -}}
+</div>

@@ -43,7 +43,16 @@ twitter = "AxoFlowIO"
     [markup.goldmark.renderer]
       unsafe = true
   [markup.highlight]
-    # See a complete list of available styles at https://xyproto.github.io/splash/docs/all.html
+    # Disable Chroma (Hugo's built-in highlighter) for fenced code blocks so
+    # that Prism.js (loaded from static/css/prism.css + static/js/prism.js) can
+    # do the syntax highlighting client-side. With codeFences=true (the default)
+    # Hugo emits <pre class="chroma" style="background-color:...inline..."> with
+    # inline-styled tokens, which (1) Prism cannot decorate because there are no
+    # language-* classes, and (2) cannot be themed by our [data-bs-theme="dark"]
+    # CSS rules because the styles are inline. With codeFences=false, Hugo emits
+    # plain <pre><code class="language-X">...</code></pre> for Prism to process.
+    codeFences = false
+    # Style below is now inert (used only if Chroma is re-enabled).
     style = "tango"
     # Uncomment if you want your chosen highlight style used for code blocks without a specified language
     # guessSyntax = "true"
@@ -141,6 +150,11 @@ twitter = "AxoFlowIO"
   # Set to true to hide the sidebar search box (the top nav search box will still be displayed if search is enabled)
   sidebar_search_disable = true
   sidebar_search_below_title = true # Enables search box below the doc title in the left sidebar
+  # Keep displaying the entire toc
+  sidebar_root_enabled = false
+  # Enable the light/dark mode toggle in the navbar. Also activates the
+  # dark-mode JS bundle and FOUC-prevention init in head.html / baseof.html.
+  showLightDarkModeMenu = true
 
   [params.links]
   # End user relevant links. These will show up on left side of footer and in the community page if you have one.
@@ -272,15 +286,19 @@ anchor = "smart"
     [[menus.main]]
       name = "Axoflow vs SC4S"
       weight = 120
-      url = "https://axoflow.com/axoflow-platform-vs-sc4s"
+      url = "https://axoflow.com/axoflow-platform-vs-sc4s?utm_source=docs&utm_medium=menu"
       identifier = "sc4s"
       parent = "comparisons"
+  # NOTE: Integrations is logically under Products (parent = "products") to
+  # match axoflow.com's top-nav and footer. It remains in the [[menus.main]]
+  # array near the Solutions block only because TOML order doesn't matter for
+  # menu hierarchy — Hugo resolves nesting by the `parent` identifier.
   [[menus.main]]
     name = "Integrations"
-    weight = 300
+    weight = 600
     url = "/"
     identifier = "integrations"
-    parent = "solutions"
+    parent = "products"
     [[menus.main]]
       name = "Axoflow + Google Cloud"
       weight = 100
@@ -312,7 +330,7 @@ anchor = "smart"
       identifier = "integration-other"
       parent = "integrations"
   [[menus.main]]
-    name = "Use cases"
+    name = "Use Cases"
     weight = 500
     url = "/"
     identifier = "usecases"
@@ -363,28 +381,36 @@ anchor = "smart"
   name = "Products"
   weight = -130
   url = "/"
-  identifier = "product"
+  identifier = "products"
   [[menus.main]]
     name = "Axoflow Platform"
     weight = -120
     url = "https://axoflow.com/axoflow-platform?utm_source=docs&utm_medium=menu"
-    parent = "product"
+    parent = "products"
   [[menus.main]]
     name = "AxoLake"
     weight = 20
     url = "https://axoflow.com/axolake-petabyte-security-data-storage?utm_source=docs&utm_medium=menu"
     identifier = "axolake"
-    parent = "product"
+    parent = "products"
   [[menus.main]]
     name = "AxoRouter"
     weight = 100
     url = "https://axoflow.com/axorouter?utm_source=docs&utm_medium=menu"
-    parent = "product"
+    parent = "products"
   [[menus.main]]
     name = "Axoflow + AI"
     weight = 500
     url = "https://axoflow.com/how-axoflow-really-uses-ai?utm_source=docs&utm_medium=menu"
-    parent = "product"
+    parent = "products"
+  # Integrations (weight 600) is also a child of "products" — see the
+  # [[menus.main]] entry near the Solutions block.
+  [[menus.main]]
+    name = "Capabilities"
+    weight = 700
+    url = "https://axoflow.com/capabilities?utm_source=docs&utm_medium=menu"
+    identifier = "capabilities"
+    parent = "products"
 
 [[menus.main]]
   name = "Resources"
@@ -499,7 +525,7 @@ anchor = "smart"
   url = "https://axoflow.com/data-strikes-back-podcast?utm_source=docs&utm_medium=menu"
   parent = "resources"
 [[menus.main]]
-  name = "Support and Professional Services"
+  name = "Support & Professional Services"
   weight = 200
   url = "https://axoflow.com/support?utm_source=docs&utm_medium=menu"
   parent = "resources"
@@ -522,10 +548,16 @@ anchor = "smart"
     identifier = "documentation-axosyslog"
     parent = "opensource"
   [[menus.main]]
-    name = "Logging operator"
+    name = "Logging Operator Documentation"
     weight = 40
-    url = "https://kube-logging.dev/"
+    url = "https://kube-logging.dev/docs/"
     identifier = "logging-operator"
+    parent = "opensource"
+  [[menus.main]]
+    name = "Syslogopedia"
+    weight = 50
+    url = "https://axoflow.com/syslogopedia?utm_source=docs&utm_medium=menu"
+    identifier = "syslogopedia"
     parent = "opensource"
 [[menus.main]]
   name = "About"
@@ -565,3 +597,201 @@ anchor = "smart"
   weight = 150
   url = "https://axoflow.com/request-sandbox?utm_source=docs&utm_medium=menu"
   identifier = "menu-button"
+
+###############################################################################
+# Hugo - Footer row-1 menu (categorized link columns)
+###############################################################################
+# Sourced verbatim from https://axoflow.com/ row-1 footer. Intentionally
+# independent from [[menus.main]] so footer and top navbar can drift on their
+# own. Iterated by themes/docsy-axoflow/layouts/_partials/footer/row-1.html.
+
+# ----- Products column -----
+[[menus.footer]]
+  identifier = "products"
+  name       = "Products"
+  weight     = 100
+
+  [[menus.footer]]
+    identifier = "products-platform"
+    name       = "Axoflow Platform"
+    url        = "https://axoflow.com/axoflow-platform?utm_source=docs&utm_medium=footer"
+    parent     = "products"
+    weight     = 110
+
+  [[menus.footer]]
+    identifier = "products-axolake"
+    name       = "AxoLake"
+    url        = "https://axoflow.com/axolake-petabyte-security-data-storage?utm_source=docs&utm_medium=footer"
+    parent     = "products"
+    weight     = 120
+
+  [[menus.footer]]
+    identifier = "products-axorouter"
+    name       = "AxoRouter"
+    url        = "https://axoflow.com/axorouter?utm_source=docs&utm_medium=footer"
+    parent     = "products"
+    weight     = 130
+
+  [[menus.footer]]
+    identifier = "products-ai"
+    name       = "Axoflow + AI"
+    url        = "https://axoflow.com/how-axoflow-really-uses-ai?utm_source=docs&utm_medium=footer"
+    parent     = "products"
+    weight     = 140
+
+  [[menus.footer]]
+    identifier = "products-integrations"
+    name       = "Integrations"
+    url        = "https://axoflow.com/docs/axoflow/destinations/?utm_source=docs&utm_medium=footer"
+    parent     = "products"
+    weight     = 150
+
+  [[menus.footer]]
+    identifier = "products-capabilities"
+    name       = "Capabilities"
+    url        = "https://axoflow.com/capabilities?utm_source=docs&utm_medium=footer"
+    parent     = "products"
+    weight     = 160
+
+# ----- Solutions column -----
+[[menus.footer]]
+  identifier = "solutions"
+  name       = "Solutions"
+  weight     = 200
+
+  [[menus.footer]]
+    identifier = "solutions-comparisons"
+    name       = "Comparisons"
+    url        = "https://axoflow.com/comparisons?utm_source=docs&utm_medium=footer"
+    parent     = "solutions"
+    weight     = 210
+
+  [[menus.footer]]
+    identifier = "solutions-use-cases"
+    name       = "Use Cases"
+    url        = "https://axoflow.com/use-cases?utm_source=docs&utm_medium=footer"
+    parent     = "solutions"
+    weight     = 220
+
+  [[menus.footer]]
+    identifier = "solutions-case-studies"
+    name       = "Case Studies"
+    url        = "https://axoflow.com/case-studies?utm_source=docs&utm_medium=footer"
+    parent     = "solutions"
+    weight     = 230
+
+# ----- Resources column -----
+[[menus.footer]]
+  identifier = "resources"
+  name       = "Resources"
+  weight     = 300
+
+  [[menus.footer]]
+    identifier = "resources-blog"
+    name       = "Blog"
+    url        = "https://axoflow.com/blog?utm_source=docs&utm_medium=footer"
+    parent     = "resources"
+    weight     = 310
+
+  [[menus.footer]]
+    identifier = "resources-documentation"
+    name       = "Documentation"
+    url        = "https://axoflow.com/docs?utm_source=docs&utm_medium=footer"
+    parent     = "resources"
+    weight     = 320
+
+  [[menus.footer]]
+    identifier = "resources-webinars"
+    name       = "Webinars"
+    url        = "https://axoflow.com/webinars?utm_source=docs&utm_medium=footer"
+    parent     = "resources"
+    weight     = 330
+
+  [[menus.footer]]
+    identifier = "resources-white-papers"
+    name       = "White papers"
+    url        = "https://axoflow.com/white-papers?utm_source=docs&utm_medium=footer"
+    parent     = "resources"
+    weight     = 340
+
+  [[menus.footer]]
+    identifier = "resources-podcast"
+    name       = "Podcast"
+    url        = "https://axoflow.com/data-strikes-back-podcast?utm_source=docs&utm_medium=footer"
+    parent     = "resources"
+    weight     = 350
+
+  [[menus.footer]]
+    identifier = "resources-support"
+    name       = "Support & Professional Services"
+    url        = "https://axoflow.com/support?utm_source=docs&utm_medium=footer"
+    parent     = "resources"
+    weight     = 360
+
+# ----- Open Source column -----
+[[menus.footer]]
+  identifier = "opensource"
+  name       = "Open Source"
+  weight     = 400
+
+  [[menus.footer]]
+    identifier = "opensource-axosyslog"
+    name       = "AxoSyslog"
+    url        = "https://axoflow.com/axosyslog?utm_source=docs&utm_medium=footer"
+    parent     = "opensource"
+    weight     = 410
+
+  [[menus.footer]]
+    identifier = "opensource-axosyslog-docs"
+    name       = "AxoSyslog Documentation"
+    url        = "https://axoflow.com/docs/axosyslog-core/"
+    parent     = "opensource"
+    weight     = 420
+
+  [[menus.footer]]
+    identifier = "opensource-logging-operator"
+    name       = "Logging Operator Documentation"
+    url        = "https://kube-logging.dev/docs/"
+    parent     = "opensource"
+    weight     = 430
+
+  [[menus.footer]]
+    identifier = "opensource-syslogopedia"
+    name       = "Syslogopedia"
+    url        = "https://axoflow.com/syslogopedia?utm_source=docs&utm_medium=footer"
+    parent     = "opensource"
+    weight     = 440
+
+# ----- About column -----
+[[menus.footer]]
+  identifier = "about"
+  name       = "About"
+  weight     = 500
+
+  [[menus.footer]]
+    identifier = "about-us"
+    name       = "About us"
+    url        = "https://axoflow.com/about-us?utm_source=docs&utm_medium=footer"
+    parent     = "about"
+    weight     = 510
+
+  [[menus.footer]]
+    identifier = "about-news"
+    name       = "News"
+    url        = "https://axoflow.com/news?utm_source=docs&utm_medium=footer"
+    parent     = "about"
+    weight     = 520
+
+  [[menus.footer]]
+    identifier = "about-contact"
+    name       = "Contact"
+    url        = "https://axoflow.com/contact?utm_source=docs&utm_medium=footer"
+    parent     = "about"
+    weight     = 530
+
+  [[menus.footer]]
+    identifier = "about-partners"
+    name       = "Our Partners"
+    url        = "https://axoflow.com/partners?utm_source=docs&utm_medium=footer"
+    parent     = "about"
+    weight     = 540

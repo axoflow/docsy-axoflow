@@ -80,20 +80,6 @@ ol > li::marker {
   max-width: 100%;
 }
 
-// Search icon fixes, ugly
-// sidebar
-.td-sidebar__search > .main-menu-search > a:nth-child(1) > .nav-link {
-  margin-left: 10px;
-  color: black;
-}
-.td-sidebar__search {
-  border: 1px solid;
-  border-radius: 8px;
-  border-color: #BFC2C8;
-  margin-bottom: 0.5rem;
-  margin-top: 0.5rem;
-}
-
 // Left-sidebar toc
 .td-sidebar {
   background-color: unset;
@@ -464,7 +450,92 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
   color: #FF6500; // main color
 }
 
-// Footer-specific stuff
+// =============================================================================
+// Footer — new td-footer__* BEM structure
+// -----------------------------------------------------------------------------
+// Markup is in themes/docsy-axoflow/layouts/_partials/footer.html plus the
+// three split sub-partials under _partials/footer/. The footer has three rows:
+//   row-1  categorized link columns (Products / Solutions / etc.)
+//   row-2  logo + About/Privacy + compliance badges
+//   row-3  copyright + social icons
+// Light-mode rules below; dark-mode overrides live in the [data-bs-theme="dark"]
+// block further down in this file.
+// =============================================================================
+
+.td-footer {
+  // Override upstream Docsy 0.15's `@extend .td-box--dark` on .td-footer
+  // (themes/docsy/assets/scss/td/_footer.scss:6 — the upstream maintainers
+  // even tagged this with a "TODO: don't impose .td-box--dark"). Without
+  // these overrides, the footer renders with the dark-box palette in light
+  // mode. Bind to Bootstrap body variables so the footer follows the page
+  // theme — light on light pages, dark on dark pages — via the existing
+  // [data-bs-theme] cascade.
+  background-color: var(--bs-body-bg);
+  background-image: none;
+  color: var(--bs-body-color);
+
+  border-top: 1px solid #E7E8EF;
+  padding: 2rem 0 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: Poppins, Arial, sans-serif;
+
+  // Row separators
+  &__row {
+    margin: 0;
+  }
+  &__row-2 {
+    border-top-color: #E7E8EF;
+  }
+
+  // Row-1: column titles + link lists
+  &__column-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    color: #FF6500; // axoflow orange
+  }
+  &__list {
+    a {
+      color: #0F1425; // eerie black
+      text-decoration: none;
+      line-height: 1.9;
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  // Row-2: logo + about/privacy + badges
+  &__site-logo {
+    max-height: 48px;
+  }
+  &__compliance-badge {
+    max-height: 96px;
+  }
+  &__link {
+    color: #FF6500;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+
+  // Row-3: copyright + social icons
+  &__copyright-text {
+    color: #0F1425;
+  }
+  &__social-icons {
+    .list-inline-item { font-size: 2rem; }
+  }
+  &__social-link {
+    color: #FF6500;
+    &:hover { color: #FF8533; }
+  }
+}
+
+// =============================================================================
+// Footer — legacy aliases (kept for one cycle for project-level overrides
+// that may extend these class names). Remove once consumers migrate to the
+// td-footer__* selectors above.
+// =============================================================================
 footer {
   border-top: #E7E8EF 1px solid;
 }
@@ -533,4 +604,275 @@ footer {
 
 .btn-info:hover {
   background-color: #009fd8;
+}
+
+// =============================================================================
+// Dark mode
+// -----------------------------------------------------------------------------
+// All rules in this section take effect only when <html data-bs-theme="dark">.
+// The navbar (in _partials/navbar.html) hard-pins itself to data-bs-theme="light",
+// so the entire <nav> subtree is excluded from these overrides by inheritance.
+// =============================================================================
+
+@if $enable-dark-mode {
+  // Bootstrap palette under [data-bs-theme="dark"]
+  @include color-mode(dark) {
+    --bs-body-bg:                       #0b0d12;
+    --bs-body-color:                    #e6e6e6;
+    --bs-emphasis-color:                #ffffff;
+    --bs-secondary-color:               #adb5bd;
+    --bs-secondary-bg:                  #1a1f2e;
+    --bs-tertiary-bg:                   #141923;
+    --bs-tertiary-color:                #c4cae8;
+    --bs-border-color:                  #2a3147;
+    --bs-link-color:                    #ff8533;
+    --bs-link-hover-color:              #ffa766;
+    --bs-code-color:                    #ff9866;
+    --bs-heading-color:                 #ffffff;
+  }
+
+  // Axoflow custom selectors — duplicate just the color/background properties
+  // from the light rules above, keeping all other declarations untouched.
+  [data-bs-theme="dark"] {
+
+    // ---- Sidebar (left) ----
+    .td-sidebar__search { border-color: #2a3147; }
+    .td-sidebar__search > .main-menu-search > a:nth-child(1) > .nav-link { color: #e6e6e6; }
+    a:has(.td-sidebar-nav-active-item) { background-color: #1a1f2e; }
+    ul .foldable { border-left-color: rgba(255, 255, 255, 0.18); }
+
+    // ---- Right-hand TOC ----
+    .td-toc-header { border-bottom-color: #c4cae8; }
+
+    // Tocbot active item (set in tocbot.css to $light-background / $warning).
+    // The light-orange tint has poor contrast against the dark body; swap for
+    // a dark surface tone and brighten the accent stripe. tocbot.css's rule
+    // doesn't use !important on background-color, so our scoped (0,2,0)
+    // selector wins over its (0,1,0) without needing !important.
+    .is-active-link        { background-color: #2a3147; }
+    .is-active-link::before { background-color: #FF8533; }
+
+    // ---- Alerts / warning block ----
+    .alert-heading { color: #ffffff !important; }
+    .alert-info    { border-left-color: #898EB0; }
+    .alert-warning { border-left-color: #FF8533; }
+    .warning-block { border-left-color: #FF8533; }
+
+    // ---- Breadcrumb ----
+    .breadcrumb-item a { color: #c4cae8; }
+    // The active crumb (current page) gets its color from Bootstrap's
+    // --bs-breadcrumb-item-active-color, but Bootstrap redeclares that var
+    // locally on `.breadcrumb` from $breadcrumb-active-color (#141D62),
+    // which overrides any root-level [data-bs-theme="dark"] var override.
+    // Bypass the var indirection — set the color directly on the rule.
+    .breadcrumb-item.active { color: #ffffff; }
+
+    // ---- Inline code ----
+    code {
+      background-color: #1a1f2e !important;
+      color: #ff9866 !important;
+    }
+
+    // ---- Body text ----
+    .td-content { color: #e6e6e6; }
+    .sidebar-heading { color: #ffffff !important; }
+
+    // ---- Details / progressive disclosure ----
+    details { background: #141923; }
+
+    // ---- Page meta (right-side action box) ----
+    .td-page-meta { background-color: #1a1f2e; }
+    .td-page-meta a { color: #e6e6e6; }
+
+    // ---- Section-menu separator line ----
+    .panel-line { color: #FF8533; }
+
+    // ---- Pagefind 1.5+ Component UI ----
+    // Bridge axoflow's [data-bs-theme="dark"] toggle to Pagefind's --pf-* CSS
+    // variables. Pagefind also supports a `data-pf-theme="dark"` attribute, but
+    // overriding the vars directly avoids needing JS to mirror the attribute.
+    pagefind-modal,
+    pagefind-modal-trigger,
+    pagefind-searchbox {
+      --pf-background:   #141923;
+      --pf-text:         #e6e6e6;
+      // --pf-text-muted is Pagefind's color for the trigger button label
+      // ("Search" placeholder text). Its default #767676 hits only 3.87:1
+      // against the dark #141923 background — below WCAG AA 4.5:1. Bumping to
+      // #adb5bd (matches our --bs-secondary-color above) yields ~7.7:1.
+      --pf-text-muted:   #adb5bd;
+      --pf-text-secondary: #c4cae8;
+      --pf-border:       #2a3147;
+      --pf-input-bg:     #1a1f2e;
+      // --pf-hover is the background of result-row hover state AND the kbd
+      // shortcut chip inside the trigger button (`.pf-trigger-key`). Pagefind
+      // does not define a `--pf-result-hover` variable, so the previous
+      // override under that name was a no-op and the chip stayed at the
+      // light-mode default #f5f5f5 even in dark mode — combined with our
+      // light --pf-text-secondary text, that produced a 1.48:1 contrast
+      // failure flagged by the color-contrast audit.
+      --pf-hover:        #2a3147;
+      --pf-accent:       #FF8533;
+    }
+
+    // ---- Footer ----
+    // New td-footer__* selectors (preferred)
+    .td-footer {
+      border-top-color: #2a3147;
+      &__row-2        { border-top-color: #2a3147; }
+      &__column-title { color: #e6e6e6; }
+      &__list a       { color: #FF8533; }
+      &__link         { color: #FF8533; }
+      &__copyright-text { color: #c4cae8; }
+      &__social-link  {
+        color: #FF8533;
+        &:hover { color: #ffa766; }
+      }
+    }
+
+    // Legacy aliases (kept until downstream sites migrate)
+    footer        { border-top-color: #2a3147; }
+    .footer-right { border-left-color: #2a3147; }
+    .footer-link,
+    .footer-social-icons * .text-footer { color: #FF8533 !important; }
+    .text-footer  { color: #e6e6e6; }
+
+    // ---- Tweaked utility classes ----
+    .bg-info.bg-opacity-10 { background-color: #1a2733 !important; }
+    .btn-info {
+      background-color: #008abf;
+      &:hover { background-color: #00779e; }
+    }
+
+    // ---- Property labels ----
+    .property-block { border-color: #2a3147; }
+
+    // ---- Prism.js syntax highlighting ----
+    // Overrides Prism's default light palette (from static/css/prism.css, which
+    // is loaded *after* the compiled SCSS in head.html). Wins by specificity:
+    // every selector here carries an extra [data-bs-theme="dark"] ancestor, so
+    // (0,n+1,m) beats Prism's unscoped (0,n,m) regardless of source order.
+    // Palette is "Tomorrow Night"-inspired, tuned for the #141923 surface used
+    // by `pre` and inline `code` in dark mode.
+
+    // Bulletproof `<pre>` background override: targets the .td-content > pre
+    // selector that Docsy sets via var(--td-pre-bg). !important because Prism's
+    // own pre[class*=language-] rule (loaded later in prism.css) tied to ours
+    // on specificity (0,2,1) was winning by source order in some builds.
+    .td-content pre,
+    .td-content pre[class*="language-"] {
+      background-color: #141923 !important;
+      background-image: none !important;
+    }
+
+    code[class*="language-"],
+    pre[class*="language-"] {
+      color: #c5c8c6;
+      text-shadow: none;
+      background: transparent;
+    }
+    :not(pre) > code[class*="language-"],
+    pre[class*="language-"] {
+      background: #141923;
+    }
+    code[class*="language-"] ::selection,
+    code[class*="language-"]::selection,
+    pre[class*="language-"] ::selection,
+    pre[class*="language-"]::selection { background: #2a3147; }
+
+    .token.comment,
+    .token.prolog,
+    .token.doctype,
+    .token.cdata        { color: #7a8499; }
+    .token.punctuation  { color: #c5c8c6; }
+    .token.namespace    { opacity: .7; }
+    .token.property,
+    .token.tag,
+    .token.constant,
+    .token.symbol,
+    .token.deleted      { color: #cc6666; }
+    .token.boolean,
+    .token.number       { color: #de935f; }
+    .token.selector,
+    .token.attr-name,
+    .token.string,
+    .token.char,
+    .token.builtin,
+    .token.inserted     { color: #b5bd68; }
+    .language-css .token.string,
+    .style .token.string,
+    .token.entity,
+    .token.operator,
+    .token.url          { color: #8abeb7; background: transparent; }
+    .token.atrule,
+    .token.attr-value,
+    .token.keyword      { color: #b294bb; }
+    .token.function,
+    .token.class-name   { color: #f0c674; }
+    .token.regex,
+    .token.important,
+    .token.variable     { color: #ffb86c; }
+
+    // Line-numbers plugin gutter
+    .line-numbers .line-numbers-rows         { border-right-color: #2a3147; }
+    .line-numbers-rows > span:before         { color: #7a8499; }
+
+    // Line-highlight plugin
+    .line-highlight                          { background: hsla(35, 30%, 60%, .12); }
+    .line-highlight:before,
+    .line-highlight[data-end]:after          { background-color: hsla(35, 30%, 60%, .35); color: #c5c8c6; text-shadow: none; }
+
+    // Toolbar (copy / download buttons)
+    div.code-toolbar > .toolbar > .toolbar-item > button,
+    div.code-toolbar > .toolbar > .toolbar-item > a {
+      background: #2a3147;
+      color: #c5c8c6;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+      &:hover, &:focus { background: #3a4361; color: #ffffff; }
+    }
+  }
+}
+
+// =============================================================================
+// View Transitions API — cross-document navigations
+// -----------------------------------------------------------------------------
+// Opt every same-origin navigation into a smooth cross-document transition.
+// The browser captures the outgoing page, navigates, and crossfades into the
+// incoming page. Elements that carry a `view-transition-name` are matched
+// across the two snapshots and animated as a single element — so the navbar,
+// the left sidebar, and the footer (which look near-identical between pages)
+// glide in place instead of crossfading from blank.
+//
+// This is a progressive enhancement. Browsers without support (Firefox as of
+// 2026 Q1) get a normal page navigation — no fallback code needed.
+//
+// What it doesn't do: it does NOT reduce the per-page wire cost of the
+// duplicated nav HTML (each page still ships its full `<nav id="td-section-
+// nav">`). It only makes navigations feel instantaneous. The "make the nav
+// only ship once" rewrite was considered separately and rejected for
+// first-paint / accessibility reasons.
+// =============================================================================
+
+@view-transition {
+  navigation: auto;
+}
+
+// Name the chrome elements that persist across pages. The browser uses these
+// names to pair the outgoing snapshot with the incoming one and animate the
+// transition as a single morph instead of a crossfade-from-blank.
+//
+// IMPORTANT: each `view-transition-name` must be unique on a given page —
+// the browser refuses to start the transition if two elements claim the same
+// name. The selectors below target single-instance landmarks; if a future
+// theme change duplicates any of them on a page, this block needs updating.
+header > .td-navbar { view-transition-name: site-navbar; }
+aside.td-sidebar    { view-transition-name: site-sidebar; }
+.td-footer          { view-transition-name: site-footer; }
+
+// Respect the user's motion preference. With navigation: none, browsers fall
+// back to instant page swaps — no animation, but also no crossfade flash.
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
 }

@@ -1,0 +1,14 @@
+{{ if .Site.Params.offlineSearchPagefind }}
+  {{/* Pagefind 1.5+ Component UI: <pagefind-modal-trigger> is a <button> that
+       opens the <pagefind-modal> mounted in docs/baseof.html. The component
+       auto-binds Cmd/Ctrl+K too, so users can open search from any page
+       without clicking. The inner <span> is slotted into the trigger's
+       default slot, preserving the existing FA icon + "Search" label. */}}
+    {{/* Explicit aria-label so the underlying <button> has a deterministic
+         accessible name regardless of how the web component exposes its
+         slotted content to the accessibility tree. The FA icon has
+         aria-hidden so it doesn't dilute the name. */}}
+    <pagefind-modal-trigger aria-label="Search">
+      <span class="nav-link"><i class="fa fa-search" aria-hidden="true"></i> Search</span>
+    </pagefind-modal-trigger>
+{{ end }}

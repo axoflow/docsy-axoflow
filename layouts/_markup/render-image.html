@@ -1,0 +1,148 @@
+{{- /*
+  Markdown image render hook.
+
+  Replaces every `![alt](src "title")` in markdown with a responsive <img>.
+  Rasters (PNG/JPEG/WebP/GIF) get:
+    - WebP conversion of the original at natural size as src
+    - srcset with 400/800/1200/1600 px WebP variants (skipping any >= natural)
+    - sizes attribute aligned with the Docsy content column
+    - explicit width/height attributes from natural dimensions
+    - loading="lazy" + decoding="async"
+  SVGs pass through unchanged (no resize, no format conversion); they're
+  intrinsically scalable so srcset is unnecessary.
+  External URLs and unresolvable paths fall through as a plain <img>.
+
+  Resolution order for the `src` value:
+    1. Page-relative resource — siblings of the calling .md file
+       (covers e.g. `![](analytics-filter-bar.png)` next to `_index.md`)
+    2. Global resource via assets/ — strip leading "/" and look up
+       (covers e.g. `![](/img/topology/topology.png)` -> `assets/img/...`)
+    3. Pass through as-is — external URLs, missing files
+
+  baseURL handling: the hook always emits `.RelPermalink`, which respects
+  Hugo's baseURL. The production config also enables `relativeURLs = true`
+  (config/_default/config.toml:78), so the final HTML carries page-relative
+  paths that work correctly under the `/docs/axoflow/` deployment prefix.
+
+  Audit context (May 2026 Lighthouse run, before this hook landed):
+    - `unsized-images` failed on 70 pages — natural width/height now emitted.
+    - `image-delivery-insight` failed on 62 pages — viewport-appropriate
+      variants now served via srcset+sizes.
+    - `image-aspect-ratio` failed on 1 page — both attrs set blocks recurrence.
+*/ -}}
+
+{{- $src := .Destination -}}
+{{- $alt := .Text -}}
+{{- $caption := .Title -}}
+
+{{- /* External URL detection: scheme, scheme-relative, or any protocol. */ -}}
+{{- $isExternal := or (strings.HasPrefix $src "http://")
+                     (or (strings.HasPrefix $src "https://")
+                         (or (strings.HasPrefix $src "//")
+                             (strings.HasPrefix $src "data:"))) -}}
+
+{{- /* Heuristic for "likely the LCP image".
+
+       The first markdown image on a page (.Ordinal == 0) is, on this docs
+       site, almost always above the fold on desktop: Docsy's content column
+       starts a couple hundred pixels in, intros are typically 1–3 short
+       paragraphs, and screenshots/diagrams follow immediately. That image
+       is the one Lighthouse usually flags as LCP and the one a slow
+       browser hold-off on lazy-loading hurts the most.
+
+       For that image we emit:
+         loading="eager"          — bypass the browser's native lazy-load
+         fetchpriority="high"     — boost it above other deferred resources
+         decoding="async"         — keep async (sync blocks paint of the page
+                                    skeleton; modern Chromium handles async
+                                    LCP decode well)
+
+       All later images keep `loading="lazy"` + default fetchpriority.
+
+       Front-matter knobs (per page, optional):
+         priority_image: "foo.png"   — force this image to be the high-priority
+                                        one regardless of ordinal. Match is by
+                                        exact .Destination string equality.
+         no_priority_image: true     — disable the heuristic for this page
+                                        (use when the first image is small,
+                                        e.g. an icon, and no image should be
+                                        prioritized).
+*/ -}}
+{{- $isPriority := false -}}
+{{- if and (eq .Ordinal 0) (not .Page.Params.no_priority_image) -}}
+  {{- $isPriority = true -}}
+{{- end -}}
+{{- with .Page.Params.priority_image -}}
+  {{- $isPriority = eq . $src -}}
+{{- end -}}
+
+{{- /* Resolve the resource — page-relative first, then global. */ -}}
+{{- $r := "" -}}
+{{- if not $isExternal -}}
+  {{- with .Page.Resources.GetMatch $src -}}
+    {{- $r = . -}}
+  {{- else -}}
+    {{- $lookup := strings.TrimPrefix "/" $src -}}
+    {{- with resources.Get $lookup -}}
+      {{- $r = . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Identify rasters Hugo's image pipeline can process. SVG and unknown
+       media types take the pass-through branch below. */ -}}
+{{- $isRaster := false -}}
+{{- with $r -}}
+  {{- $isRaster = in (slice "image/png" "image/jpeg" "image/gif" "image/webp") .MediaType.Type -}}
+{{- end -}}
+
+{{- /* Wrap in <figure> only when a markdown title was supplied; otherwise
+       emit a bare <img>. Keeps the DOM minimal for the 99% caption-less case. */ -}}
+{{- if $caption -}}<figure>{{- end -}}
+
+{{- if and $r $isRaster -}}
+  {{- /* Build WebP variants. Skip any width >= the natural width to avoid
+         upscaling — upscaling is wasted bytes with no quality gain. The full
+         natural-width variant is appended last so it's the highest-w entry
+         in srcset, which is what browsers pick for the largest viewports. */ -}}
+  {{- $widths := slice 400 800 1200 1600 -}}
+  {{- $natural := $r.Resize (printf "%dx webp" $r.Width) -}}
+  {{- $srcset := slice -}}
+  {{- range $widths -}}
+    {{- if lt . $r.Width -}}
+      {{- $v := $r.Resize (printf "%dx webp" .) -}}
+      {{- $srcset = $srcset | append (printf "%s %dw" $v.RelPermalink .) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $srcset = $srcset | append (printf "%s %dw" $natural.RelPermalink $r.Width) -}}
+
+  <img src="{{ $natural.RelPermalink }}"
+       srcset="{{ delimit $srcset ", " }}"
+       sizes="(min-width: 992px) 720px, 100vw"
+       width="{{ $r.Width }}"
+       height="{{ $r.Height }}"
+       alt="{{ $alt }}"
+       {{ if $isPriority }}loading="eager" fetchpriority="high"{{ else }}loading="lazy"{{ end }}
+       decoding="async">
+{{- else if $r -}}
+  {{- /* SVG (or any non-raster resource): pass through, no processing.
+         No width/height — SVGs scale via the CSS the parent .td-content
+         applies (max-width: 100%). Setting fixed dims here would lock them
+         out of responsive layout. */ -}}
+  <img src="{{ $r.RelPermalink }}"
+       alt="{{ $alt }}"
+       {{ if $isPriority }}loading="eager" fetchpriority="high"{{ else }}loading="lazy"{{ end }}
+       decoding="async">
+{{- else -}}
+  {{- /* External URL or unresolvable local path. Pass through but still
+         apply lazy-load / decoding hints for modest perf wins. */ -}}
+  <img src="{{ $src }}"
+       alt="{{ $alt }}"
+       {{ if $isPriority }}loading="eager" fetchpriority="high"{{ else }}loading="lazy"{{ end }}
+       decoding="async">
+{{- end -}}
+
+{{- if $caption -}}
+  <figcaption>{{ $caption | markdownify }}</figcaption>
+  </figure>
+{{- end -}}

@@ -1,0 +1,60 @@
+{{/*
+  Footer row-3: copyright text + social icons.
+  Plain <div>s (info, not navigation).
+
+  Data sources:
+    params.copyright          — copyright holder name
+    params.copyright_from     — start year for "YYYY-YYYY" copyright range
+    params.links.user         — user-facing social/community links (LinkedIn, GitHub, Discord)
+    params.links.developer    — developer-facing links (currently unused in axoflow-docs)
+
+  Both link arrays are rendered into the same icon strip — the legacy split
+  between "user" and "developer" doesn't show visually but is preserved so
+  config doesn't have to change.
+*/ -}}
+{{ $links := .Site.Params.links -}}
+<div class="td-footer__row td-footer__row-3 row align-items-center py-3">
+
+  <!-- Copyright -->
+  <div class="td-footer__copyright col-12 col-md-6 py-2">
+    {{ with .Site.Params.copyright -}}
+      <span class="td-footer__copyright-text">
+        &copy;
+        {{- with $.Site.Params.copyright_from }} {{ . }}&ndash;{{ end -}}
+        {{ now.Year }} {{ . }}
+        {{ T "footer_all_rights_reserved" }}
+      </span>
+    {{ end -}}
+  </div>
+
+  <!-- Social icons -->
+  <div class="td-footer__social col-12 col-md-6 py-2 text-md-end">
+    <ul class="td-footer__social-icons list-inline mb-0">
+      {{ with $links -}}
+        {{ with index . "user" -}}
+          {{ template "footer-links-block" . }}
+        {{ end -}}
+        {{ with index . "developer" -}}
+          {{ template "footer-links-block" . }}
+        {{ end -}}
+      {{ end -}}
+    </ul>
+  </div>
+
+</div>
+
+{{/* Shared inline template for rendering an array of {name, url, icon}
+     entries as FontAwesome icon links. Used above for both user + developer
+     link arrays. Defined here (rather than in footer.html) because this is
+     the only partial that consumes it. */ -}}
+{{- define "footer-links-block" -}}
+  {{ range . -}}
+    <li class="list-inline-item mx-2"
+        data-bs-toggle="tooltip" title="{{ .name }}" aria-label="{{ .name }}">
+      <a class="td-footer__social-link" href="{{ .url }}"
+         target="_blank" rel="noopener" aria-label="{{ .name }}">
+        <i class="{{ .icon }}"></i>
+      </a>
+    </li>
+  {{ end -}}
+{{- end -}}
