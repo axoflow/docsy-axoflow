@@ -199,6 +199,15 @@ resampleFilter = "CatmullRom"
 quality = 75
 anchor = "smart"
 
+# Markdown link render hook (themes/docsy-axoflow/layouts/_markup/render-link.html).
+# Validates that every internal link in markdown points to a real page or
+# resource AND that the anchor fragment, if any, matches a heading on the
+# target page. Emits a warnf for each broken reference; does NOT fail the
+# build. Switch errorLevel to "error" if needed.
+[params.render_hooks.link]
+errorLevel = "warning"   # ignore (default), warning, or error (fails the build)
+highlightBroken = true   # adds .broken class to anchors in dev mode for visual triage
+
 [minify]
   minifyOutput = true
   disableJSON = true

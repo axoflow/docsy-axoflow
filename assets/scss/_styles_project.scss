@@ -432,6 +432,20 @@ pre > code {
   text-decoration: underline;
 }
 
+// Dev-only: the render-link.html hook adds .broken to any anchor whose target
+// could not be resolved (missing page, missing heading ID, etc.), but only
+// when highlightBroken is true in config and we're in `hugo server`. Loud
+// styling on purpose — these stand out during local preview so authors fix
+// them before pushing. In production builds the class is never emitted, so
+// the rule is dead bytes (negligible after PurgeCSS).
+a.broken {
+  background-color: rgba($warning, 0.15);
+  outline: 2px solid $warning;
+  outline-offset: 1px;
+  border-radius: 2px;
+  padding: 0 0.15em;
+}
+
 .td-content p {
   line-height: 1.62rem;
 }
