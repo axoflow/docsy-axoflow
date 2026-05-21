@@ -19,6 +19,13 @@
        (covers e.g. `![](/img/topology/topology.png)` -> `assets/img/...`)
     3. Pass through as-is — external URLs, missing files
 
+  Build-time validation: when a local (non-external) src can't be resolved
+  via either path, the hook emits a `warnf` with the source location so
+  authors and CI logs surface the broken reference. The build still
+  succeeds — missing images render as a plain <img> with the unresolved
+  src, which keeps work-in-progress pages buildable but visibly broken.
+  Tail `hugo --minify 2>&1 | grep "render-image:"` to list all of them.
+
   baseURL handling: the hook always emits `.RelPermalink`, which respects
   Hugo's baseURL. The production config also enables `relativeURLs = true`
   (config/_default/config.toml:78), so the final HTML carries page-relative
@@ -89,6 +96,26 @@
   {{- end -}}
 {{- end -}}
 
+{{- /* Build-time guard against missing images.
+
+       If the path is local (not an external URL or data: URI) and neither
+       the page-resource lookup nor the global resource lookup found a file,
+       emit a `warnf`. The build does NOT fail — warnings only — so authors
+       can still commit a page in progress, but the missing reference is
+       visible in stdout/CI logs and grepable later.
+
+       External URLs (http(s)://, scheme-relative //, data:) are skipped on
+       purpose: we can't validate them without making HTTP requests at build
+       time, which would be slow and flaky.
+
+       The warning includes .Position, which Hugo formats as
+       "<file>:<line>:<column>" — clickable in most editors and grepable in
+       CI logs (e.g. `hugo --minify 2>&1 | grep "render-image"`).
+*/ -}}
+{{- if and (not $isExternal) (not $r) -}}
+  {{- warnf "render-image: image %q not found (referenced from %s)" $src .Position -}}
+{{- end -}}
+
 {{- /* Identify rasters Hugo's image pipeline can process. SVG and unknown
        media types take the pass-through branch below. */ -}}
 {{- $isRaster := false -}}
@@ -135,7 +162,10 @@
        decoding="async">
 {{- else -}}
   {{- /* External URL or unresolvable local path. Pass through but still
-         apply lazy-load / decoding hints for modest perf wins. */ -}}
+         apply lazy-load / decoding hints for modest perf wins. The missing-
+         image case is already announced via warnf above; this branch just
+         renders something visible (a broken <img>) so authors notice on
+         their next preview. */ -}}
   <img src="{{ $src }}"
        alt="{{ $alt }}"
        {{ if $isPriority }}loading="eager" fetchpriority="high"{{ else }}loading="lazy"{{ end }}
