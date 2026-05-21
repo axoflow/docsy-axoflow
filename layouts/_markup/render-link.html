@@ -172,16 +172,34 @@ either of these shortcodes in conjunction with this render hook.
     {{- end }}
   {{- else }}
     {{- with $u.Fragment }}
-      {{- /* Destination is on the same page; prepend relative permalink. */}}
-      {{- $ctx := dict
-        "contentPath" $contentPath
-        "errorLevel" $errorLevel
-        "page" $.Page
-        "parsedURL" $u
-        "position" $position
-        "renderHookName" $renderHookName
-      }}
-      {{- partial "inline/h-rh-l/validate-fragment.html" $ctx }}
+      {{- /* Destination is on the same page; prepend relative permalink.
+
+             Skip same-page-anchor validation when the source file lives under
+             content/headless/. Those snippets get inlined into other pages
+             via include-headless / readfile, so a `[X](#foo)` inside a
+             snippet targets an anchor on whatever parent ends up rendering
+             the snippet — not on the snippet itself. The render hook can't
+             know who'll include the snippet, so validating against the
+             snippet's own Fragments produces false positives. We trade
+             detection of typos inside snippet same-page anchors for the
+             ability to keep errorLevel="error" without false breakage. */}}
+      {{- $isSnippetSource := false }}
+      {{- with $.Page.File }}
+        {{- if strings.HasPrefix .Path "headless/" }}
+          {{- $isSnippetSource = true }}
+        {{- end }}
+      {{- end }}
+      {{- if not $isSnippetSource }}
+        {{- $ctx := dict
+          "contentPath" $contentPath
+          "errorLevel" $errorLevel
+          "page" $.Page
+          "parsedURL" $u
+          "position" $position
+          "renderHookName" $renderHookName
+        }}
+        {{- partial "inline/h-rh-l/validate-fragment.html" $ctx }}
+      {{- end }}
       {{- $attrs = dict "href" (printf "%s#%s" $.Page.RelPermalink .) }}
     {{- else }}
       {{- if eq $errorLevel "warning" }}
@@ -336,18 +354,52 @@ either of these shortcodes in conjunction with this render hook.
 
   @returns {map[string]bool} a set keyed by anchor ID
   */}}
+  {{- /* IMPORTANT: do NOT call .Fragments.Identifiers on the snippet pages
+         here. Hugo computes Fragments lazily by parsing the page content,
+         which fires the markdown render hooks on each link inside the
+         snippet — and those render hooks call back into this very partial.
+         partialCached doesn't safely handle that re-entrant call and the
+         whole build deadlocks before any page renders.
+
+         The regex scans of .RawContent below catch:
+           - HTML attribute anchors: `<a name="X">`, `<a id="X">`,
+             `<h2 id="X">`, etc. — any element with id="X" or name="X".
+           - Goldmark block-attribute IDs: `## Heading {#X}` and the form
+             that appears on its own line above a block. This is the form
+             used by `content/headless/manage-linux-service.md` for its
+             `{#check-status}` anchor and similar in other snippets.
+         Together they cover every custom-anchor convention in this docs
+         site without triggering snippet rendering. */}}
   {{- $set := dict }}
   {{- with site.GetPage "/headless" }}
     {{- range .Resources.ByType "page" }}
       {{- with .RawContent }}
+        {{- /* HTML attribute style: name="X" or id="X". */}}
         {{- range $m := findRESubmatch `(?:id|name)\s*=\s*["']([^"']+)["']` . }}
           {{- $set = merge $set (dict (index $m 1) true) }}
         {{- end }}
-      {{- end }}
-      {{- range .Fragments.Identifiers }}
-        {{- $set = merge $set (dict . true) }}
+        {{- /* Goldmark block-attribute style: `{#X}` or `{#X .class …}`.
+               Anchored to a word boundary on the left so we don't match
+               URL fragments like `(/foo/#bar)` (those have no `{` before
+               the `#`). */}}
+        {{- range $m := findRESubmatch `\{#([A-Za-z][\w-]*)` . }}
+          {{- $set = merge $set (dict (index $m 1) true) }}
+        {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}
   {{- return $set }}
 {{- end -}}
+
+{{- /*
+  Design note: an earlier revision tried adding a "tier 4" fallback that
+  scanned $p.Content for anchor IDs to catch anchors emitted by shortcodes
+  at render time (e.g. the message-schema reference page is generated from
+  data/message_model.yaml). That approach was rejected because calling
+  .Content on a target page from within a render hook cycles through that
+  page's own links and stalls the build on a richly cross-linked corpus.
+  No safe substitute has been found yet — pages whose anchors come from
+  shortcode output will produce false-positive heading-ID warnings.
+  Fixing this properly likely needs Hugo's deferred-rendering mechanism
+  or a build-time index step that runs before the render-hook phase.
+*/ -}}
