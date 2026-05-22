@@ -1,42 +1,71 @@
 AQL
 ASAP
+AxoRouter
 Axoflow
 Axolet
 AxoSyslog
 Azure Monitor
 backpressure
+Brightmail
+ClickHouse
+cloudconnector
+Cognito
 Cognito Detect
+config
 COTS
+cpmidu_update_tool
 Cybersecurity
+Dex
 DNS
 Dynatrace
 eBPF
 ECS
+ePolicy
+EVTX
 FilterX
+Flowmon
 Fluent Bit
 Fluentd
+Forcepoint
 FortiGate
 Fortinet
 FortiProxy
 GDPR
 GNU
+Grafana
 gRPC
 hostname
 IAM
 IBM QRadar
+Incapsula
 journald
+Junos
 LEEF
+Meraki
 Microsoft Sentinel
+misconfigured
+namespace
+Nanolog
+Netmotion
+NetScaler
 NGINX
 OCSF
 Omnissa
+onboarding
 OTLP
+Palo
 Palo Alto
 Palo Alto Networks
 PCRE
+pfSense
+Pomerium
+Powertech
+Pravail
 PRI
 Prometheus
+reachability
 rehydration
+rsyslog
 Sankey
 SC4S
 SDATA
@@ -46,6 +75,9 @@ sourcetype
 Splunk
 Splunk Connect for Syslog
 substring
+Superna
+Symantec
+syscalls
 syslog
 syslog-ng
 systemd
@@ -53,6 +85,17 @@ Tanium
 TCP
 TLS
 UDP
+UniFi
 unmanaged
 unparseable
+unpersisted
 URL
+vCenter
+Vectra
+Viptela
+VMware
+Vormetric
+vThunder
+WEC
+Websense
+Zscaler
