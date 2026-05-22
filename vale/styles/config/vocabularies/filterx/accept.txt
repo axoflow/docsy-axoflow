@@ -17,6 +17,7 @@ format_windows_eventlog_xml
 format_xml
 get_sdata
 get_timezone_source
+glob_match
 guess_timezone
 has_sdata
 hex_decode
