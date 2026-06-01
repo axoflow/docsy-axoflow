@@ -2,9 +2,13 @@ AMQP
 APIs
 AQL
 ASAP
+<<<<<<< Updated upstream
 ASCII
 authpriv
 AxoRouter
+=======
+auditable
+>>>>>>> Stashed changes
 Axoflow
 Axolet
 AxoSyslog
@@ -26,6 +30,7 @@ Cognito Detect
 collectd
 config
 COTS
+<<<<<<< Updated upstream
 cpmidu_update_tool
 cron
 csvlog
@@ -38,6 +43,11 @@ deduplicate
 Dex
 diskbuffer
 dnsConfig
+=======
+cutover
+Cybersecurity
+declaratively
+>>>>>>> Stashed changes
 DNS
 dqtool
 dstip
@@ -100,6 +110,7 @@ Kibana
 Kubernetes
 le
 LEEF
+<<<<<<< Updated upstream
 libcurl
 Loggly
 loggen
@@ -116,6 +127,12 @@ lt
 mbox
 MCEdit
 Meraki
+=======
+logstore
+logstores
+lookup
+lookups
+>>>>>>> Stashed changes
 Microsoft Sentinel
 misconfigured
 MQTT
@@ -183,6 +200,7 @@ SELinux
 separate_extensions
 Severities
 SIEM
+<<<<<<< Updated upstream
 slogencrypt
 slogkey
 slogverify
@@ -190,6 +208,10 @@ SMTP
 SNMP
 snmptrap
 Solaris
+=======
+SIEMs
+SOC
+>>>>>>> Stashed changes
 SonicWall
 sourcetype
 Splunk
