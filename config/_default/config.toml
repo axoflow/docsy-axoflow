@@ -245,6 +245,12 @@ highlightBroken = true   # adds .broken class to anchors in dev mode for visual 
     identifier = "case-studies"
     parent = "solutions"
     [[menus.main]]
+      name = "Case study - Storage Modernization"
+      weight = 500
+      url = "https://axoflow.com/case-studies/case-study---non-profit-government-organization?utm_source=docs&utm_medium=menu"
+      identifier = "case-study-storage-modernization"
+      parent = "case-studies"
+    [[menus.main]]
       name = "Case Study - Migrating to Google SecOps"
       weight = 1000
       url = "https://axoflow.com/case-studies/google-secops-migration-government-organization?utm_source=docs&utm_medium=menu"
