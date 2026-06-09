@@ -187,8 +187,10 @@ li.nav-item > a.show {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23FF6500' viewBox='0 0 448 512'%3E%3Cpath d='M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z'/%3E%3C/svg%3E") no-repeat center / contain;
 }
 
-// Hide residual FA pseudo-element icons inherited from Docsy SCSS.
-.td-toc-title__link::after {
+// Hide residual FA pseudo-element icons inherited from Docsy SCSS to avoid duplicating the hamburger icon.
+.td-toc-title__link::after,
+.td-sidebar__toggle::before,
+.td-sidebar__toggle[aria-expanded='true']::before {
   content: none !important;
 }
 

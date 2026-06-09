@@ -182,8 +182,9 @@
       </span>
     {{ if $treeRoot }}{{ with site.Params.version }}<span class="td-sidebar-nav-doc-version">v{{ . }}</span>{{ end }}{{ end }}</a>
     {{ if and $treeRoot site.Params.ui.sidebar_search_below_title }}
-    <form class="td-sidebar__search d-flex align-items-center">
-      {{ partial "search-input.html" . }}
+    {{/* Inner below-title search form. */}}
+    <form class="td-sidebar__search d-none d-lg-flex align-items-center">
+      {{ partial "search-input.html" $p }}
       <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#td-section-nav" aria-controls="td-section-nav" aria-expanded="false" aria-label="Toggle section navigation">
         {{ partial "icon.html" (dict "name" "bars") }}
       </button>
