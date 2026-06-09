@@ -1,0 +1,24 @@
+# Flag inline FontAwesome `<i class="fa-…">` icons in content.
+#
+# Context: in 2026-05 the Axoflow docs sites dropped the FontAwesome webfont
+# and the FA CSS that accompanies it. 
+# Replacement: `{{< icon "<name>" >}}` (shortcode) or
+#              `{{ partial "icon.html" (dict "name" "<name>") }}` (template).
+# Available icon names live in themes/docsy-axoflow/data/icons.yaml. Adding a
+# new icon there is a two-step copy from FontAwesome's SVG source — see the
+# docstring at the top of that file.
+#
+# The pattern: `<i …>` element whose class attribute contains a FA class
+# anywhere (any of fa-X, fas, fab, far, fa-solid, fa-brands, fa-regular).
+# `\b` word boundary prevents false positives on identifiers like `myfa-…`.
+# `scope: raw` makes Vale scan inline HTML in markdown rather than skipping
+# it (Vale's default `text` scope ignores HTML).
+
+extends: existence
+message: 'Inline `<i class="fa-…">` icons no longer render — the FontAwesome webfont was removed in 2026-05. Replace with `{{< icon "<name>" >}}` (see themes/docsy-axoflow/data/icons.yaml for available icon names). To add a new icon, download the SVG from FontAwesome, copy viewBox and the <path …> element verbatim into themes/docsy-axoflow/data/icons.yaml, and reference as {{ partial "icon.html" (dict "name" "<name>") }} in templates, or {{< icon "<name>" >}} in the markdown.'
+link: https://github.com/axoflow/docsy-axoflow/blob/main/data/icons.yaml
+level: error
+nonword: true
+scope: raw
+tokens:
+  - '<i[^>]+class="[^"]*\bfa[bsr]?[- ][^"]*"'
