@@ -1,0 +1,36 @@
+// Minimal FA-compat shim.
+//
+// Shadows the upstream `fontawesome.scss` that themes/docsy/hugo.yaml
+// mounts from `node_modules/@fortawesome/fontawesome-free/scss/`. Hugo's
+// asset lookup walks docsy-axoflow → docsy, so this file wins over the
+// FA source. We import ONLY the FA `_variables.scss` (and `_functions.scss`)
+// because some Docsy SCSS files reference variables like `$fa-var-chevron-
+// left` in `content:` declarations — without them, the SCSS pipeline fails
+// with `Undefined variable: "$fa-var-…"`. The variables are SCSS-time
+// constants and emit no CSS, so this preserves compilation without
+// shipping any FA class rules.
+//
+// Sibling stubs in this directory (solid.scss, brands.scss) are fully
+// empty — they had no compile-time dependencies. Skipping their @font-face
+// declarations is what kills the 157 KB woff2 downloads.
+//
+// The icons we still need render via inline SVG from
+// `themes/docsy-axoflow/layouts/_partials/icon.html`, sourced from path
+// data in `themes/docsy-axoflow/data/icons.yaml`.
+
+@import 'functions';
+@import 'variables';
+
+// Minimal `.fa` / `.fas` class definitions so `@extend .fa` and
+// `@extend .fas` in themes/docsy/assets/scss/td/_search.scss resolve.
+// Those extends drive the Lunr offline-search UI, which this site does
+// not use (we run Pagefind via `offlineSearchPagefind = true`), so the
+// rendered styles are unreachable at runtime. The empty declaration
+// block exists only to keep the SCSS @extend target valid; one harmless
+// property is set to prevent the rule from being optimized away.
+.fa,
+.fas,
+.fa-brands,
+.fa-solid {
+  font-style: normal;
+}

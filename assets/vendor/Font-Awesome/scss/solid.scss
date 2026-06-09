@@ -1,0 +1,4 @@
+// Intentionally empty — see ./fontawesome.scss for the rationale.
+// Shadows the FA solid-icon family SCSS so its @font-face rule (which
+// pulls fa-solid-900.woff2) and ~1 600 `.fa-…` selectors are never
+// emitted into main.min.css.

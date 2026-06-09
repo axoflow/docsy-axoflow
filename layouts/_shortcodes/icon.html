@@ -1,0 +1,19 @@
+{{- /*
+  Shortcode wrapper around the icon partial. Lets markdown content embed an
+  inline SVG icon by name:
+    {{< icon "dharmachakra" >}}
+    {{< icon name="github" label="GitHub" >}}
+
+  Positional and named arguments both work; named arguments support the
+  optional `class`, `size`, and `label` parameters (see icon.html for details).
+*/ -}}
+
+{{- $name := .Get 0 -}}
+{{- with .Get "name" }}{{ $name = . }}{{ end -}}
+
+{{- $ctx := dict "name" $name -}}
+{{- with .Get "class" }}{{ $ctx = merge $ctx (dict "class" .) }}{{ end -}}
+{{- with .Get "size"  }}{{ $ctx = merge $ctx (dict "size"  .) }}{{ end -}}
+{{- with .Get "label" }}{{ $ctx = merge $ctx (dict "label" .) }}{{ end -}}
+
+{{- partial "icon.html" $ctx -}}

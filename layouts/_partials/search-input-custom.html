@@ -9,6 +9,6 @@
          slotted content to the accessibility tree. The FA icon has
          aria-hidden so it doesn't dilute the name. */}}
     <pagefind-modal-trigger aria-label="Search">
-      <span class="nav-link"><i class="fa fa-search" aria-hidden="true"></i> Search</span>
+      <span class="nav-link">{{ partial "icon.html" (dict "name" "search") }} Search</span>
     </pagefind-modal-trigger>
 {{ end }}

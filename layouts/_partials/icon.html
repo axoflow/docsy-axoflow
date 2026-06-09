@@ -1,0 +1,54 @@
+{{- /*
+  Render an inline SVG icon by name. Replaces the FontAwesome `<i class="fa-…">`
+  pattern across the site without the 157 KB woff2 webfont or the FA CSS bundle.
+
+  Usage:
+    {{ partial "icon.html" (dict "name" "search") }}
+    {{ partial "icon.html" (dict "name" "linkedin" "class" "td-footer__social-icon") }}
+    {{ partial "icon.html" (dict "name" "linkedin" "size" "1.5em" "label" "LinkedIn") }}
+
+  Parameters (passed as a dict):
+    name   (string, required)  Icon key from site.Data.icons.icons. Legacy FA
+                               class names like "fa-search" are accepted too —
+                               the leading "fa-" is stripped and aliases (e.g.
+                               search → magnifying-glass) are resolved.
+    class  (string, optional)  Extra CSS classes to add to the <svg>.
+    size   (string, optional)  CSS size for both width and height. Default "1em"
+                               so the icon scales with surrounding font-size,
+                               matching FA's behavior.
+    label  (string, optional)  Accessible name. When present, the SVG renders
+                               with role="img" + <title> so screen readers
+                               announce it. When omitted (the common inline-
+                               with-text case), the SVG is aria-hidden so it
+                               doesn't double-up on the adjacent visible text.
+
+  Icon data lives in themes/docsy-axoflow/data/icons.yaml — see that file
+  for instructions on adding a new icon.
+*/ -}}
+
+{{- $name := .name | default "" -}}
+{{- /* Strip a leading "fa-" if the caller passed an old FA class name. */ -}}
+{{- $name = strings.TrimPrefix "fa-" $name -}}
+
+{{- /* Resolve aliases (legacy → canonical icon key). */ -}}
+{{- with index site.Data.icons.aliases $name -}}
+  {{- $name = . -}}
+{{- end -}}
+
+{{- $icon := index site.Data.icons.icons $name -}}
+
+{{- if not $icon -}}
+  {{- warnf "icon.html: unknown icon %q (referenced from %s). Add it to themes/docsy-axoflow/data/icons.yaml." $name (.position | default "<unknown>") -}}
+{{- else -}}
+  {{- $class := .class | default "" -}}
+  {{- $size  := .size  | default "1em" -}}
+  {{- $label := .label -}}
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="{{ $icon.viewBox }}"
+    width="{{ $size }}" height="{{ $size }}" fill="currentColor"
+    {{- with $class }} class="{{ . }}"{{ end }}
+    {{- if $label }} role="img" aria-label="{{ $label }}"
+    {{- else }} aria-hidden="true" focusable="false"{{ end }}>
+    {{- with $label }}<title>{{ . }}</title>{{ end -}}
+    <path {{ $icon.path | safeHTMLAttr }}/>
+  </svg>
+{{- end -}}

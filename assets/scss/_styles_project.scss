@@ -102,17 +102,21 @@ nav.foldable-nav .td-sidebar-nav__section {
   padding-top: 0.5rem;
 }
 
-// Change open/close icon in left sidebar
+// Open/close indicator in the left sidebar tree.
+//   closed (`.with-child > label::before`)      → angle-right (›)
+//   open   (`input:checked ~ label::before`)    → angle-down  (v)
 .ul-1 .with-child > label:before {
   position: absolute;
-  left: -0.88rem !important;
-  top: 10px;
-  content: "\f105" !important;
-  color: #FF6500 !important;
+  top: 1rem;
+  content: "" !important;
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23FF6500' viewBox='0 0 320 512'%3E%3Cpath d='M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z'/%3E%3C/svg%3E") no-repeat center / contain;
 }
 
 .ul-1 .with-child > input:checked ~ label:before {
-  content: "\f107" !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23FF6500' viewBox='0 0 448 512'%3E%3Cpath d='M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z'/%3E%3C/svg%3E");
   rotate: -90deg;
 }
 
@@ -164,16 +168,31 @@ li.nav-item > a.show {
   }
 }
 
-// Change menu dropdown icon
+// Menu dropdown icon.
+//   width/height: 0.8em scales with the parent's font-size so the caret stays
+//   proportional to the menu text.
+//   `vertical-align: -0.05em` nudges the chevron baseline so it sits where
+//   the text-rendered FA glyph used to.
+//
+// Color: fill='%23FF6500' is `#FF6500` URL-encoded. The dropdown-toggle has
+// no dark-mode override here, so a single fixed-color SVG is fine.
 .dropdown-toggle::after {
   border: none !important;
-  color: #FF6500; // main color
-  content: "\f107" !important;
-  font-family: var(--fa-style-family, "Font Awesome 6 Free");
-  vertical-align: inherit;
+  content: "" !important;
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin-left: 0.3em;
+  vertical-align: -0.05em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23FF6500' viewBox='0 0 448 512'%3E%3Cpath d='M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z'/%3E%3C/svg%3E") no-repeat center / contain;
 }
 
-// Makes the menu entry with identifier menu-button look like a button
+// Hide residual FA pseudo-element icons inherited from Docsy SCSS.
+.td-toc-title__link::after {
+  content: none !important;
+}
+
+// Makes the menu entry with identifier menu-button look like a button.
 #menu-button, #menu-contact {
   box-sizing: border-box;
   border: 1px solid #FF6500; // main color
@@ -182,6 +201,7 @@ li.nav-item > a.show {
   border-radius: 8px;
   padding-left: 2rem;
   padding-right: 2rem;
+  font-size: 1.1875rem;       // 19px @ 16px base → "large text" per WCAG
   font-weight: 700;
   &:hover {
     color: #141D62;  // space cadet

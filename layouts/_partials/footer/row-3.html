@@ -49,11 +49,16 @@
      the only partial that consumes it. */ -}}
 {{- define "footer-links-block" -}}
   {{ range . -}}
+    {{- /* `.icon` in the config is FA-class string ("fab fa-linkedin", "fa fa-envelope", …).
+           Strip the FA framework prefix and feed the bare icon name to our
+           inline-SVG partial. Keeps the existing config format working
+           even after we removed FontAwesome from the bundle. */ -}}
+    {{- $iconName := .icon | replaceRE `^fa[bsr]?\s+fa-` "" -}}
     <li class="list-inline-item mx-2"
         data-bs-toggle="tooltip" title="{{ .name }}" aria-label="{{ .name }}">
       <a class="td-footer__social-link" href="{{ .url }}"
          target="_blank" rel="noopener" aria-label="{{ .name }}">
-        <i class="{{ .icon }}"></i>
+        {{ partial "icon.html" (dict "name" $iconName) }}
       </a>
     </li>
   {{ end -}}
