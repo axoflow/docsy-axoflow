@@ -1,16 +1,12 @@
-AMQP
 APIs
 AQL
 ASAP
-<<<<<<< Updated upstream
 ASCII
-authpriv
-AxoRouter
-=======
 auditable
->>>>>>> Stashed changes
+authpriv
 Axoflow
 Axolet
+AxoRouter
 AxoSyslog
 Azure Monitor
 backoffs
@@ -19,36 +15,32 @@ BigQuery
 boolean
 Brightmail
 BSD
-c_rehash
 CAs
 chroot
 ClickHouse
-CPUs
 cloudconnector
 Cognito
 Cognito Detect
 collectd
 config
 COTS
-<<<<<<< Updated upstream
 cpmidu_update_tool
+CPUs
 cron
 csvlog
+cutover
 Cybersecurity
+c_rehash
 Datacenters
 datagram
 datagrams
 datetime
+declaratively
 deduplicate
 Dex
 diskbuffer
-dnsConfig
-=======
-cutover
-Cybersecurity
-declaratively
->>>>>>> Stashed changes
 DNS
+dnsConfig
 dqtool
 dstip
 dstport
@@ -58,9 +50,9 @@ ECS
 Entra
 ePolicy
 eventlog
+EVTX
 execmem
 extraVolumes
-EVTX
 Fabien
 failover
 fd
@@ -110,29 +102,26 @@ Kibana
 Kubernetes
 le
 LEEF
-<<<<<<< Updated upstream
 libcurl
-Loggly
-loggen
 logfile
 logformat
+loggen
+Loggly
 Logmatic
 logpaths
 LogScale
 logserver
 Logstash
+logstore
+logstores
 Loki
+lookup
+lookups
 lpr
 lt
 mbox
 MCEdit
 Meraki
-=======
-logstore
-logstores
-lookup
-lookups
->>>>>>> Stashed changes
 Microsoft Sentinel
 misconfigured
 MQTT
@@ -154,8 +143,8 @@ nonblocking
 nonsequential
 NTP
 Objectid
-Octetstring
 OCSF
+Octetstring
 Omnissa
 onboarding
 OpenSearch
@@ -200,18 +189,15 @@ SELinux
 separate_extensions
 Severities
 SIEM
-<<<<<<< Updated upstream
+SIEMs
 slogencrypt
 slogkey
 slogverify
 SMTP
 SNMP
 snmptrap
-Solaris
-=======
-SIEMs
 SOC
->>>>>>> Stashed changes
+Solaris
 SonicWall
 sourcetype
 Splunk
@@ -262,7 +248,7 @@ Viptela
 VMware
 Vormetric
 vThunder
-WEC
 Websense
+WEC
 Wernli
 Zscaler
