@@ -245,6 +245,12 @@ highlightBroken = true   # adds .broken class to anchors in dev mode for visual 
     identifier = "case-studies"
     parent = "solutions"
     [[menus.main]]
+      name = "Case studies"
+      weight = 400
+      url = "https://axoflow.com/case-studies?utm_source=docs&utm_medium=menu"
+      identifier = "case-studies-overview"
+      parent = "case-studies"
+    [[menus.main]]
       name = "Case study - Storage Modernization"
       weight = 500
       url = "https://axoflow.com/case-studies/case-study---non-profit-government-organization?utm_source=docs&utm_medium=menu"
@@ -385,6 +391,18 @@ highlightBroken = true   # adds .broken class to anchors in dev mode for visual 
       weight = 700
       url = "https://axoflow.com/storage-solutions-security-data?utm_source=docs&utm_medium=menu"
       identifier = "storage-overview"
+      parent = "usecases"
+    [[menus.main]]
+      name = "Log Management"
+      weight = 733
+      url = "https://axoflow.com/log-management?utm_source=docs&utm_medium=menu"
+      identifier = "log-management"
+      parent = "usecases"
+    [[menus.main]]
+      name = "Cut Your Anthropic Bill"
+      weight = 767
+      url = "https://axoflow.com/cut-ai-token-costs?utm_source=docs&utm_medium=menu"
+      identifier = "cut-ai-token-costs"
       parent = "usecases"
     [[menus.main]]
       name = "For Managed Service Providers"
@@ -612,6 +630,37 @@ highlightBroken = true   # adds .broken class to anchors in dev mode for visual 
   weight = 150
   url = "https://axoflow.com/request-sandbox?utm_source=docs&utm_medium=menu"
   identifier = "menu-button"
+
+  [[menus.main]]
+    name = "Collection"
+    weight = 100
+    url = "https://axoflow.com/capabilities/collection?utm_source=docs&utm_medium=menu"
+    identifier = "capabilities-collection"
+    parent = "capabilities"
+  [[menus.main]]
+    name = "Processing"
+    weight = 200
+    url = "https://axoflow.com/capabilities/processing?utm_source=docs&utm_medium=menu"
+    identifier = "capabilities-processing"
+    parent = "capabilities"
+  [[menus.main]]
+    name = "Routing"
+    weight = 300
+    url = "https://axoflow.com/capabilities/routing?utm_source=docs&utm_medium=menu"
+    identifier = "capabilities-routing"
+    parent = "capabilities"
+  [[menus.main]]
+    name = "Storage"
+    weight = 400
+    url = "https://axoflow.com/capabilities/security-data-storage?utm_source=docs&utm_medium=menu"
+    identifier = "capabilities-security-data-storage"
+    parent = "capabilities"
+  [[menus.main]]
+    name = "Management"
+    weight = 500
+    url = "https://axoflow.com/capabilities/security-data-pipeline-management?utm_source=docs&utm_medium=menu"
+    identifier = "capabilities-security-data-pipeline-management"
+    parent = "capabilities"
 
 ###############################################################################
 # Hugo - Footer row-1 menu (categorized link columns)
