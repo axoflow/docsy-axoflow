@@ -20,3 +20,10 @@ Then check for:
 
 Return a prioritized list of issues with the line numbers and suggested fixes.
 Do not make changes until I confirm.
+
+When referring to a specific line in a finding, format the reference as
+`<absolute-file-path>:<line-number>` (for example,
+`/Users/you/project/content/example.md:48`) — Claude Code renders this pattern
+as a terminal hyperlink the user can CMD+click to open in the editor. Use this
+format every time you cite a line — in section headings, inline references, and
+when introducing suggested fixes — instead of bare `Line 48` text.
