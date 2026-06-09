@@ -7,20 +7,7 @@ that every linked item also appears in the ``[[menus.main]]`` sections of
 ``themes/docsy-axoflow/config/_default/config.toml``.
 
 Matching is done by normalized URL. Pure dropdown toggles 
-(``url = "/"`` or ``#``) carry no destination and are ignored on both sides.
-
-For every navbar link that is missing from the config the script also works out
-*where* it belongs, so it can generate ready-to-use ``[[menus.main]]`` entries:
-
-* ``parent``     -- the navbar mega-menu column heading (e.g. "Use Cases",
-                    "Capabilities") is matched, by name, to an existing config
-                    entry; that entry's ``identifier`` becomes the parent.
-* ``weight``     -- the item's weight is interpolated between the weights of its
-                    neighbours in the same column, so the menu keeps the same
-                    order as the navbar. Columns with no existing entries get
-                    evenly spaced weights (100, 200, ...).
-* ``identifier`` -- a unique slug derived from the URL path, de-duplicated
-                    against the identifiers already present in the config.
+(``url = "/"`` or ``#``) are ignored.
 
 Output formats (``--format``):
 
@@ -30,15 +17,12 @@ Output formats (``--format``):
     toml   just the generated ``[[menus.main]]`` blocks for the missing items
 
 With ``--write`` the generated blocks are inserted into the config file (right
-before the footer-menu section). TOML order does not affect the rendered menu --
-Hugo resolves nesting by ``parent`` and orders siblings by ``weight`` -- so the
-blocks are simply inserted as a group.
+before the footer-menu section).
 
 Exit status: 0 when every navbar link is covered, 1 when some are missing, 2 on
 a runtime error -- suitable for CI gating.
 
-Dependencies: BeautifulSoup (``beautifulsoup4``), already used by the sibling
-``hugo_to_markdown.py`` script.
+Dependencies: BeautifulSoup (``beautifulsoup4``)
 
 Usage:
     python3 themes/docsy-axoflow/scripts/check_main_menu.py
@@ -428,10 +412,6 @@ def render_additions_toml(additions):
     for addition in additions:
         if addition["parent"] != current_parent:
             current_parent = addition["parent"]
-            blocks.append(
-                "  # Added from axoflow.com navbar -- children of "
-                '"%s"' % current_parent
-            )
         blocks.append(render_entry_toml(addition).rstrip("\n"))
     return "\n".join(blocks) + "\n"
 
