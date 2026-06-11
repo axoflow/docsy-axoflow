@@ -1,79 +1,121 @@
+{{/*
+  Main navigation bar.
+
+  Responsive pattern (Bootstrap 5.3 responsive offcanvas):
+    - `<div class="offcanvas-lg offcanvas-end">` is the menu container.
+      `.offcanvas-lg` is self-switching — it carries its own breakpoint
+      rules: below lg (992px) it's a slide-in drawer; at lg+ it collapses
+      back to an inline flex container.
+    - `navbar-toggler`: the hamburger, shown below lg, hidden at lg+.
+    - `btn-close` in the offcanvas header closes the drawer; the header is
+      auto-hidden at lg+, so the close button only appears in drawer mode.
+
+  Replaces Docsy's `td-navbar js-navbar-scroll` horizontal-scroll
+  pattern to avoid menu overlaps
+
+  Multi-level dropdowns inside the drawer: the companion CSS statically
+  positions `.dropdown-menu`s so they don't overflow the narrow column,
+  and pins the hover-only `.dropdown-submenu` flyouts open on touch.
+*/}}
+
 {{ $cover := and
     (.HasShortcode "blocks/cover")
     (not .Site.Params.ui.navbar_translucent_over_cover_disable)
 -}}
 {{ $baseURL := urls.Parse $.Site.Params.Baseurl -}}
 
-<nav class="td-navbar js-navbar-scroll
-            {{- if $cover }} td-navbar-cover {{- end }}" data-bs-theme="light">
-<div class="container-fluid flex-column flex-md-row">
-  <a class="navbar-brand" href="{{ .Site.Home.RelPermalink }}" aria-label="{{- .Site.Title -}}">
-    {{- /**/ -}}
-    <span class="navbar-brand__logo navbar-logo">
-      {{- if ne .Site.Params.ui.navbar_logo false -}}
-        {{ with resources.Get "icons/logo.svg" -}}
-          {{ ( . | minify).Content | safeHTML -}}
+<nav class="navbar navbar-expand-lg td-navbar
+            {{- if $cover }} td-navbar-cover{{ end }}" data-bs-theme="light">
+  <div class="container-fluid">
+
+    {{- /* Brand */ -}}
+    <a class="navbar-brand" href="{{ .Site.Home.RelPermalink }}"
+       aria-label="{{ .Site.Title }}">
+      <span class="navbar-brand__logo navbar-logo">
+        {{- if ne .Site.Params.ui.navbar_logo false -}}
+          {{ with resources.Get "icons/logo.svg" -}}
+            {{ ( . | minify).Content | safeHTML -}}
+          {{ end -}}
         {{ end -}}
-      {{ end -}}
-    </span>
-    {{- /**/ -}}
-    <span class="navbar-brand__name">
-      {{- .Site.Title -}}
-    </span>
-    {{- /**/ -}}
-  </a>
-  <div class="td-navbar-nav-scroll ms-md-auto" id="main_navbar">
-    <ul class="navbar-nav">
-      {{ $p := . -}}
-      {{ range .Site.Menus.main -}}
-      {{ if not .HasChildren }}
-      <li class="nav-item">
-        {{ $active := or ($p.IsMenuCurrent "main" .) ($p.HasMenuCurrent "main" .) -}}
-        {{ $href := "" -}}
-        {{ with .Page -}}
-          {{ $active = or $active ( $.IsDescendant .) -}}
-          {{ $href = .RelPermalink -}}
-        {{ else -}}
-          {{ $href = .URL | relLangURL -}}
-        {{ end -}}
-        {{ $isExternal := ne $baseURL.Host (urls.Parse .URL).Host -}}
-        <a {{/**/ -}}
-          class="nav-link {{- if $active }} active {{- end }}" {{/**/ -}}
-          href="{{ $href }}"
-          {{ with .Identifier }}id="{{ . }}"{{ end -}}
-          {{- if $isExternal }} target="_blank" rel="noopener" {{- end -}}
-        >
-            {{- .Pre -}}
-            <span>{{ .Name }}</span>
-            {{- .Post -}}
-        </a>
-      </li>
-      {{ else }}
-          {{ partial "navbar-dropdown.html" . }}
-      {{ end -}}
-      {{ end }}
-      {{ if .Site.Params.versions -}}
-      <li class="nav-item dropdown d-none d-lg-block">
-        {{ partial "navbar-version-selector.html" . -}}
-      </li>
-      {{ end -}}
-      {{ if (gt (len .Site.Home.Translations) 0) -}}
-      <li class="nav-item dropdown d-none d-lg-block">
-        {{ partial "navbar-lang-selector.html" . -}}
-      </li>
-      {{ end -}}
-      {{ if .Site.Params.ui.showLightDarkModeMenu -}}
-      <li class="td-light-dark-menu nav-item dropdown">
-        {{ partial "theme-toggler" . }}
-      </li>
-      {{ end -}}
-    </ul>
+      </span>
+      <span class="navbar-brand__name">{{ .Site.Title }}</span>
+    </a>
+
+    {{- /* Hamburger toggler — visible only below lg (auto-hidden by
+           Bootstrap when navbar-expand-lg matches). The inline SVG
+           replaces Bootstrap's default `.navbar-toggler-icon` so we
+           don't depend on the (removed) FontAwesome webfont. */ -}}
+    <button class="navbar-toggler border-0" type="button"
+            data-bs-toggle="offcanvas" data-bs-target="#mainNavOffcanvas"
+            aria-controls="mainNavOffcanvas"
+            aria-label="Toggle navigation">
+      {{ partial "icon.html" (dict "name" "bars" "size" "1.5em") }}
+    </button>
+
+    {{- /* Responsive offcanvas drawer — `.offcanvas-lg` is self-switching
+           (drawer below lg, inline at lg+). See header comment for why the
+           `-lg` suffix matters with Docsy's navbar extend. */ -}}
+    <div class="offcanvas-lg offcanvas-end" tabindex="-1"
+         id="mainNavOffcanvas" aria-labelledby="mainNavOffcanvasLabel">
+      <div class="offcanvas-header">
+        <h2 class="offcanvas-title h5 mb-0" id="mainNavOffcanvasLabel">Menu</h2>
+        <button type="button" class="btn-close"
+                data-bs-dismiss="offcanvas" data-bs-target="#mainNavOffcanvas"
+                aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav ms-lg-auto align-items-lg-center">
+          {{ $p := . -}}
+          {{ range .Site.Menus.main -}}
+            {{ if not .HasChildren -}}
+              <li class="nav-item">
+                {{ $active := or ($p.IsMenuCurrent "main" .) ($p.HasMenuCurrent "main" .) -}}
+                {{ $href := "" -}}
+                {{ with .Page -}}
+                  {{ $active = or $active ($.IsDescendant .) -}}
+                  {{ $href = .RelPermalink -}}
+                {{ else -}}
+                  {{ $href = .URL | relLangURL -}}
+                {{ end -}}
+                {{ $isExternal := ne $baseURL.Host (urls.Parse .URL).Host -}}
+                <a class="nav-link{{ if $active }} active{{ end }}"
+                  href="{{ $href }}"
+                  {{ with .Identifier }}id="{{ . }}"{{ end -}}
+                  {{- if $isExternal }} target="_blank" rel="noopener"{{ end -}}>
+                  {{- .Pre -}}<span>{{ .Name }}</span>{{- .Post -}}
+                </a>
+              </li>
+            {{- else -}}
+              {{ partial "navbar-dropdown.html" . }}
+            {{- end -}}
+          {{- end }}
+
+          {{ if .Site.Params.versions -}}
+          <li class="nav-item dropdown">
+            {{ partial "navbar-version-selector.html" . -}}
+          </li>
+          {{- end }}
+
+          {{ if gt (len .Site.Home.Translations) 0 -}}
+          <li class="nav-item dropdown">
+            {{ partial "navbar-lang-selector.html" . -}}
+          </li>
+          {{- end }}
+
+          {{ if .Site.Params.ui.showLightDarkModeMenu -}}
+          <li class="td-light-dark-menu nav-item dropdown">
+            {{ partial "theme-toggler" . }}
+          </li>
+          {{- end }}
+        </ul>
+
+        {{ if not .Site.Params.ui.navbar_search_disable -}}
+        <div class="td-navbar__search ms-lg-3 mt-3 mt-lg-0">
+          {{ partial "search-input.html" . }}
+        </div>
+        {{- end }}
+      </div>
+    </div>
   </div>
-  <div class="d-none d-lg-block">
-  {{ if not .Site.Params.ui.navbar_search_disable -}}
-    {{ partial "search-input.html" . }}
-  {{ end }}
-  </div>
-</div>
-{{- partial "banner.html" . }} <!-- Adds announcements banner under the menu -->
+  {{- partial "banner.html" . }}
 </nav>

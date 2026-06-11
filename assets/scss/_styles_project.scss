@@ -238,6 +238,72 @@ li.nav-item > a.show {
   }
 }
 
+// =============================================================================
+// Mobile navbar — offcanvas drawer (below lg / 992 px)
+// -----------------------------------------------------------------------------
+// The navbar menu lives in `<div class="offcanvas-lg offcanvas-end">` 
+// layouts/_partials/navbar.html). `.offcanvas-lg` is
+// self-switching — Bootstrap gives it a slide-in drawer below lg and an
+// inline flex container at lg+
+//
+// Overrides the leakage from Docsy's UNSCOPED
+// `@extend .navbar-expand` on `.td-navbar` (themes/docsy/.../td/_nav.scss:27),
+// which forces the toggler hidden and the nav horizontal at every width.
+// Docsy's generated `.navbar-expand .offcanvas` rules target the bare
+// `.offcanvas` class and so never touch our `.offcanvas-lg` element
+@include media-breakpoint-down(lg) {
+  .td-navbar {
+    // Re-show the hamburger (Docsy's extend hides it at all widths).
+    .navbar-toggler {
+      display: inline-block !important;
+    }
+    // Stack the nav vertically inside the drawer (extend forces row).
+    .navbar-nav {
+      flex-direction: column !important;
+    }
+
+    // Dropdowns inside the drawer: Bootstrap positions `.dropdown-menu`
+    // absolutely, which overflows the narrow drawer. Pin them to static
+    // flow and strip the floating-card chrome so they read as inline,
+    // accordion-style children.
+    .dropdown-menu {
+      position: static !important;
+      transform: none !important;
+      border: 0;
+      box-shadow: none;
+      background-color: transparent;
+      padding: 0 0 0 1rem;
+      width: auto;
+    }
+
+    // The custom `.dropdown-submenu` flyouts open on `:hover`, which never
+    // fires on touch — pin them open so their items stay reachable.
+    .dropdown-submenu {
+      width: auto;
+      .dropdown-menu {
+        display: block !important;
+        left: 0;
+        top: 0;
+      }
+    }
+
+    // CTA pills become full-width touch targets in the drawer. (The
+    // `.dropdown-toggle` chevron keeps its desktop size — see that rule
+    // near the top of this file.)
+    #menu-button,
+    #menu-contact {
+      display: block;
+      text-align: center;
+      margin: 0.5rem 1rem;
+    }
+
+    // Give the dropdown labels a comfortable row height in the drawer.
+    .nav-item.dropdown > .nav-link {
+      padding: 0.5rem 0;
+    }
+  }
+}
+
 // CSS for multi-level dropdown menu
 .dropdown-submenu {
   position: relative;
