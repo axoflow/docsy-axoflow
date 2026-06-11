@@ -4,11 +4,7 @@
        auto-binds Cmd/Ctrl+K too, so users can open search from any page
        without clicking. The inner <span> is slotted into the trigger's
        default slot, preserving the existing FA icon + "Search" label. */}}
-    {{/* Explicit aria-label so the underlying <button> has a deterministic
-         accessible name regardless of how the web component exposes its
-         slotted content to the accessibility tree. The FA icon has
-         aria-hidden so it doesn't dilute the name. */}}
-    <pagefind-modal-trigger aria-label="Search">
+    <pagefind-modal-trigger placeholder="Search" aria-label="Search">
       <span class="nav-link">{{ partial "icon.html" (dict "name" "search") }} Search</span>
     </pagefind-modal-trigger>
 {{ end }}

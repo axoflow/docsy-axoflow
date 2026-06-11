@@ -4,26 +4,46 @@
 <!-- Pagefind 1.5+ Component UI (replaces the legacy PagefindUI / pagefind-ui.js).
      Web components auto-register from these assets — see <pagefind-modal>,
      <pagefind-modal-trigger>, <pagefind-searchbox>, <pagefind-config>.
-     Loaded non-render-blocking: the stylesheet uses the print-media trick
-     (load is async, applied to "all" once available); the module script is
-     auto-deferred by `type="module"`. Lighthouse audit (May 2026) showed the
-     CSS as render-blocking with ~86% unused rules. -->
+
+     The stylesheet stays off the render-blocking path via the print-media
+     trick (loaded async, applied to "all" once available).
+
+     highlight.js only matters on pages opened from a search result (which
+     carry a ?highlight= param), so it loads eagerly *only* in that case. It
+     exposes window.PagefindHighlight as a module side effect. -->
 <link rel="preload" href="{{ "pagefind/pagefind-component-ui.css" | relURL }}" as="style">
 <link rel="stylesheet" href="{{ "pagefind/pagefind-component-ui.css" | relURL }}" media="print" onload="this.media='all';this.onload=null">
 <noscript><link rel="stylesheet" href="{{ "pagefind/pagefind-component-ui.css" | relURL }}"></noscript>
-<script type="module" src="{{ "pagefind/pagefind-component-ui.js" | relURL }}"></script>
+<script>
+  (function () {
+    var uiURL = "{{ "pagefind/pagefind-component-ui.js" | relURL }}";
+    var hlURL = "{{ "pagefind/pagefind-highlight.js" | relURL }}";
 
-<!-- Needed to highlight search keyword on the result page.
-     The module script below is what actually wires up PagefindHighlight; the
-     legacy classic-script tag has been removed because it loaded the same file
-     a second time under a different MIME (~44 KB duplicate fetch, 36% unused).
-     pagefind-highlight.js exposes `window.PagefindHighlight` as a side effect
-     of module evaluation, and module scripts execute in document order, so
-     the second module can rely on the global being set. -->
-{{ $pagefind_highlight_url := "pagefind/pagefind-highlight.js" | relURL }}
-<script type="module" src="{{ $pagefind_highlight_url }}"></script>
-<script type="module">
-  new window.PagefindHighlight({ highlightParam: "highlight" });
+    // Result pages (opened with ?highlight=) need the highlighter immediately.
+    if (window.location.search.indexOf("highlight=") !== -1) {
+      import(hlURL).then(function () {
+        if (window.PagefindHighlight) {
+          new window.PagefindHighlight({ highlightParam: "highlight" });
+        }
+      });
+    }
+
+    // Load the Component UI once, on first interaction or at idle.
+    var events = ["pointerdown", "keydown", "touchstart", "focusin"];
+    var loaded = false;
+    function loadUI() {
+      if (loaded) { return; }
+      loaded = true;
+      events.forEach(function (evt) { window.removeEventListener(evt, loadUI, true); });
+      import(uiURL);
+    }
+    events.forEach(function (evt) { window.addEventListener(evt, loadUI, true); });
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(loadUI, { timeout: 2500 });
+    } else {
+      window.addEventListener("load", function () { setTimeout(loadUI, 1200); });
+    }
+  })();
 </script>
 {{ end -}}
 

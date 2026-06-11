@@ -82,7 +82,12 @@ window.markmap = {
 {{ if and .Site.Params.search (isset .Site.Params.search "algolia") -}}
   {{ template "algolia/scripts" .Site.Params.search.algolia -}}
 {{ end -}}
-<script src='{{ "js/tabpane-persist.js" | relURL }}'></script>
+{{/* `defer` keeps this off the parser-blocking path. The script's only
+     top-level side effect is registering a DOMContentLoaded listener (which
+     still fires after deferred scripts run), and its bootstrap.Tab use lives
+     inside that handler — bootstrap is in the deferred main.js above, so it's
+     defined by the time the handler runs. */ -}}
+<script src='{{ "js/tabpane-persist.js" | relURL }}' defer></script>
 {{ partial "hooks/body-end.html" . -}}
 
 {{ define "algolia/scripts" -}}
@@ -103,17 +108,21 @@ for (let c of containers) {
 {{ end -}}
 {{ if .Site.Params.jstoc.enable }}
 <!-- Initialize tocbot -->
-<script src='{{ "js/tocbot.min.js" | relURL }}'></script>
+{{/* `defer` takes tocbot.min.js off the render-blocking path, and waits with the
+     init for DOMContentLoaded. */ -}}
+<script src='{{ "js/tocbot.min.js" | relURL }}' defer></script>
 <script type="text/javascript">
-    tocbot.init({
-        // Where to render the table of contents.
-        tocSelector: '.td-toc',
-        // Where to grab the headings to build the table of contents.
-        contentSelector: '.td-content',
-        // Which headings to grab inside of the contentSelector element.
-        headingSelector: '{{ with .Site.Params.jstoc.custom_headings }}{{ . }}{{ else }}h2, h3, h4{{ end }}',
-        // ignore headings that are hidden in DOM
-        ignoreHiddenElements: true
+    window.addEventListener('DOMContentLoaded', function () {
+        tocbot.init({
+            // Where to render the table of contents.
+            tocSelector: '.td-toc',
+            // Where to grab the headings to build the table of contents.
+            contentSelector: '.td-content',
+            // Which headings to grab inside of the contentSelector element.
+            headingSelector: '{{ with .Site.Params.jstoc.custom_headings }}{{ . }}{{ else }}h2, h3, h4{{ end }}',
+            // ignore headings that are hidden in DOM
+            ignoreHiddenElements: true
+        });
     });
 </script>
 {{ end }}
@@ -140,15 +149,19 @@ for (let c of containers) {
 
 <!-- Lightbox-like zoomable images -->
 {{ if not .Params.disable_image_zoom }}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
-<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+{{/* Image zoom isn't needed for first paint, so keep glightbox off the
+     critical path */}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" media="print" onload="this.media='all';this.onload=null" />
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" /></noscript>
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js" defer></script>
 <script>
-  const lightbox = GLightbox({
-    selector: '.td-content * img',
-    touchNavigation: true,
-    loop: true,
-    autoplayVideos: true
-});
+  window.addEventListener('DOMContentLoaded', function () {
+    const lightbox = GLightbox({
+      selector: '.td-content * img',
+      touchNavigation: true,
+      loop: true,
+      autoplayVideos: true
+    });
+  });
 </script>
 {{ end }}
-

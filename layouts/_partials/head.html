@@ -1,6 +1,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+{{/* Warm the connection to the jsDelivr CDN early. 
+     `dns-prefetch` is the fallback for browsers that
+     ignore preconnect. */ -}}
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
 {{ $darkMode := partialCached "dark-mode-config.html" "dark-mode-global" -}}
 {{ if $darkMode.enable -}}
 {{/* Browser hints before CSS loads */ -}}
@@ -87,7 +93,9 @@
 {{ end -}}
 
 {{ if .Site.Params.prism_syntax_highlighting -}}
-<link rel="stylesheet" href="{{ "css/prism.css" | relURL }}"/>
+<link rel="preload" href="{{ "css/prism.css" | relURL }}" as="style">
+<link rel="stylesheet" href="{{ "css/prism.css" | relURL }}" media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="{{ "css/prism.css" | relURL }}"></noscript>
 {{ end -}}
 
 {{ template "algolia/head" . -}}
