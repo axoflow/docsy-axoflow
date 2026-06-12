@@ -239,6 +239,25 @@ li.nav-item > a.show {
   }
 }
 
+// Theme switcher (`td-light-dark-menu`): the toggler `<li>` lives inside
+// `.navbar-nav`, so Bootstrap treats it as an in-navbar dropdown and positions
+// the menu statically (no Popper). Docsy's `.td-light-dark-menu { position:
+// unset }` then leaves the absolute `.dropdown-menu` with no nearby positioning
+// context, so its `left:0` resolves against the fixed `.td-navbar` and the menu
+// jumps to the screen's left edge. Restore a context on desktop and pin the
+// menu under the button (right-aligned — it sits at the navbar end via
+// `ms-lg-auto`).
+@include media-breakpoint-up(lg) {
+  .td-navbar .td-light-dark-menu {
+    position: relative;
+
+    .dropdown-menu {
+      right: 0;
+      left: auto;
+    }
+  }
+}
+
 // =============================================================================
 // Mobile navbar — offcanvas drawer (below lg / 992 px)
 // -----------------------------------------------------------------------------
