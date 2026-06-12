@@ -1,0 +1,42 @@
+// =============================================================================
+// Self-hosted brand fonts — Poppins (UI/body) + Roboto Mono (code)
+// -----------------------------------------------------------------------------
+// These replace Docsy's Google-Fonts loader. We keep `$td-enable-google-fonts`
+// false (its default) so Docsy does NOT emit the render-blocking
+// `@import url(fonts.googleapis.com/...)` — instead we ship the woff2 files from
+// our own origin (CDN) and declare them here. 
+// `font-display: swap`: text paints immediately in the Arial/system fallback
+// and is repainted in Poppins once the woff2 arrives 
+// =============================================================================
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../fonts/poppins-300.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/poppins-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/poppins-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/roboto-mono-400.woff2") format("woff2");
+}

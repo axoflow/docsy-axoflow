@@ -7,6 +7,11 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
+{{/* Preload the two above-the-fold brand-fonts.
+     `crossorigin` is required even for same-origin fonts. */ -}}
+<link rel="preload" href="{{ "fonts/poppins-400.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ "fonts/poppins-700.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+
 {{ $darkMode := partialCached "dark-mode-config.html" "dark-mode-global" -}}
 {{ if $darkMode.enable -}}
 {{/* Browser hints before CSS loads */ -}}

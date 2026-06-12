@@ -28,6 +28,14 @@ $link-color: #010A22;
 $google_font_name: "Poppins";
 $google_font_family: "Poppins:300,300i,400,400i,700,700i|Roboto+Mono";
 
+// Make Poppins the body/UI font. Without this, `--bs-font-sans-serif`
+// falls back to Bootstrap's default system stack and the self-hosted Poppins
+// @font-face (assets/scss/_fonts.scss) is loaded but never requested by the
+// body.
+$font-family-sans-serif: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto,
+  "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif,
+  "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+
 $font-family-monospace: "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas,
   "Liberation Mono", "Courier New", monospace !default; // TODO: consider moving into UG SCSS or namespace the var (td-)
 
