@@ -8,7 +8,7 @@
   <head>
     {{ partial "head.html" . }}
   </head>
-  <body class="td-{{ .Kind }}{{ with .Page.Params.body_class }} {{ . }}{{ end }}">
+  <body class="td-{{ .Kind }}{{ with .Page.Params.body_class }} {{ . }}{{ end }}" {{ with .Page.Params.body_attribute }} {{ . | safeHTMLAttr }}{{ end }}>
     {{ partial "hooks/body-top.html" . -}}
     <header>
       {{ partial "navbar.html" . }}
