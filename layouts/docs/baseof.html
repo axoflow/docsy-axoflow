@@ -42,7 +42,41 @@
            <pagefind-modal-trigger> (in the sidebar) or the Cmd/Ctrl+K shortcut.
            Mounted at the end of <body> so DOM is fully built when the web
            component auto-connects. */ -}}
+      {{- /* Multi-version docs: when data/versions.yaml exists and this is the
+             latest (root) build with more than one version, include a version
+             selector in the search modal.
+             The index of the latest site is a unified index covering every version. 
+             Older versions and projects with no versions data file use the plain modal. The
+             latest build is detected from the baseURL, like navbar-version-selector. */ -}}
+      {{- $showVersionFilter := false -}}
+      {{- with site.Data.versions -}}
+        {{- $curBase := (urls.Parse site.BaseURL).Path -}}
+        {{- if not (strings.HasSuffix $curBase "/") }}{{ $curBase = printf "%s/" $curBase }}{{ end -}}
+        {{- $segs := split (strings.Trim $curBase "/") "/" -}}
+        {{- $lastSeg := index $segs (sub (len $segs) 1) -}}
+        {{- $isLatest := true -}}
+        {{- range . }}{{ if and (not .latest) (eq (printf "%v" .version) $lastSeg) }}{{ $isLatest = false }}{{ end }}{{ end -}}
+        {{- $showVersionFilter = and $isLatest (gt (len .) 1) -}}
+      {{- end -}}
+      {{ if $showVersionFilter -}}
+      <pagefind-modal>
+        <pagefind-modal-header>
+          <pagefind-input></pagefind-input>
+        </pagefind-modal-header>
+        <pagefind-modal-body>
+          <pagefind-summary></pagefind-summary>
+          {{/* Newest version on top. We use count-desc: the latest version has the most
+               indexed pages (docs accrete), so it sorts first. */ -}}
+          <pagefind-filter-dropdown filter="section" label="Version" sort="count-desc"></pagefind-filter-dropdown>
+          <pagefind-results></pagefind-results>
+        </pagefind-modal-body>
+        <pagefind-modal-footer>
+          <pagefind-keyboard-hints></pagefind-keyboard-hints>
+        </pagefind-modal-footer>
+      </pagefind-modal>
+      {{- else -}}
       <pagefind-modal></pagefind-modal>
+      {{- end }}
       <pagefind-config
         bundle-path="{{ "pagefind/" | relURL }}"
         highlight-param="highlight"
