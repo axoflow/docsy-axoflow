@@ -57,6 +57,7 @@ Fabien
 failover
 fd
 FilterX
+firewalld
 Flowmon
 Fluent Bit
 Fluentd
