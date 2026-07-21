@@ -272,6 +272,14 @@ either of these shortcodes in conjunction with this render hook.
     {{- $found := false }}
     {{- $duplicate := false }}
 
+    {{- /* Front-matter opt-out for target pages whose anchors are generated
+           at render time by a shortcode (e.g. the message-schema reference,
+           built from data/message_model.yaml). Such anchors never appear in
+           the page's .Fragments or .RawContent, so fragment validation can't
+           see them. Set `skip_fragment_validation: true` in the target page's
+           front matter to silence these unavoidable false positives. */}}
+    {{- $skip := $p.Params.skip_fragment_validation }}
+
     {{- /* 1. Hugo-managed heading and {#id} block IDs. */}}
     {{- if $p.Fragments.Identifiers.Contains $fragment }}
       {{- $found = true }}
@@ -300,14 +308,14 @@ either of these shortcodes in conjunction with this render hook.
       {{- end }}
     {{- end }}
 
-    {{- if $duplicate }}
+    {{- if and $duplicate (not $skip) }}
       {{- $msg := printf "The %q render hook detected duplicate heading IDs %q at %s (in %s)" $renderHookName $fragment $position $contentPath }}
       {{- if eq $errorLevel "warning" }}
         {{- warnf $msg }}
       {{- else if eq $errorLevel "error" }}
         {{- errorf $msg }}
       {{- end }}
-    {{- else if not $found }}
+    {{- else if and (not $found) (not $skip) }}
       {{- /* Determine target path for warning and error message. */}}
       {{- $targetPath := "" }}
       {{- with $p.File }}

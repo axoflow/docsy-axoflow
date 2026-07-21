@@ -49,7 +49,7 @@
              Older versions and projects with no versions data file use the plain modal. The
              latest build is detected from the baseURL, like navbar-version-selector. */ -}}
       {{- $showVersionFilter := false -}}
-      {{- with site.Data.versions -}}
+      {{- with hugo.Data.versions -}}
         {{- $curBase := (urls.Parse site.BaseURL).Path -}}
         {{- if not (strings.HasSuffix $curBase "/") }}{{ $curBase = printf "%s/" $curBase }}{{ end -}}
         {{- $segs := split (strings.Trim $curBase "/") "/" -}}

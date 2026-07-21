@@ -31,11 +31,11 @@
 {{- $name = strings.TrimPrefix "fa-" $name -}}
 
 {{- /* Resolve aliases (legacy → canonical icon key). */ -}}
-{{- with index site.Data.icons.aliases $name -}}
+{{- with index hugo.Data.icons.aliases $name -}}
   {{- $name = . -}}
 {{- end -}}
 
-{{- $icon := index site.Data.icons.icons $name -}}
+{{- $icon := index hugo.Data.icons.icons $name -}}
 
 {{- if not $icon -}}
   {{- warnf "icon.html: unknown icon %q (referenced from %s). Add it to themes/docsy-axoflow/data/icons.yaml." $name (.position | default "<unknown>") -}}
