@@ -732,6 +732,67 @@ footer {
 }
 
 // =============================================================================
+// Table matrix
+// -----------------------------------------------------------------------------
+// Cells can be color-coded so the accept/reject pattern reads at a glance — green for a
+// accepted, red for a rejected one. Markup is raw HTML because
+// the merged header cells (rowspan/colspan) can't be expressed in Markdown.
+// =============================================================================
+.table-matrix {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+  border: 1px solid #E7E8EF;
+  border-radius: 8px;
+  overflow: hidden; // clip the body cells to the rounded outer corners
+
+  th,
+  td {
+    padding: 0.6rem 0.9rem;
+    border: 1px solid #E7E8EF;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  thead th {
+    background-color: #FFF0E5; // light orange tint
+    color: #0F1425;            // eerie black
+    font-weight: 700;
+  }
+
+  // Vertical axis label spanning the body rows.
+  &__rowgroup {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    background-color: #FFF0E5;
+    color: #0F1425;
+    font-weight: 700;
+    white-space: nowrap;
+    width: 2.5rem;
+  }
+
+  // Left-hand row descriptions (the setting combinations).
+  &__rowhead {
+    text-align: left;
+    font-weight: 400;
+    background-color: #FBFBFC;
+  }
+}
+
+// Result cells — accepted vs. rejected connection.
+.accept-ok {
+  background-color: #E7F6EC;
+  color: #1B7A3D;
+  font-weight: 600;
+}
+.reject-nope {
+  background-color: #FCEBEA;
+  color: #B42318;
+  font-weight: 600;
+}
+
+// =============================================================================
 // Dark mode
 // -----------------------------------------------------------------------------
 // All rules in this section take effect only when <html data-bs-theme="dark">.
@@ -877,6 +938,18 @@ footer {
 
     // ---- Property labels ----
     .property-block { border-color: #2a3147; }
+
+    // ---- Certificate-verification matrix ----
+    .table-matrix {
+      border-color: #2a3147;
+      th,
+      td { border-color: #2a3147; }
+      thead th   { background-color: #2a1a10; color: #e6e6e6; }
+      &__rowgroup { background-color: #2a1a10; color: #e6e6e6; }
+      &__rowhead  { background-color: #141923; }
+    }
+    .cert-ok     { background-color: #14301f; color: #7ee2a8; }
+    .cert-reject { background-color: #3a1714; color: #f2a59d; }
 
     // ---- Prism.js syntax highlighting ----
     // Overrides Prism's default light palette (from static/css/prism.css, which
