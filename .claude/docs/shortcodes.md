@@ -29,6 +29,26 @@ If a file (for example a warning, a section, or the description of a parameter) 
 
 The path is relative to `content/headless`.
 
+### Macros (placeholder substitution)
+
+A snippet can contain numbered placeholders `{{1}}`, `{{2}}`, … up to `{{9}}`. Pass values as extra positional arguments to replace them, so the same snippet can be reused with different parameter names:
+
+```markdown
+{{< include-headless "option-use-macros.md" "key" "cert" >}}
+```
+
+For example, if the snippet contains `Set the {{1}} and {{2}} fields.`, the call above renders as `Set the key and cert fields.`
+
+- **Missing value** — if a placeholder is left unfilled (fewer arguments than placeholders), the build **fails** with an error naming the snippet and call site.
+- **Extra value** — if an argument has no matching placeholder, the build logs a **warning** but succeeds.
+- Values are inserted as plain text; avoid HTML-special characters.
+
+To combine macros with the optional `module` parameter, use the named form for every argument (Hugo forbids mixing positional and named arguments in one call):
+
+```markdown
+{{< include-headless file="option-use-macros.md" module="axosyslog-core" 1="key" 2="cert" >}}
+```
+
 In some cases, the `include-headless` shortcode doesn't work or is not practical, for example if the page has a frontmatter parameter that is used with the `if` shortcode in the snippet/ In these cases use `readfile`:
 
 ```markdown

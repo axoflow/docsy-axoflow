@@ -1,25 +1,62 @@
 {{/* For details on using this shortcode, see /content/headless/README.md */}}
-{{ $file := .Get 0 }}
 
-{{ $path := .Site.GetPage "" }}
+{{/* Parse arguments. A shortcode call is either all-positional or all-named
+     (Hugo forbids mixing), so branch on .IsNamedParams.
+       positional: arg 0 = file, args 1..n = macro values ({{1}}, {{2}}, ...)
+       named:      file=, module= (optional), 1=, 2=, ... = macro values      */}}
+{{ $file := "" }}
+{{ $module := "" }}
+{{ $macros := slice }}
 
-{{ if .Get 1 }}
-    {{ $module := .Get 1 }}
-    {{ $modulepath := "" }}
-    {{ if .Site.GetPage (printf "%s%s%s" "/docs/" $module "/headless/index.md") }}
-        {{ $modulepath = (printf "%s%s%s" "/docs/" $module "/headless/index.md" ) }}
-    {{else}}
-        {{ $modulepath = (printf "%s%s%s" $module "/headless/index.md" ) }}
+{{ if .IsNamedParams }}
+    {{ $file = .Get "file" }}
+    {{ $module = .Get "module" }}
+    {{ range $i := seq 1 9 }}
+        {{ $v := $.Get (string $i) }}
+        {{ with $v }}
+            {{ $macros = $macros | append (dict "n" $i "v" .) }}
+        {{ end }}
     {{ end }}
-    {{ $path = .Site.GetPage $modulepath }}
-{{else}}
+{{ else }}
+    {{ $file = .Get 0 }}
+    {{ range $i, $v := .Params }}
+        {{ if gt $i 0 }}
+            {{ $macros = $macros | append (dict "n" $i "v" $v) }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+
+{{/* Resolve the headless bundle (optionally from another module). */}}
+{{ $path := .Site.GetPage "" }}
+{{ with $module }}
+    {{ $modulepath := "" }}
+    {{ if $.Site.GetPage (printf "/docs/%s/headless/index.md" .) }}
+        {{ $modulepath = printf "/docs/%s/headless/index.md" . }}
+    {{ else }}
+        {{ $modulepath = printf "%s/headless/index.md" . }}
+    {{ end }}
+    {{ $path = $.Site.GetPage $modulepath }}
+{{ else }}
     {{ $path = .Site.GetPage "/headless/index.md" }}
 {{ end }}
 
 {{ $reusablePages := $path.Resources.Match $file }}
-{{if lt (len $reusablePages) 1}}
-    {{ errorf "Headless file not found: %q %s" $file .Position}}
+{{ if lt (len $reusablePages) 1 }}
+    {{ errorf "Headless file not found: %q %s" $file .Position }}
 {{ end }}
+
 {{ range $reusablePages }}
-    {{- .Content }}
+    {{ $content := .Content }}
+    {{ range $m := $macros }}
+        {{ $ph := printf "{{%d}}" $m.n }}
+        {{ if strings.Contains $content $ph }}
+            {{ $content = replace $content $ph $m.v }}
+        {{ else }}
+            {{ warnf "include-headless: argument %d=%q has no matching placeholder %s in %q: %s" $m.n $m.v $ph $file $.Position }}
+        {{ end }}
+    {{ end }}
+    {{ if findRE `\{\{\d+\}\}` $content 1 }}
+        {{ errorf "include-headless: unsubstituted placeholder in %q (missing argument): %s" $file $.Position }}
+    {{ end }}
+    {{ $content | safeHTML }}
 {{ end }}
