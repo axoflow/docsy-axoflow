@@ -23,6 +23,14 @@
            any script before GTM loads are still replayed by GTM on init. -->
       <script>
         window.dataLayer = window.dataLayer || [];
+        {{ with ($.Scratch.Get "contentGroup") -}}
+        {{/* Pushed before the `gtm.js` event so the value is already in GTM's
+             data model when the container replays the queue on init and fires
+             page_view. Reading it requires a Data Layer Variable named
+             `content_group` in the container, mapped to the GA4 tag's
+             content_group field — the push alone is not enough. */ -}}
+        window.dataLayer.push({'content_group': '{{ . }}'});
+        {{ end -}}
         window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
         (function(w, d, gtmId) {
           var loaded = false;
