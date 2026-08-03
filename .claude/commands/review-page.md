@@ -12,11 +12,27 @@ Then check for:
 2. **Style guide compliance** — read .claude/docs/style-guide.md first
 3. **Front matter** — title, weight, description present and correct
 4. **Heading hierarchy** — no skipped levels, sentence case
-5. **Code blocks** — all have language identifiers
-6. **Shortcodes** — only approved shortcodes from .claude/docs/shortcodes.md
-7. **Links** — internal links use the {{< relref >}} shortcode; no hardcoded
-   full URLs
-8. **Terminology** — correct spelling of AxoSyslog, syslog-ng, etc.
+5. **Headings containing shortcodes** — warn on every heading that has a
+   shortcode but no explicit `{#custom-anchor}`, for example
+   `### {{< console >}} updates`. Hugo derives the heading ID from the
+   *unexpanded* shortcode placeholder, producing garbage like
+   `hahahugoshortcode445s15hbhb-updates`. The numeric part shifts whenever
+   content above the heading changes, so every link and bookmark to it breaks
+   silently. Suggest a stable anchor for each occurrence. To see the real IDs,
+   build the site and inspect them:
+
+   ```
+   hugo --minify && grep -oE '<h[1-4] id="[^"]*"' public/<page-path>/index.html
+   ```
+
+6. **Code blocks** — all have language identifiers
+7. **Shortcodes** — only approved shortcodes from .claude/docs/shortcodes.md
+8. **Links** — internal links use the {{< relref >}} shortcode; no hardcoded
+   full URLs. Flag `{{% xref %}}` calls that include an `#anchor`: the shortcode
+   emits an already-resolved permalink, which the link render hook can't resolve
+   back to a page, so the build warns. Use
+   `[text]({{< relref "path.md#anchor" >}})` instead.
+9. **Terminology** — correct spelling of AxoSyslog, syslog-ng, etc.
 
 Return a prioritized list of issues with the line numbers and suggested fixes.
 Do not make changes until I confirm.
