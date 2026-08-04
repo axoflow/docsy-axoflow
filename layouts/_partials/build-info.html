@@ -1,0 +1,42 @@
+{{/* Build provenance — which git ref, commit, and theme revisions produced this
+     build.
+
+     Hugo cannot work any of this out for itself: `.GitInfo` is per-page (the last
+     commit that touched a single file, not the commit being built), and `hugo.Deps`
+     reports an empty version for themes wired in as git submodules rather than as
+     Hugo modules. So the values are passed in as site params. Set them from the
+     environment, which needs no config change because Hugo maps HUGO_PARAMS_* onto
+     params automatically:
+
+       HUGO_PARAMS_BUILDREF=release-0.81 \
+       HUGO_PARAMS_BUILDCOMMIT=$(git rev-parse HEAD) \
+       HUGO_PARAMS_BUILDVERSION=0.81 \
+       HUGO_PARAMS_BUILDDOCSYCOMMIT=$(git -C themes/docsy rev-parse HEAD) \
+       HUGO_PARAMS_BUILDDOCSYAXOFLOWCOMMIT=$(git -C themes/docsy-axoflow rev-parse HEAD) \
+       hugo --environment production
+
+     In CI, resolve the ref from the checkout itself rather than from
+     GITHUB_REF_NAME: for the archived-version builds that is the ref that
+     triggered the run (main), not the release branch or tag that was checked out.
+
+     Read the theme commits from the checked-out submodules rather than from the
+     superproject's gitlink: a build can legitimately render with a theme other than
+     the one its ref pins — scripts/serve-local-versions.sh does exactly that,
+     symlinking the current theme into every archived build — and the point of these
+     tags is to record what was actually used.
+
+     Returns a dict with empty strings for whatever the build did not supply.
+*/ -}}
+{{- $ref := string (or site.Params.buildRef "") -}}
+{{- $commit := string (or site.Params.buildCommit "") -}}
+{{- $version := string (or site.Params.buildVersion "") -}}
+{{- $docsy := string (or site.Params.buildDocsyCommit "") -}}
+{{- $docsyAxoflow := string (or site.Params.buildDocsyAxoflowCommit "") -}}
+{{- return dict
+      "ref" $ref
+      "commit" $commit
+      "version" $version
+      "docsyCommit" $docsy
+      "docsyAxoflowCommit" $docsyAxoflow
+      "time" (now.UTC.Format "2006-01-02T15:04:05Z07:00")
+-}}

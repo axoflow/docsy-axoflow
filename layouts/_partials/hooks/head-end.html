@@ -1,5 +1,20 @@
 {{ with .Page.Params.redirect }} <meta http-equiv="refresh" content="0;URL='{{ . }}'" /> {{ end }}
 
+
+{{/* Which git ref/commit a published page was built from — the only way to tell
+     whether a versioned sub-site actually got rebuilt from the ref it is supposed
+     to track. Emitted only when the build supplies the values; see
+     build-info.html for how to set them. */ -}}
+{{ $build := partialCached "build-info.html" . "build-info" -}}
+{{ if or $build.ref $build.commit -}}
+<meta name="docs-build-version" content="{{ $build.version }}">
+<meta name="docs-build-ref" content="{{ $build.ref }}">
+<meta name="docs-build-commit" content="{{ $build.commit }}">
+<meta name="docs-build-theme-docsy" content="{{ $build.docsyCommit }}">
+<meta name="docs-build-theme-docsy-axoflow" content="{{ $build.docsyAxoflowCommit }}">
+<meta name="docs-build-time" content="{{ $build.time }}">
+{{ end -}}
+
 {{ if .Site.Params.offlineSearchPagefind -}}
 <!-- Pagefind 1.5+ Component UI (replaces the legacy PagefindUI / pagefind-ui.js).
      Web components auto-register from these assets — see <pagefind-modal>,
