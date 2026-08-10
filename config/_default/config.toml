@@ -251,9 +251,9 @@ highlightBroken = true   # adds .broken class to anchors in dev mode for visual 
       identifier = "case-studies-overview"
       parent = "case-studies"
     [[menus.main]]
-      name = "Case study - Storage Modernization"
+      name = "Case study - Storage modernization"
       weight = 500
-      url = "https://axoflow.com/case-studies/case-study---non-profit-government-organization?utm_source=docs&utm_medium=menu"
+      url = "https://axoflow.com/case-studies/case-study-non-profit-government-organization?utm_source=docs&utm_medium=menu"
       identifier = "case-study-storage-modernization"
       parent = "case-studies"
     [[menus.main]]
@@ -551,6 +551,14 @@ highlightBroken = true   # adds .broken class to anchors in dev mode for visual 
     weight = 50
     url = "https://axoflow.com/white-papers/white-paper-scalable-syslog-architecture-best-practices/?utm_source=docs&utm_medium=menu"
     identifier = "white-paper-scalable-syslog"
+    parent = "white-papers"
+  # NOTE: singular /white-paper/ is the correct path for this one — the plural
+  # /white-papers/the-cost-of-a-correct-triage 404s.
+  [[menus.main]]
+    name = "The Cost of a Correct Triage"
+    weight = 60
+    url = "https://axoflow.com/white-paper/the-cost-of-a-correct-triage?utm_source=docs&utm_medium=menu"
+    identifier = "white-paper-correct-triage"
     parent = "white-papers"
 [[menus.main]]
   name = "Podcast"
