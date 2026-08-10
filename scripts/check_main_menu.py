@@ -32,10 +32,13 @@ Usage:
 """
 
 import argparse
+import http.client
 import json
 import os
 import sys
+import time
 import tomllib
+import urllib.error
 import urllib.request
 from urllib.parse import urlparse
 
@@ -54,6 +57,18 @@ UTM_SUFFIX = "?utm_source=docs&utm_medium=menu"
 WEIGHT_STEP = 100
 # Marker placed before the inserted block / used to find the insertion point.
 FOOTER_MARKER = "# Hugo - Footer row-1 menu"
+
+# axoflow.com truncates the response (IncompleteRead) on roughly every other
+# request, so a single attempt fails often enough to break CI.
+FETCH_ATTEMPTS = 4
+FETCH_BACKOFF = 1.0  # seconds before the first retry; doubled after each failure
+RETRYABLE_ERRORS = (
+    http.client.IncompleteRead,
+    http.client.RemoteDisconnected,
+    urllib.error.URLError,  # connection reset/refused, DNS, socket timeout
+    TimeoutError,
+)
+RETRYABLE_STATUS = frozenset({429, 500, 502, 503, 504})
 
 
 def normalize_url(url):
@@ -92,11 +107,36 @@ def clean_text(node):
 # Scraping
 # --------------------------------------------------------------------------- #
 
-def fetch_html(url):
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(request, timeout=30) as response:
-        charset = response.headers.get_content_charset() or "utf-8"
-        return response.read().decode(charset, "replace")
+def is_retryable(error):
+    """True for transient network failures; 4xx (other than 429) are permanent."""
+    if isinstance(error, urllib.error.HTTPError):
+        return error.code in RETRYABLE_STATUS
+    return isinstance(error, RETRYABLE_ERRORS)
+
+
+def fetch_html(url, attempts=FETCH_ATTEMPTS):
+    """Fetch `url`, retrying transient failures with exponential backoff.
+
+    Re-raises the last error once `attempts` is exhausted, so the caller still
+    sees a clean failure.
+    """
+    delay = FETCH_BACKOFF
+    for attempt in range(1, attempts + 1):
+        request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                charset = response.headers.get_content_charset() or "utf-8"
+                return response.read().decode(charset, "replace")
+        except Exception as error:  # noqa: BLE001 - re-raised unless retryable
+            if attempt == attempts or not is_retryable(error):
+                raise
+            print(
+                "WARNING: attempt %d/%d to fetch %s failed (%s); retrying in %.0fs"
+                % (attempt, attempts, url, error, delay),
+                file=sys.stderr,
+            )
+            time.sleep(delay)
+            delay *= 2
 
 
 def scrape_nav(html):
