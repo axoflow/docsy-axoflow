@@ -1176,6 +1176,58 @@ html {
         }
     }
 
+    // THE HUB MARK NEVER SHRINKS. Every other item is `min-width: 0` so the row
+    // can clip instead of overflowing, and the flex algorithm then takes the
+    // squeeze out of all of them in proportion -- which is how "Documentation"
+    // ended up as "Docum…" on 199 of axosyslog-core's 490 trails. `flex: none`
+    // takes the mark out of that negotiation: it is 16px or it is nothing, and
+    // the crumbs after it absorb the whole shortfall.
+    //
+    // The size is stated in `em` so the mark tracks the 14px trail rather than
+    // the root, and the explicit `width`/`height` are load-bearing: the parent's
+    // `overflow: hidden` crops an unsized inline `<svg>` to a sliver.
+    .breadcrumb-item--icon {
+        flex: none;
+        min-width: auto;
+
+        // THE MARK SITS ON THE LINE, not at the top of it. Its `<a>` is
+        // shrink-to-fit, so it was 16px tall next to the text crumbs' 21px line
+        // box, both starting from the same top edge -- the mark's centre landed
+        // 2.5px above the text's. Measured: mark mid 189.0, glyph mid 191.5.
+        //
+        // `min-height` rather than a nudge, and it is `1.5em` because that is the
+        // `line-height: 1.5` this block sets above: the box becomes the line box,
+        // and `align-items: center` then puts the mark on the text's centre by
+        // construction instead of by a magic offset that drifts with the scale.
+        > a {
+            display: flex;
+            align-items: center;
+            min-height: 1.5em;
+            overflow: visible;
+        }
+    }
+
+    .axo-crumb-mark {
+        display: block;
+        width: 1.15em;
+        height: 1.15em;
+    }
+
+    // THE SITE'S OWN NAME IS NOT NEGOTIABLE EITHER, for the same reason and with
+    // a measured cost. Flex takes the shortfall out of every shrinkable item in
+    // proportion to its size, so a one-word crumb next to a sentence-length one
+    // loses its share too: on axosyslog-core's deepest page "AxoSyslog" rendered
+    // as a bare "A" -- 209 of 490 trails at 1440. It is 62px; pinning it moves
+    // those 62px of squeeze onto the ancestor crumbs, which are the ones with
+    // words to spare.
+    //
+    // Safe against overflow because every remaining item keeps `min-width: 0`:
+    // the row still clips rather than pushing the column open. Swept at 1440 and
+    // 1152 across both sites -- 0 wraps, 0 pages with horizontal overflow.
+    .breadcrumb-item--site {
+        flex: none;
+    }
+
     // The separator is Bootstrap's `$breadcrumb-divider`, which the theme sets to
     // a chevron. It keeps its own width; only the colour follows the trail.
     .breadcrumb-item + .breadcrumb-item::before {
