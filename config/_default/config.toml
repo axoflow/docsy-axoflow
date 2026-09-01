@@ -120,8 +120,27 @@ twitter = "AxoFlowIO"
   #pygmentsOptions = "linenos=table"
   # See https://help.farbox.com/pygments.html
   pygmentsStyle = "coy"
-  # Enable syntax highlighting and copy buttons on code blocks with Prism
-  prism_syntax_highlighting = true
+  # PRISM IS OFF, and these two keys go together.
+  #
+  # This theme now ships its own code-block treatment: layouts/_markup/render-codeblock.html
+  # marks the block up, assets/scss/_axo-content.scss paints Chroma's tokens, and
+  # assets/js/axo-code-copy.js draws the copy control. Hugo's Chroma highlights at
+  # build time, so Prism's JavaScript has nothing to tokenise -- measured on three
+  # code-bearing pages with the flag on: `.token` elements 0, and css/prism.css
+  # reported 100% unused. The flag gates the stylesheet in head.html and the script
+  # in scripts.html, so off takes css/prism.css (4.9KB) and js/prism.js (52.6KB) off
+  # every page, both of which were being PRELOADED.
+  #
+  # themes/docsy/layouts/_partials/scripts.html ships one or the other:
+  #
+  #   {{ if .Site.Params.prism_syntax_highlighting }} prism.js
+  #   {{ else if not .Site.Params.disable_click2copy_chroma }} click-to-copy.js
+  #
+  # so turning Prism off wakes Docsy's own copy button, which DOES find Chroma's
+  # blocks: measured, five code blocks with two copy controls each, and Docsy's is
+  # drawn with `fas fa-copy`, a FontAwesome class the chrome has no font for.
+  prism_syntax_highlighting = false
+  disable_click2copy_chroma = true
 
   # Use tocbot for table of contents
   [params.jstoc]
@@ -130,7 +149,14 @@ twitter = "AxoFlowIO"
   # User interface configuration
   [params.ui]
   #  Set to true to disable breadcrumb navigation.
-  breadcrumb_disable = false
+  #
+  # No breadcrumb: the navigation column already shows the path a page sits on,
+  # and the trail repeated it above every title. Turning it off also stops
+  # layouts/_partials/hooks/breadcrumb-lead.html being reached, so a site that
+  # uses that hook to link back out of the documentation has to put the link
+  # somewhere else -- see the axosyslog-core documentation, where those two crumbs
+  # were the only link back to https://axoflow.com/docs from inside a page.
+  breadcrumb_disable = true
   # Set to true to disable the About link in the site footer
   footer_about_disable = false
   # footer in the left part of the logo
