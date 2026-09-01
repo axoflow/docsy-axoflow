@@ -9,7 +9,13 @@
   does: it only registers `beforeprint`/`afterprint` listeners, and a print
   cannot be started before the document has finished parsing.
 */ -}}
-{{ range slice "js/sidebar-height.js" "js/axo-toc.js" "js/axo-code-copy.js" "js/axo-wide.js" "js/axo-print-theme.js" -}}
+{{/*
+  `js/axo-breadcrumb.js` runs after `js/axo-wide.js` on purpose: the wide toggle
+  is what changes the trail's width without a `resize` event, and the breadcrumb
+  script observes the row rather than the window, so the order only matters for
+  the first measurement -- which should happen once the wide state is settled.
+*/ -}}
+{{ range slice "js/sidebar-height.js" "js/axo-toc.js" "js/axo-code-copy.js" "js/axo-wide.js" "js/axo-breadcrumb.js" "js/axo-print-theme.js" -}}
   {{ with resources.Get . -}}
     {{ $js := . | js.Build (dict "minify" true) | fingerprint -}}
     <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"
