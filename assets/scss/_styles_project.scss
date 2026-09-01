@@ -2443,7 +2443,10 @@ nav.foldable-nav .ul-1 .with-child > input:checked ~ label:before {
     border: 0;
     border-radius: 4px;
     background: none;
-    color: var(--axo-text-faint);
+    // The token is `muted` rather than `faint` for the contrast reason recorded
+    // on the shared block below, which this row has to match: the two sites draw
+    // this block from different markup and must not read as two designs.
+    color: var(--axo-text-muted);
     font-size: 13px;
     line-height: 16.25px;
     text-align: start;
@@ -2457,6 +2460,78 @@ nav.foldable-nav .ul-1 .with-child > input:checked ~ label:before {
     flex: none;
     width: 16px;
     height: 16px;
+}
+
+// =============================================================================
+// ONE TREATMENT FOR THE PAGE ACTIONS, whichever markup renders them
+// -----------------------------------------------------------------------------
+// The two sites drew this block differently, and the difference was visible side
+// by side. axoflow-docs overrides `page-meta-links.html` and ships one action, so
+// it got `.td-page-meta--print` above: 13px, weight 400, faint, accent on hover.
+// axosyslog-core uses this theme's own partial and ships five, which fall to the
+// BASE RULES' `.td-page-meta a` -- black, weight 600, 12px, no hover state -- with
+// icons that are ORANGE AT REST because `assets/icons/meta-links/*.svg` carry
+// `fill="#FF6500"` in the file.
+//
+// The faint-then-accent treatment is the one that stays, and not by preference:
+//
+//   1. It is what the rest of this chrome does. The navigation column, the
+//      contents list and the trail are all `--axo-text-faint` at rest with the
+//      accent arriving on hover. A block that is already accented has nothing
+//      left to say when the pointer reaches it.
+//   2. The accent is the single call-to-action colour, and the "Book a Call"
+//      button sits directly above these rows in the same 232px column. Five
+//      permanent orange marks there compete with the one thing in the column that
+//      is meant to be clicked.
+//
+// The icons follow the label through `currentColor` rather than by editing the
+// SVG files: a CSS declaration outranks a presentation attribute, so the `fill`
+// in the asset is overridden here and the files stay byte-identical for anything
+// else that resolves them.
+//
+// The LABELS are deliberately not unified. "Print this page" is `window.print()`
+// on the page a reader is on; "Print entire section" is a link to the `print`
+// output format for the whole section, which axoflow-docs no longer builds. They
+// are different actions and the wording is the only thing telling them apart.
+// =============================================================================
+.td-sidebar-toc .td-page-meta a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    // `muted`, NOT `faint`, and the reason is a measurement rather than a taste.
+    // These rows sit on the card's `#fff7f2`, not on white: `faint` (#657780)
+    // measures 4.4:1 there, which misses WCAG AA for normal text by 0.1, and this
+    // block is five rows on axosyslog-core where it used to be black. `muted`
+    // (#42555f) is 7.36:1, still reads as furniture beside the accent, and the
+    // dark theme is unaffected -- #b4b7c1 on #1a1f2e is 8.19:1 either way.
+    color: var(--axo-text-muted);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16.25px;
+
+    &:hover,
+    &:focus-visible {
+        color: var(--axo-text-accent);
+        text-decoration: none;
+    }
+
+    // The assets are 20px; the column's rhythm is 16, which is what the print
+    // button's own icon is set to.
+    > svg {
+        flex: none;
+        width: 16px;
+        height: 16px;
+
+        // `fill` is on the `<path>`, not the root, so the override has to reach
+        // it -- `fill: currentColor` on the `<svg>` alone changes nothing.
+        path,
+        circle,
+        rect {
+            fill: currentColor;
+        }
+    }
 }
 
 // The card's own type. It is the site's furniture rather than part of this
