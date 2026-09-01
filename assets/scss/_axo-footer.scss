@@ -85,6 +85,20 @@ $axo-footer-gutter-wide: 2.5rem;
     border-top: 0;
     padding: 0 $axo-footer-gutter;
 
+    // CLEAR SPACE ABOVE THE BAND. Measured before this rule, the gap from the
+    // last painted thing in the article to the top of the footer was 32px on
+    // /data-management/processing/ — the article's own trailing margin and
+    // nothing else. On a long page the footer arrived directly under the prose.
+    //
+    // 64px here, which makes the total 96 and is not a new number: 96 is what
+    // row-3 already pads at the bottom of the band, so the footer now has the
+    // same clear space above it that it has below it.
+    //
+    // A margin rather than padding, so the band's own rows keep the vertical
+    // rhythm they were measured with — row-1 pads 40/60, row-2 40/60, row-3
+    // 0/96 — and the space that was added is outside all of them.
+    margin-block-start: 4rem;
+
     // The footer has to reach the viewport edges — the rule and the border are
     // the one thing a full-bleed band is for. It used to take back half a
     // Bootstrap gutter here, because `.td-outer` is a `.container-fluid` and

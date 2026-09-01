@@ -218,14 +218,16 @@ $axo-heading-classes: "h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6";
 }
 
 // =============================================================================
-// The title and the line under it
+// The gap under the title
 // -----------------------------------------------------------------------------
 // The page reads as a stack of panels, each with 24px of padding: the title is
-// in the first, the prose in the second, and the second draws a 1px hairline
-// across the top of the 816px content column. From the bottom of the h1 to the
-// top of the first paragraph is therefore 24 + 1 + 24, plus the 16px the
-// paragraph gets for following a sibling — 65px, measured. Docsy has one
-// container and no rule, and put the first paragraph 24px down.
+// in the first and the prose in the second. From the bottom of the h1 to the top
+// of the first paragraph is therefore 24 + 24, plus the 16px the paragraph gets
+// for following a sibling — 65px, measured. Docsy has one container and put the
+// first paragraph 24px down.
+//
+// The second panel used to draw a 1px hairline across the top of the 816px
+// content column. It is gone; only the space it divided is left.
 //
 // The rule hangs on `header.article-meta`, which Docsy renders between the two
 // (themes/docsy/layouts/_td-content.html:4) and which is empty on this site:
@@ -237,7 +239,16 @@ $axo-heading-classes: "h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6";
     margin-top: 1.5rem;
     margin-bottom: 0;
     padding-top: 1.5rem;
-    border-top: 1px solid var(--axo-content-hairline);
+    // NO RULE UNDER THE TITLE. There was a 1px hairline here, across the whole
+    // 816px content column, and it was removed on instruction.
+    //
+    // The GEOMETRY IS LEFT ALONE, deliberately: the 24 + 24 above and below stay,
+    // so the first paragraph is still 65px under the title and only the line is
+    // gone. Removing the space in the same change would make it impossible to
+    // tell, looking at the result, which of the two did what -- and 65px of blank
+    // under a title is a judgement, not a measurement. Docsy's own gap is 24px,
+    // which is what this would collapse to if the padding and margin went too.
+    border-top: 0;
 }
 
 // The rule spans the content column, not the prose column, so it bleeds back out

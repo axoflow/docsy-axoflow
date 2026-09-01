@@ -579,11 +579,16 @@ aside.td-sidebar-toc {
     // where Docsy's own `padding-top` has to be beaten with `!important` and one
     // owner for the property is the only way to keep it predictable.
 
-    // The hairline that separates the column from the page. The base rules set
-    // `border-left: unset` on it; this design draws one, in the same token as
-    // the sidebar's control borders, which is why it follows the theme without
-    // a second rule.
-    border-left: 1px solid var(--axo-control-border);
+    // NO HAIRLINE BETWEEN THE ARTICLE AND THIS COLUMN. There was one -- 1px in
+    // `--axo-control-border`, the same token the sidebar's controls use -- and it
+    // was removed on instruction: the column already reads as its own region from
+    // its heading and its indent, and the rule drew a second vertical line
+    // 1128px in on a page that has one down the left already.
+    //
+    // Stated as `0` rather than deleted: the base rules set `border-left: unset`
+    // on this element, so an absent declaration would land on whatever Docsy
+    // leaves there rather than on nothing.
+    border-left: 0;
 
     // Where the column comes to rest while the page moves under it.
     //
@@ -1096,6 +1101,26 @@ html {
     html {
         scroll-padding-top: calc(#{$axo-chrome-landed} + 52px);
     }
+}
+
+// =============================================================================
+// The call-to-action card at the top of the contents column
+// -----------------------------------------------------------------------------
+// Rendered by layouts/_partials/hooks/custom-right-sidebar-elements-top.html.
+// Only its body copy is styled here; the box, the mark and the button are
+// Bootstrap utilities in that partial.
+//
+// LIGHT, NOT REGULAR. The copy sat at 400, which is the body weight, and against
+// the bold heading above it and the bold button below it the card read as three
+// weights of the same emphasis. 300 is loaded (stolzl-300.woff2) and is the
+// weight the prose in the article is set in.
+//
+// `aside.td-sidebar-toc p.small` is (0,2,2) against Bootstrap's single-class
+// `.small`, so it wins without `!important`.
+// =============================================================================
+
+aside.td-sidebar-toc p.small {
+    font-weight: 300;
 }
 
 // =============================================================================
