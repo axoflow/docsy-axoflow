@@ -1104,6 +1104,86 @@ html {
 }
 
 // =============================================================================
+// The trail above the title
+// -----------------------------------------------------------------------------
+// Rendered by layouts/_partials/breadcrumb.html into `<main>`, above
+// `.td-content`. Docsy styles it at the body size with Bootstrap's stock
+// breadcrumb; these are the four things the frame needs from it.
+//
+// 14px, the frame's small scale — the same size the contents column's entries and
+// the page actions are set at. At Docsy's 16px the trail is 12.5% wider for no
+// reason: it is orientation, not prose.
+//
+// IT MUST NOT WRAP. A trail on two lines pushes the title 32px down the page and
+// reads as a broken row rather than as a second line. `nowrap` on the list plus a
+// per-item clip is the guard: measured, the widest trail in the build is 653px at
+// 16px and 571px at 14px against a 769px row, so nothing clips today -- this is
+// what keeps a section renamed to something long from wrapping instead.
+//
+// The clip is CSS, and the full label stays in the DOM on purpose: a label cut in
+// the template would be cut for a screen reader too.
+//
+// `--axo-text-faint` rather than the link colour: the trail is furniture. The
+// accent arrives on hover, which is where the whole chrome puts it.
+// =============================================================================
+
+// `min-width: 0` ON THE COLUMN, and it is the load-bearing half of the guard.
+//
+// `<main>` is a Bootstrap column, so it is a flex item, and a flex item's default
+// `min-width: auto` refuses to shrink below its content. Without this the nowrap
+// row below does not clip -- it pushes the column open instead. Measured on
+// axosyslog-core's deepest page, whose ancestor labels are sentence-length:
+// `<main>` went to 1908px, the trail to 1860, and the document to 2451px against
+// a 1440 window -- a horizontal scrollbar on the whole page.
+//
+// `.td-content` is capped at 768 by its own rule, so nothing in the prose column
+// starts shrinking because of this; it only stops the column growing.
+.td-main main {
+    min-width: 0;
+}
+
+.td-main .td-breadcrumbs {
+    max-width: 100%;
+    margin-block: 0 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+
+    .breadcrumb {
+        flex-wrap: nowrap;
+        min-width: 0;
+        margin-bottom: 0;
+    }
+
+    // `min-width: 0` is what lets a flex item shrink below its content: without
+    // it the row overflows instead of the items clipping, which is the same trap
+    // the drawer's own rows hit.
+    .breadcrumb-item {
+        min-width: 0;
+        white-space: nowrap;
+
+        > a {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--axo-text-faint);
+            text-decoration: none;
+
+            &:hover,
+            &:focus-visible {
+                color: var(--axo-text-accent);
+                text-decoration: underline;
+            }
+        }
+    }
+
+    // The separator is Bootstrap's `$breadcrumb-divider`, which the theme sets to
+    // a chevron. It keeps its own width; only the colour follows the trail.
+    .breadcrumb-item + .breadcrumb-item::before {
+        color: var(--axo-text-faint);
+    }
+}
+
+// =============================================================================
 // The call-to-action card at the top of the contents column
 // -----------------------------------------------------------------------------
 // Rendered by layouts/_partials/hooks/custom-right-sidebar-elements-top.html.

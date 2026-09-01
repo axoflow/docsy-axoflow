@@ -150,13 +150,24 @@ twitter = "AxoFlowIO"
   [params.ui]
   #  Set to true to disable breadcrumb navigation.
   #
-  # No breadcrumb: the navigation column already shows the path a page sits on,
-  # and the trail repeated it above every title. Turning it off also stops
-  # layouts/_partials/hooks/breadcrumb-lead.html being reached, so a site that
-  # uses that hook to link back out of the documentation has to put the link
-  # somewhere else -- see the axosyslog-core documentation, where those two crumbs
-  # were the only link back to https://axoflow.com/docs from inside a page.
-  breadcrumb_disable = true
+  # THE BREADCRUMB IS ON, and it fits because the trail was shortened at both ends
+  # rather than truncated in the middle.
+  #
+  # It was off for a round: at Docsy's shape -- a `Documentation / <site name>`
+  # lead plus the current page as the last crumb -- the trail did not fit the prose
+  # column. Measured across all 334 pages with a trail, at 16px in the 769px row:
+  # 105 wrapped onto a second line at 1440 and 213 at 1152, pushing the title 32px
+  # down the page.
+  #
+  # Two items came off, both redundant rather than shortened: the site-name crumb
+  # (hooks/breadcrumb-lead.html) and the current page (breadcrumb.html). The widest
+  # trail in the build is now 653px at 16px, 571px at the 14px the frame sets, and
+  # nothing wraps at any width the default frame uses.
+  #
+  # This also restores what turning it off cost: `hooks/breadcrumb-lead.html` is
+  # reached again, and with it the only link back to https://axoflow.com/docs from
+  # inside a documentation page.
+  breadcrumb_disable = false
   # Set to true to disable the About link in the site footer
   footer_about_disable = false
   # footer in the left part of the logo

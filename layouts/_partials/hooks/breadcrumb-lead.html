@@ -1,1 +1,24 @@
-<!-- Custom HTML elements or templates that are added before the generated breadcrumbs -->
+{{/*
+  The crumb before the generated trail: the documentation hub on the marketing
+  site, which is the one place a reader cannot reach from inside these pages
+  otherwise.
+
+  ONE CRUMB, NOT TWO. Both documentation repositories carried a byte-identical
+  copy of this file with a second `<li>` after it -- `.Site.Title` linked to
+  `.Site.BaseURL` -- so every trail opened with
+
+      Documentation / Axoflow documentation / …
+
+  The two say the same thing, the site's own name is already the brand in the bar
+  above, and measured at 16px the pair cost 370px of a 769px row: 105 of 334 pages
+  wrapped their trail onto a second line at 1440 and 213 of 334 at 1152. Dropping
+  the second one takes that to 13 and 63.
+
+  Stated here rather than in each repository, because the two copies were
+  identical and there is nothing site-specific in it: the hub is the same page for
+  both sites. axosyslog-core-docs also kept its copy at the pre-0.146
+  `layouts/partials/` path, which this replaces.
+*/ -}}
+<li class="breadcrumb-item">
+  <a href="https://axoflow.com/docs">Documentation</a>
+</li>
