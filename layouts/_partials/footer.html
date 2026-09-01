@@ -1,24 +1,27 @@
 {{/*
-  Top-level footer orchestrator.
+  The marketing footer, reproducing https://axoflow.com/ box for box.
 
-  The footer is split into three rows to mirror the marketing site
-  (https://axoflow.com/) footer structure:
+  It keeps the three-row split and the td-footer__* class names this file already
+  had, but the rows now carry the marketing footer's own contents rather than
+  Docsy's:
 
-    row-1  categorized link columns (Products / Solutions / Resources /
-           Open Source / About) — sourced from [[menus.footer]]
-    row-2  site logo + About/Privacy text + compliance badges
-    row-3  copyright text + social icons
+    row-1  the five link columns
+    row-2  logo + rule + tagline + badges
+    row-3  copyright + social + privacy
 
-  This pattern follows Docsy 0.15's split-file footer architecture
-  (themes/docsy/layouts/_partials/footer/{left,right,center,…}.html)
-  but uses axoflow-specific row-1/row-2/row-3 naming that matches the
-  marketing site's CSS structure for visual parity.
+  All three row partials are overridden under layouts/_partials/footer/. They
+  have to be: a row left as it was would keep rendering Docsy's version
+  of that row against this file's stylesheet.
 
-  The previous monolithic 78-line footer.html had its inline
-  `footer-links-block` define moved into row-3.html, where it's the
-  only consumer.
+  Content comes from data/footer.yaml, which is read off the live footer's own
+  DOM -- see the header of that file. Nothing here is transcribed from a
+  screenshot.
+
+  `.container-fluid` is the inner box: _styles_project.scss caps it at the
+  1280px page grid, and _axo-footer.scss zeroes the Bootstrap gutter inside it
+  so the columns start on the bar's own left edge.
 */ -}}
-<footer class="td-footer d-print-none">
+<footer class="td-footer d-print-none" aria-label="Site footer">
   <div class="container-fluid">
     {{ partial "footer/row-1.html" . }}
     {{ partial "footer/row-2.html" . }}
