@@ -78,7 +78,13 @@
 {{- end }}
 
 {{ $outputFormat := partial "outputformat.html" . -}}
-{{ if and hugo.IsProduction (ne $outputFormat "print") (not .Page.Params.dontIndex) -}}
+{{/* `dontIndexSite` is the site-wide robots opt-out, injected by CI for archived
+     version builds so old docs don't compete with the current release for the
+     same queries. It is deliberately separate from the per-page `dontIndex`,
+     which docs/baseof.html also reads to withhold `data-pagefind-body`: setting
+     that one site-wide would drop every archived page out of the latest build's
+     unified Pagefind index and break cross-version search. */ -}}
+{{ if and hugo.IsProduction (ne $outputFormat "print") (not .Page.Params.dontIndex) (not site.Params.dontIndexSite) -}}
 <meta name="robots" content="index, follow">
 {{ else -}}
 <meta name="robots" content="noindex, nofollow">
