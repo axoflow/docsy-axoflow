@@ -164,7 +164,10 @@
             {{ partial "hooks/custom-right-sidebar-elements-bottom.html" . }}
             <!-- Adds a hook to add custom sidebar elements -->
           </aside>
-          <main class="col-xs-10 col-md-9 col-xl-8 mt-3 mt-md-5" role="main"{{ if and .Site.Params.offlineSearchPagefind (not .Page.Params.dontIndex)}} data-pagefind-body{{ end }}>
+          {{/* `ne .Kind "404"` keeps the not-found page out of the search index:
+               a 404 has no content file, so it cannot carry `dontIndex` in front
+               matter, and it is the one page a search result must never land on. */ -}}
+          <main class="col-xs-10 col-md-9 col-xl-8 mt-3 mt-md-5" role="main"{{ if and .Site.Params.offlineSearchPagefind (and (not .Page.Params.dontIndex) (ne .Kind "404")) }} data-pagefind-body{{ end }}>
             {{- /* The version banner used to be called here; it is above
                    `.td-outer` now. See the note beside `<header>`.  */ -}}
             {{ if not .Site.Params.ui.breadcrumb_disable }}{{ partial "breadcrumb.html" . }}{{ end }}

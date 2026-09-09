@@ -27,9 +27,7 @@
   Tail `hugo --minify 2>&1 | grep "render-image:"` to list all of them.
 
   baseURL handling: the hook always emits `.RelPermalink`, which respects
-  Hugo's baseURL. The production config also enables `relativeURLs = true`
-  (config/_default/config.toml:78), so the final HTML carries page-relative
-  paths that work correctly under the `/docs/axoflow/` deployment prefix.
+  Hugo's baseURL.
 
   Audit context (May 2026 Lighthouse run, before this hook landed):
     - `unsized-images` failed on 70 pages — natural width/height now emitted.
