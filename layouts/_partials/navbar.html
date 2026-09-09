@@ -268,29 +268,6 @@
       </div>
     </div>
   </div>
-  {{- /* `banner.html` IS NO LONGER CALLED, and the announcement strip above
-         replaces it.
-
-         `banner.html` renders every page under this theme's own
-         `content/announcements/` on any page whose front matter sets
-         `show_banner`. `announcement-strip.html` renders the strip axoflow.com
-         runs across the top of the window, from `data/chrome.yaml`. Both live,
-         the same Splunk .conf2026 announcement was stated twice -- and the band
-         sits INSIDE the fixed bar: measured, it covered the brand mark and the
-         call to action, so the header was not readable at all.
-
-         It went unnoticed for a while because the two documentation sites pinned
-         different revisions of this theme. At 83431023 that announcement file was
-         deleted, so the call rendered nothing; at 3c6323e1, three commits newer,
-         it is present. Now that both sites take the chrome from here they see the
-         same answer, whichever it is.
-
-         Left as a removal rather than a stylesheet rule: hiding it with CSS keeps
-         the markup, keeps it in the printed page and in the reading order, and
-         says nothing about why. `content/announcements/` and `banner.html` stay
-         in the repository -- nothing else has been changed about them, and a site
-         that wants the old band back can call the partial from its own navbar
-         override. */ -}}
 </nav>
 
 {{- /* The three strings the running head and foot are made of.
