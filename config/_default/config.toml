@@ -120,8 +120,27 @@ twitter = "AxoFlowIO"
   #pygmentsOptions = "linenos=table"
   # See https://help.farbox.com/pygments.html
   pygmentsStyle = "coy"
-  # Enable syntax highlighting and copy buttons on code blocks with Prism
-  prism_syntax_highlighting = true
+  # PRISM IS OFF, and these two keys go together.
+  #
+  # This theme now ships its own code-block treatment: layouts/_markup/render-codeblock.html
+  # marks the block up, assets/scss/_axo-content.scss paints Chroma's tokens, and
+  # assets/js/axo-code-copy.js draws the copy control. Hugo's Chroma highlights at
+  # build time, so Prism's JavaScript has nothing to tokenise -- measured on three
+  # code-bearing pages with the flag on: `.token` elements 0, and css/prism.css
+  # reported 100% unused. The flag gates the stylesheet in head.html and the script
+  # in scripts.html, so off takes css/prism.css (4.9KB) and js/prism.js (52.6KB) off
+  # every page, both of which were being PRELOADED.
+  #
+  # themes/docsy/layouts/_partials/scripts.html ships one or the other:
+  #
+  #   {{ if .Site.Params.prism_syntax_highlighting }} prism.js
+  #   {{ else if not .Site.Params.disable_click2copy_chroma }} click-to-copy.js
+  #
+  # so turning Prism off wakes Docsy's own copy button, which DOES find Chroma's
+  # blocks: measured, five code blocks with two copy controls each, and Docsy's is
+  # drawn with `fas fa-copy`, a FontAwesome class the chrome has no font for.
+  prism_syntax_highlighting = false
+  disable_click2copy_chroma = true
 
   # Use tocbot for table of contents
   [params.jstoc]
@@ -130,6 +149,24 @@ twitter = "AxoFlowIO"
   # User interface configuration
   [params.ui]
   #  Set to true to disable breadcrumb navigation.
+  #
+  # THE BREADCRUMB IS ON, and it fits because the trail was shortened at both ends
+  # rather than truncated in the middle.
+  #
+  # It was off for a round: at Docsy's shape -- a `Documentation / <site name>`
+  # lead plus the current page as the last crumb -- the trail did not fit the prose
+  # column. Measured across all 334 pages with a trail, at 16px in the 769px row:
+  # 105 wrapped onto a second line at 1440 and 213 at 1152, pushing the title 32px
+  # down the page.
+  #
+  # Two items came off, both redundant rather than shortened: the site-name crumb
+  # (hooks/breadcrumb-lead.html) and the current page (breadcrumb.html). The widest
+  # trail in the build is now 653px at 16px, 571px at the 14px the frame sets, and
+  # nothing wraps at any width the default frame uses.
+  #
+  # This also restores what turning it off cost: `hooks/breadcrumb-lead.html` is
+  # reached again, and with it the only link back to https://axoflow.com/docs from
+  # inside a documentation page.
   breadcrumb_disable = false
   # Set to true to disable the About link in the site footer
   footer_about_disable = false

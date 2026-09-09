@@ -1,1 +1,40 @@
-<!-- Custom HTML elements or templates that are added before the generated breadcrumbs -->
+{{/*
+  The two crumbs before the generated trail: the documentation hub on the
+  marketing site, and this site inside it. Neither is a page in this build, so
+  neither can come from the trail itself.
+
+  THE HUB IS AN ICON, NOT THE WORD. "Documentation" measured 129.6px of the
+  769px row; the mark is 16px plus its padding. The root of a trail is the one
+  crumb that has to survive a squeeze -- it is the reader's way out -- and an
+  icon survives it at any width, which the word did not: on axosyslog-core 199
+  of 490 trails clipped it to "Docum…".
+
+  It is a book rather than a house because the target is not a home page: it is
+  the documentation hub, one level below axoflow.com. A house crumb pointing at
+  something that is not the site's home reads as a wrong link.
+
+  ACCESSIBILITY. The mark carries `aria-label` so a screen reader still says
+  "Documentation", and `title` so a pointer gets the same on hover. The `<svg>`
+  is `aria-hidden` and `focusable="false"` -- without the latter it takes a tab
+  stop of its own in older Edge/IE and the trail grows a phantom focus.
+
+  THE SITE CRUMB IS THE BRAND WORD, not `.Site.Title`. The titles are "Axoflow
+  documentation" and "AxoSyslog"; the first repeats the crumb before it and cost
+  240.4px measured, against 62px for "Axoflow". `breadcrumb_site_label`
+  overrides it per site and falls back to `.Site.Title`, so a site that wants
+  its full name only has to say nothing.
+*/ -}}
+{{- $siteLabel := default .Site.Title .Site.Params.breadcrumb_site_label -}}
+<li class="breadcrumb-item breadcrumb-item--icon">
+  <a href="https://axoflow.com/docs" aria-label="Documentation" title="Documentation">
+    <svg class="axo-crumb-mark" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+         stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"
+         aria-hidden="true" focusable="false">
+      <path d="M8 4.4 2.6 3.1v9.4L8 13.8l5.4-1.3V3.1L8 4.4Z" />
+      <path d="M8 4.4v9.4" />
+    </svg>
+  </a>
+</li>
+<li class="breadcrumb-item breadcrumb-item--site">
+  <a href="{{ .Site.Home.RelPermalink }}">{{ $siteLabel }}</a>
+</li>

@@ -7,10 +7,29 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
-{{/* Preload the two above-the-fold brand-fonts.
-     `crossorigin` is required even for same-origin fonts. */ -}}
-<link rel="preload" href="{{ "fonts/poppins-400.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{{ "fonts/poppins-700.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+{{/* NO FONT PRELOADS HERE.
+
+     This file used to preload `fonts/poppins-400.woff2` and
+     `fonts/poppins-700.woff2` at this point. Both documentation sites forked it
+     to take those two lines out, and that was the only difference between the
+     fork and this file.
+
+     Poppins was this theme's brand face; the documentation's is Stolzl, and Poppins was
+     measured painting zero glyphs across six page shapes and six states while
+     costing 23KB a load, two files of it at preload priority. It is also out of
+     the font stack now (assets/scss/_variables_project.scss).
+
+     Stolzl is deliberately NOT preloaded in its place. It is declared in the
+     compiled stylesheet, which is itself preloaded, so the face is requested as
+     soon as that sheet is parsed; a preload here would only duplicate the
+     request. If the first paint ever proves to want it earlier, the measurement
+     to make first is which weight the above-the-fold text actually uses — the
+     wordmark and h1 are 500, not 400.
+
+     This block used to live in a project fork of this partial, one per
+     documentation repository, which had to be diffed against this file every
+     time the theme pointer moved. It is stated here now and there is nothing
+     left to keep in sync. */ -}}
 
 {{ $darkMode := partialCached "dark-mode-config.html" "dark-mode-global" -}}
 {{ if $darkMode.enable -}}
