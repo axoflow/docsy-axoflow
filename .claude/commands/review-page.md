@@ -7,6 +7,7 @@ vale <file>
 ```
 
 Then check for:
+1. Compliance with simplified technical English using /ste-writer
 1. **Vale findings** — report all errors and warnings from the Vale output above;
    suppress Vale suggestions unless they reveal a real problem
 2. **Style guide compliance** — read .claude/docs/style-guide.md first
