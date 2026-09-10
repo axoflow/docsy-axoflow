@@ -1,0 +1,77 @@
+{{- /*
+  Assembles the whole documentation set into one HTML document: cover, table of
+  contents, then every published page in sidebar order.
+
+  Two parallel walks of the same tree (TOC first, then content) keep the
+  section numbers identical between the two — they are derived from position in
+  the tree, not stored anywhere.
+
+  Pages with `no_print: true` in front matter are skipped, the same flag Docsy's
+  print output honours. Drafts never reach here (buildDrafts is off).
+
+  @context {page} . The home page.
+*/ -}}
+
+{{- define "pdf-recurse-toc" -}}
+  {{- $pages := partial "pdf/pages.html" .section -}}
+  {{- $maxDepth := .maxDepth -}}
+  {{- $depth := .depth -}}
+  {{- if $pages -}}
+    {{- $i := 1 -}}
+    <ul class="pdf-toc-list pdf-toc-list-{{ $depth }}">
+    {{- range $pages -}}
+      {{- $sid := printf "%s%d" $.psid $i -}}
+      {{- $i = add $i 1 -}}
+      <li class="pdf-toc-item pdf-toc-item-{{ $depth }}">
+        <a href="#pg-{{ partial "pdf/uid.html" . }}">
+          <span class="pdf-toc-label"><span class="pdf-toc-num">{{ $sid }}</span> {{ .Title }}</span>
+          <span class="pdf-toc-dots" aria-hidden="true"></span>
+        </a>
+        {{- if and .IsSection (or (eq $maxDepth 0) (lt $depth $maxDepth)) -}}
+          {{- template "pdf-recurse-toc" (dict "section" . "psid" (printf "%s." $sid) "depth" (add $depth 1) "maxDepth" $maxDepth) -}}
+        {{- end -}}
+      </li>
+    {{- end -}}
+    </ul>
+  {{- end -}}
+{{- end -}}
+
+{{- define "pdf-recurse-content" -}}
+  {{- $pages := partial "pdf/pages.html" .section -}}
+  {{- $i := 1 -}}
+  {{- $depth := .depth -}}
+
+  {{- /* True when the page that precedes this list is a section heading with
+         no content of its own, so the first page here should carry on beneath
+         it rather than start a new sheet. */ -}}
+  {{- $continues := .continues -}}
+  {{- $first := true -}}
+
+  {{- range $pages -}}
+    {{- $sid := printf "%s%d" $.psid $i -}}
+    {{- $i = add $i 1 -}}
+    {{- $carryOn := and $continues $first -}}
+    {{- $first = false -}}
+    {{- partial "pdf/content.html" (dict "page" . "sid" $sid "depth" $depth "continues" $carryOn) -}}
+    {{- if .IsSection -}}
+      {{- template "pdf-recurse-content" (dict
+            "section" .
+            "psid" (printf "%s." $sid)
+            "depth" (add $depth 1)
+            "continues" (partial "pdf/is-stub.html" .)) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $maxDepth := int (default 0 (.Site.Param "pdf.toc_max_depth")) -}}
+
+{{ partial "pdf/cover.html" . }}
+
+<nav class="pdf-toc" role="doc-toc">
+  <h1 class="pdf-toc-title">{{ default "Contents" (.Site.Param "pdf.toc_title") }}</h1>
+  {{ template "pdf-recurse-toc" (dict "section" .CurrentSection "psid" "" "depth" 1 "maxDepth" $maxDepth) }}
+</nav>
+
+<div class="pdf-content">
+  {{ template "pdf-recurse-content" (dict "section" .CurrentSection "psid" "" "depth" 1 "continues" false) }}
+</div>

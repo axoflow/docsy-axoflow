@@ -1,0 +1,35 @@
+{{- /*
+  Returns the child pages of a section that belong in the PDF, in sidebar
+  order.
+
+  Both walks in pdf/render.html (contents, then content) call this, so the
+  section numbers they generate can't drift apart.
+
+  Excluded:
+    no_print      the flag Docsy's print output already honours
+    manuallink    sidebar-only entries that redirect elsewhere. They carry no
+                  content of their own — printing them yields a numbered
+                  heading followed by nothing.
+    toc_hide      kept out of the site's own navigation, so out of the book's
+    hide_summary  table of contents too. This is what excludes the Search
+    dontIndex     page, whose content is a search form with nothing to print.
+
+  Excluding a section excludes everything beneath it, so a flag on an
+  _index.md drops that whole branch. None of the pages currently flagged have
+  children; check that before adding one that does.
+
+  @context {page} . The section to list.
+  @returns {page.Pages}
+*/ -}}
+{{- $pages := slice -}}
+{{- range (union .Pages .Sections).ByWeight -}}
+  {{- if and
+        (ne .Params.no_print true)
+        (not .Params.manuallink)
+        (ne .Params.toc_hide true)
+        (ne .Params.hide_summary true)
+        (ne .Params.dontIndex true) -}}
+    {{- $pages = $pages | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- return $pages -}}

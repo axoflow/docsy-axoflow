@@ -1,0 +1,19 @@
+{{- /*
+  Returns the stable per-page identifier used to build in-document anchors for
+  the PDF edition ("pg-<uid>"). Same value as Docsy's print output uses, so the
+  two stay interchangeable.
+
+  Pages built from a file get Hugo's .File.UniqueID (a content hash of the
+  path). Generated pages have no .File, so they fall back to their slugified
+  RelPermalink — unique by construction, since two pages can't share a URL.
+
+  @context {page} . The page.
+  @returns {string}
+*/ -}}
+{{- $uid := "" -}}
+{{- with .File -}}
+  {{- $uid = .UniqueID -}}
+{{- else -}}
+  {{- $uid = printf "x%s" (replace (trim .RelPermalink "/") "/" "-") -}}
+{{- end -}}
+{{- return $uid -}}

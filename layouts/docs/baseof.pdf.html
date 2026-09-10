@@ -1,0 +1,72 @@
+{{- /*
+  Document shell for the single-file PDF edition of the docs.
+
+  Emitted by the "pdf" output format to /_pdf/index.html, then paginated into
+  a real PDF by scripts/pdf/render.mjs (headless Chrome + Paged.js).
+
+  This deliberately does not reuse head.html / navbar.html / footer.html /
+  scripts.html. The PDF needs the site's stylesheet and Prism, and nothing
+  else: analytics, search, the dark-mode switcher and the image lightbox
+  either no-op in a headless render or actively interfere with pagination.
+*/ -}}
+<!doctype html>
+<html lang="{{ .Site.Language.Lang }}" data-bs-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ .Site.Title }}{{ with .Site.Params.version_tag }} {{ . }}{{ end }}</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    {{/* scripts/pdf/metadata.py copies these into the PDF's document
+         properties, which is where they survive being downloaded and passed
+         around. Same build-provenance tags the HTML pages carry. */ -}}
+    <meta name="author" content="{{ .Site.Param "pdf.author" | default (.Site.Param "project_name") | default .Site.Title }}">
+    {{ with .Site.Params.version_tag }}<meta name="docs-version" content="{{ . }}">{{ end }}
+    {{ $build := partialCached "build-info.html" . "build-info" -}}
+    {{ if or $build.ref $build.commit -}}
+    <meta name="docs-build-version" content="{{ $build.version }}">
+    <meta name="docs-build-ref" content="{{ $build.ref }}">
+    <meta name="docs-build-commit" content="{{ $build.commit }}">
+    <meta name="docs-build-theme-docsy" content="{{ $build.docsyCommit }}">
+    <meta name="docs-build-theme-docsy-axoflow" content="{{ $build.docsyAxoflowCommit }}">
+    {{ end -}}
+    <meta name="docs-build-time" content="{{ $build.time }}">
+
+    {{/* The site's compiled SCSS. This is what makes the PDF look like the docs. */ -}}
+    {{ partialCached "head-css.html" . "head-css-cache-key" }}
+
+    {{ if .Site.Params.prism_syntax_highlighting -}}
+    <link rel="stylesheet" href="{{ "css/prism.css" | relURL }}">
+    {{ end -}}
+
+    {{/* Paged-media rules: @page geometry, running heads, break control.
+         Loaded last so it overrides the site stylesheet by order rather than
+         by a wall of !important. */ -}}
+    {{ with resources.Get "scss/pdf.scss" -}}
+      {{ $css := . | toCSS (dict "targetPath" "css/pdf.css" "enableSourceMap" false) -}}
+      {{ if hugo.IsProduction }}{{ $css = $css | minify }}{{ end -}}
+      <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+    {{ else -}}
+      {{ errorf "pdf: assets/scss/pdf.scss not found" -}}
+    {{ end -}}
+
+    {{/* The running header carries the site title and version, which only the
+         config knows — so this one rule has to be generated, not shipped in
+         pdf.scss. */ -}}
+    <style>
+      @page {
+        @top-right {
+          content: "{{ .Site.Title }}{{ with .Site.Params.version_tag }} {{ . }}{{ end }}";
+        }
+      }
+    </style>
+
+    {{/* Not deferred: Prism must finish highlighting before render.mjs starts
+         pagination, otherwise code blocks change height mid-layout. */ -}}
+    {{ if .Site.Params.prism_syntax_highlighting -}}
+    <script src="{{ "js/prism.js" | relURL }}"></script>
+    {{ end -}}
+  </head>
+  <body class="td-pdf">
+    {{ block "main" . }}{{ end }}
+  </body>
+</html>

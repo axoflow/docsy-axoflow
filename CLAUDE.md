@@ -43,6 +43,55 @@ All three exit 1 on drift, so any of them can gate CI. The menu and footer `--wr
 The banner is the one piece of chrome meant to change often, and it also goes away — marketing takes the strip down between events. `announcement.label` empty is how that is recorded (the partial then renders nothing), the stored `href` is kept as the record of where the last one pointed, and a down strip is not counted as drift.
 
 What the footer script deliberately does not copy from live, because the data file's values are this site's own: the vendored `logo.*` / `badges[].file` paths (it checks the artwork behind them instead and says when it needs re-vendoring), the social labels (which are the glyph keys in `footer/row-3.html`), the column title casing, and the `Capablities` typo, which it corrects on the way in and reports.
+### pdf/ — the single-file PDF edition
+
+Renders the whole documentation set as one PDF: cover page, table of contents
+with page numbers, running heads, and internal links that jump inside the PDF
+instead of opening a browser.
+
+```bash
+themes/docsy-axoflow/scripts/pdf/build.sh              # → axoflow-docs-<version>.pdf
+themes/docsy-axoflow/scripts/pdf/build.sh -e chrome    # fallback engine, faster
+```
+
+Three parts, each usable on its own:
+
+- `build.sh` — the local driver: Hugo build → prepare → serve → render.
+- `prepare.py` — rewrites the generated HTML for print. This is where link
+  correctness lives: concatenating 300+ pages collides their heading ids and
+  leaves every internal link pointing at the website, and both failures are
+  silent. Also flattens `srcset`, drops `loading="lazy"`, expands tab panes.
+- `render.mjs` — headless Chrome via puppeteer. Default engine is Paged.js
+  (page numbers in the TOC, running heads); `--engine chrome` is the fallback
+  if Paged.js runs out of memory on a very large document.
+- `metadata.py` — copies the author and the build provenance from the HTML's
+  `<meta>` tags into the PDF's Author/Subject properties. Incremental, so it
+  rewrites only the trailer of an 80 MB file. Optional: without pypdf the step
+  warns and the PDF is unchanged.
+
+Pages excluded from the PDF: `draft: true`, `no_print: true`, and
+`manuallink` (sidebar-only entries that redirect elsewhere and carry no
+content of their own).
+
+**Images.** PDF has no WebP filter, so Chrome decodes a `.webp` and stores it
+losslessly — measured here at ~40 MB of a ~60 MB file. When
+`params.pdf.image_format` is set, `_markup/render-image.html` emits a single
+JPEG at print resolution instead (no srcset — there is no viewport on paper),
+which Chrome embeds as-is. `metadata.py` prints the filter mix of every build,
+so a regression to `FlateDecode` shows up immediately. The knobs live in
+`config/pdf/config.toml`; unset, the hook behaves exactly as it does for the
+web.
+
+Requires in the consuming project:
+
+- `config/pdf/config.toml` declaring the `pdf` output format and enabling it
+  for `home` (see axoflow-docs for the canonical copy),
+- `puppeteer` and `pagedjs` in devDependencies, `beautifulsoup4` (and
+  optionally `pypdf`) for Python.
+
+Theme-side pieces: `layouts/docs/{baseof,list}.pdf.html`,
+`layouts/_partials/pdf/*`, `assets/scss/pdf.scss`. A project can override the
+cover logo by adding its own `assets/icons/pdf-logo.svg`.
 
 ### hugo_to_markdown.py
 

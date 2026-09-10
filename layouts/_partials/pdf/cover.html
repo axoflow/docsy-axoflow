@@ -1,0 +1,40 @@
+{{- /*
+  PDF cover page.
+
+  The logo is inlined rather than linked so it stays vector in the PDF and the
+  render never depends on a second HTTP fetch. Projects that want a different
+  cover mark can drop their own `assets/icons/pdf-logo.svg` in; otherwise the
+  theme's Axoflow logo is used.
+
+  Build provenance (ref + commit) is printed in small type when the CI stamps
+  it into params, so a PDF found on a disk years later can be traced back to
+  the commit it was built from.
+
+  @context {page} . The home page.
+*/ -}}
+{{- $logo := or (resources.Get "icons/pdf-logo.svg") (resources.Get "icons/axoflow-logo.svg") -}}
+
+<header class="pdf-cover">
+  {{ with $logo }}
+  <div class="pdf-cover-logo">{{ .Content | safeHTML }}</div>
+  {{ end }}
+
+  <div class="pdf-cover-main">
+    <h1 class="pdf-cover-title">{{ .Site.Title }}</h1>
+
+    {{ with .Site.Params.version_tag }}
+    <p class="pdf-cover-version">Version {{ . }}</p>
+    {{ end }}
+
+    <p class="pdf-cover-date">{{ now.Format "2 January 2006" }}</p>
+  </div>
+
+  <footer class="pdf-cover-legal">
+    {{ with .Site.Params.copyright }}
+    <p>&copy; {{ with $.Site.Params.copyright_from }}{{ . }}&ndash;{{ end }}{{ now.Format "2006" }} {{ . }} All rights reserved.</p>
+    {{ end }}
+    {{ with .Site.Params.buildcommit }}
+    <p class="pdf-cover-provenance">Built from {{ with $.Site.Params.buildref }}{{ . }}&nbsp;{{ end }}{{ substr . 0 8 }}</p>
+    {{ end }}
+  </footer>
+</header>

@@ -1,0 +1,27 @@
+{{- /*
+  Reports whether a page is nothing but a heading for the pages beneath it —
+  a section whose _index.md has no body, like /destinations/amazon/.
+
+  On the web those are invisible: the sidebar shows them as a parent node and
+  the landing page lists its children. In a single document they become a
+  sheet with a title and nothing else, which is why pdf/render.html lets the
+  first page underneath one carry on below it instead of starting a new sheet.
+
+  Emptiness is measured on the rendered content rather than on a word count,
+  so a page holding only a diagram still counts as having something to show.
+  Set `params.pdf.stub_wordcount` above 0 to also fold in section pages that
+  have a sentence or two of their own.
+
+  @context {page} . The page to test.
+  @returns {bool}
+*/ -}}
+{{- $isStub := false -}}
+{{- if .IsSection -}}
+  {{- $words := int (default 0 (site.Param "pdf.stub_wordcount")) -}}
+  {{- if eq (len (trim .Content " \n\r\t")) 0 -}}
+    {{- $isStub = true -}}
+  {{- else if and (gt $words 0) (le (countwords .Plain) $words) -}}
+    {{- $isStub = true -}}
+  {{- end -}}
+{{- end -}}
+{{- return $isStub -}}

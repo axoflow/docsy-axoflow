@@ -1,0 +1,459 @@
+// Paged-media stylesheet for the single-file PDF edition of the docs.
+//
+// Loaded after the site's main stylesheet by layouts/docs/baseof.pdf.html, so
+// it wins on source order and needs !important only where Bootstrap utility
+// classes or inline styles would otherwise win.
+//
+// Read this together with scripts/pdf/prepare.py: anything that needs the DOM
+// changed (link rewriting, srcset flattening, tab expansion) happens there,
+// anything that is purely presentational happens here.
+//
+// The @page rules are interpreted by Paged.js (scripts/pdf/render.mjs). Under
+// the `chrome` fallback engine, only `size` and `margin` are honoured and the
+// running heads come from Chrome's own header/footer templates instead.
+
+$pdf-brand: #ff6500;
+$pdf-rule: #d8d8d8;
+$pdf-muted: #6b7280;
+$pdf-page-margin: 18mm;
+$pdf-cover-band: 12mm;
+
+// ---------------------------------------------------------------------------
+// Page geometry and running heads
+// ---------------------------------------------------------------------------
+
+@page {
+  size: A4;
+  margin: 20mm $pdf-page-margin 18mm $pdf-page-margin;
+
+  @top-left {
+    content: string(chapter);
+    font-family: "Poppins", sans-serif;
+    font-size: 8pt;
+    color: $pdf-muted;
+    padding-bottom: 4mm;
+  }
+
+  // @top-right is generated in baseof.pdf.html — it needs the site title and
+  // version from the config.
+
+  @bottom-right {
+    content: counter(page) " / " counter(pages);
+    font-family: "Poppins", sans-serif;
+    font-size: 8pt;
+    color: $pdf-muted;
+    padding-top: 4mm;
+  }
+}
+
+// The cover is the only page with no furniture at all.
+@page cover {
+  margin: 0;
+
+  // The brand band has to run the full height of the sheet. Painting it on
+  // the cover element instead would stop wherever that block's content ends,
+  // so it goes on the page box, which is always exactly one sheet tall.
+  background: linear-gradient(to right, $pdf-brand 0 $pdf-cover-band, #fff $pdf-cover-band);
+
+  @top-left { content: none; }
+  @top-right { content: none; }
+  @bottom-right { content: none; }
+}
+
+@page toc {
+  @top-left { content: "Contents"; }
+}
+
+// ---------------------------------------------------------------------------
+// Document base
+// ---------------------------------------------------------------------------
+
+html {
+  // Docsy sizes everything in rem, so this one value sets the whole scale.
+  // 10.5pt gives ~70 characters per line in the A4 text column.
+  font-size: 10.5pt;
+  background: #fff;
+}
+
+body.td-pdf {
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  color: #212529;
+
+  // Never inherit the reader's dark mode into a print artefact.
+  color-scheme: light;
+}
+
+// Interactive furniture that has no meaning on paper. Most of it is already
+// absent from baseof.pdf.html; these rules catch what shortcodes inject.
+.d-print-none,
+.td-sidebar,
+.td-sidebar-nav,
+.td-toc,
+.td-footer,
+.td-navbar,
+.pageinfo-primary,
+.td-heading-self-link,
+.click-to-copy,
+.copy-to-clipboard-button,
+.td-page-meta,
+.taxonomy-terms-article {
+  display: none !important;
+}
+
+// ---------------------------------------------------------------------------
+// Cover
+// ---------------------------------------------------------------------------
+
+// Laid out with flex + auto margins rather than a fixed 297mm box, so it fills
+// the sheet under Paged.js (where @page cover removes the margins) and still
+// fits on one page under the `chrome` engine (where it does not).
+.pdf-cover {
+  page: cover;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 240mm;
+  padding: 35mm 25mm 25mm;
+  break-after: page;
+
+  // Backstop for the page-box gradient above: under `--engine chrome`, which
+  // ignores @page backgrounds, this still draws the band beside the content.
+  border-left: $pdf-cover-band solid $pdf-brand;
+}
+
+.pdf-cover-main {
+  margin-top: auto;
+}
+
+.pdf-cover-logo {
+  svg {
+    width: 62mm;
+    height: auto;
+  }
+}
+
+.pdf-cover-title {
+  margin: 0;
+  font-size: 30pt;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+
+  // Feeds the running head in @page :left/@top-left of every following page
+  // via string(doctitle) if a project wants it; harmless otherwise.
+  string-set: doctitle content(text);
+}
+
+.pdf-cover-version {
+  margin: 6mm 0 0;
+  font-size: 14pt;
+  font-weight: 600;
+  color: $pdf-brand;
+}
+
+.pdf-cover-date {
+  margin: 1mm 0 0;
+  font-size: 11pt;
+  color: $pdf-muted;
+}
+
+.pdf-cover-legal {
+  // Sits on the bottom edge of the cover in both engines without absolute
+  // positioning, which would anchor to the block rather than to the sheet.
+  margin-top: auto;
+  padding-top: 20mm;
+  font-size: 8pt;
+  color: $pdf-muted;
+
+  p {
+    margin: 0;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Table of contents
+// ---------------------------------------------------------------------------
+
+.pdf-toc {
+  page: toc;
+  break-after: page;
+}
+
+.pdf-toc-title {
+  margin: 0 0 8mm;
+  font-size: 22pt;
+  font-weight: 700;
+}
+
+.pdf-toc-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pdf-toc-item {
+  margin: 0;
+
+  a {
+    display: flex;
+    align-items: baseline;
+    color: inherit;
+    text-decoration: none;
+
+    // Paged.js resolves this to the page the target lands on. Under the
+    // `chrome` engine it resolves to nothing and the TOC shows no page
+    // numbers — see scripts/pdf/render.mjs.
+    &::after {
+      content: target-counter(attr(href), page);
+      font-variant-numeric: tabular-nums;
+      color: $pdf-muted;
+    }
+  }
+}
+
+.pdf-toc-label {
+  // Keep a long title from pushing the page number off the line.
+  overflow-wrap: anywhere;
+}
+
+.pdf-toc-num {
+  display: inline-block;
+  min-width: 14mm;
+  color: $pdf-muted;
+  font-variant-numeric: tabular-nums;
+}
+
+.pdf-toc-dots {
+  flex: 1 1 auto;
+  min-width: 6mm;
+  margin: 0 2mm;
+  border-bottom: 1px dotted $pdf-rule;
+}
+
+// Depth-based indentation and weight: chapters stand out, leaves recede.
+.pdf-toc-item-1 > a {
+  margin-top: 3mm;
+  font-size: 11pt;
+  font-weight: 600;
+}
+
+.pdf-toc-item-2 > a { padding-left: 8mm; font-size: 10pt; }
+.pdf-toc-item-3 > a { padding-left: 16mm; font-size: 9.5pt; }
+.pdf-toc-item-4 > a { padding-left: 24mm; font-size: 9pt; }
+.pdf-toc-item-5 > a { padding-left: 32mm; font-size: 9pt; }
+
+.pdf-toc-item-1 > a .pdf-toc-dots { border-bottom-style: none; }
+
+// ---------------------------------------------------------------------------
+// Chapters and pages
+// ---------------------------------------------------------------------------
+
+// Expressed as :not() rather than as a later `break-before: auto` override:
+// Paged.js turns break declarations into attributes as it walks the
+// stylesheet, so "don't break here" is safest said by never matching the rule
+// in the first place.
+.pdf-page:not(.pdf-page-continues) {
+  break-before: page;
+}
+
+.pdf-page {
+  .td-content {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+// The first page under an empty section heading. It sits on the same sheet as
+// that heading, so it needs the air a page top would have given it.
+.pdf-page-continues {
+  margin-top: 9mm;
+}
+
+.pdf-page-title {
+  break-after: avoid;
+  break-inside: avoid;
+  margin: 0 0 4mm;
+  font-size: 16pt;
+  line-height: 1.25;
+}
+
+.pdf-chapter-title {
+  padding-bottom: 3mm;
+  border-bottom: 2px solid $pdf-brand;
+  font-size: 22pt;
+
+  // Drives the @top-left running head: the value persists onto every page
+  // until the next chapter sets it.
+  string-set: chapter content(text);
+}
+
+.pdf-page-num {
+  display: inline-block;
+  margin-right: 4mm;
+  color: $pdf-muted;
+  font-variant-numeric: tabular-nums;
+}
+
+.pdf-page-lead {
+  margin: 0 0 4mm;
+  color: $pdf-muted;
+  font-size: 1.05rem;
+}
+
+// ---------------------------------------------------------------------------
+// Break control — the "no content lost at a page boundary" requirement
+// ---------------------------------------------------------------------------
+
+// Docsy scrolls wide content sideways on the web. On paper a scroll container
+// clips, so everything that can overflow has to be allowed to reflow instead.
+pre,
+code,
+.highlight,
+.td-content table,
+.table-responsive,
+.tab-content,
+.tab-pane {
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+pre,
+pre code {
+  // Long command lines must wrap rather than run off the trim edge.
+  white-space: pre-wrap !important;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+pre {
+  font-size: 8.5pt;
+  line-height: 1.45;
+  break-inside: auto; // long listings may split; clipping them would be worse
+}
+
+code {
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  break-after: avoid;
+  break-inside: avoid;
+}
+
+p, li, blockquote {
+  orphans: 3;
+  widows: 3;
+}
+
+img, svg, figure {
+  break-inside: avoid;
+}
+
+img {
+  max-width: 100% !important;
+  // Leaves room for a caption and keeps a tall screenshot on one page.
+  max-height: 210mm;
+  height: auto;
+}
+
+figure figcaption {
+  margin-top: 2mm;
+  color: $pdf-muted;
+  font-size: 9pt;
+}
+
+// Admonitions: keep the whole box together where it fits on a page.
+.alert,
+.card,
+blockquote {
+  break-inside: avoid;
+}
+
+// ---------------------------------------------------------------------------
+// Tables
+// ---------------------------------------------------------------------------
+
+.td-content table {
+  width: 100%;
+  font-size: 9pt;
+  table-layout: auto;
+  word-break: break-word;
+}
+
+.td-content table thead {
+  // Repeat the header on every page a long table spans.
+  display: table-header-group;
+}
+
+.td-content table tbody tr {
+  break-inside: avoid;
+}
+
+// prepare.py flags tables with many columns; shrink them rather than let a
+// column get pushed past the page edge.
+.pdf-wide-table {
+  font-size: 7.5pt;
+
+  th, td {
+    padding: 1mm 1.5mm !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Links
+// ---------------------------------------------------------------------------
+
+// In-document links stay branded but unobtrusive; external links keep the
+// same treatment (the URL itself is not printed — 2,800 inline URLs would
+// cost more in noise than they add in usefulness).
+.pdf-content a {
+  color: #0b5cad;
+  text-decoration: none;
+}
+
+// ---------------------------------------------------------------------------
+// Disclosure widgets
+// ---------------------------------------------------------------------------
+
+// prepare.py opens every <details> — a closed one prints as its summary and
+// nothing else. What's left to do here is drop the affordances that only make
+// sense when there is something to click.
+summary {
+  cursor: auto;
+  list-style: none;
+
+  &::-webkit-details-marker,
+  &::marker {
+    display: none;
+    content: "";
+  }
+}
+
+details {
+  break-inside: auto;
+}
+
+// ---------------------------------------------------------------------------
+// Tabbed content
+// ---------------------------------------------------------------------------
+
+// On paper there is nothing to click, so every pane is shown in sequence with
+// the tab's own label as a subheading (injected by prepare.py).
+.nav-tabs {
+  display: none !important;
+}
+
+.tab-pane {
+  display: block !important;
+  opacity: 1 !important;
+}
+
+.pdf-tab-label {
+  margin: 3mm 0 1mm;
+  font-weight: 600;
+  font-size: 0.95rem;
+}

@@ -1,0 +1,37 @@
+{{- /*
+  Renders one documentation page as one chapter/section of the PDF.
+
+  The wrapper carries the metadata scripts/pdf/prepare.py needs to turn the
+  site's internal links into in-document links:
+
+    id          the link target ("pg-<uid>"), on the heading rather than the
+                section, because a section splits across pages and Paged.js
+                only keeps the id on the first fragment
+    data-uid    same uid, used to namespace this page's heading ids
+    data-path   the page's site path, used as the lookup key when rewriting
+
+  @context {page}   .page       The page to render.
+  @context {string} .sid        Its section number, e.g. "4.2.1".
+  @context {int}    .depth      Nesting level, 1 for a top-level chapter.
+  @context {bool}   .continues  Set when the page above is an empty section
+                                heading, so this one flows on beneath it
+                                instead of starting a new sheet.
+*/ -}}
+{{- $p := .page -}}
+{{- $uid := partial "pdf/uid.html" $p -}}
+{{- $isChapter := eq .depth 1 -}}
+
+<section class="pdf-page{{ if $isChapter }} pdf-chapter{{ end }}{{ if .continues }} pdf-page-continues{{ end }} pdf-depth-{{ .depth }}"
+         data-uid="{{ $uid }}"
+         data-path="{{ $p.RelPermalink }}">
+  <h1 id="pg-{{ $uid }}" class="pdf-page-title{{ if $isChapter }} pdf-chapter-title{{ end }}">
+    {{/* The space is load-bearing: the running head and the PDF bookmarks are
+         built from this element's text content, where CSS margins don't
+         exist and "2Axoflow architecture" is what you get without it. */ -}}
+    <span class="pdf-page-num">{{ .sid }}</span> {{ $p.Title }}
+  </h1>
+  {{ with $p.Params.description }}<p class="pdf-page-lead">{{ . | markdownify }}</p>{{ end }}
+  <div class="td-content">
+    {{ $p.Content }}
+  </div>
+</section>

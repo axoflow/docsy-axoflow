@@ -121,11 +121,39 @@
   {{- $isRaster = in (slice "image/png" "image/jpeg" "image/gif" "image/webp") .MediaType.Type -}}
 {{- end -}}
 
+{{- /* Print builds ask for a different image entirely.
+
+       PDF has no WebP filter, so Chrome cannot embed a .webp: it decodes each
+       one to raw pixels and stores that Flate-compressed. Measured on this
+       site, 5.7 MB of WebP screenshots became ~40 MB inside the PDF — about
+       two thirds of the file. A JPEG source, by contrast, is passed straight
+       through into the PDF as DCTDecode, at its own file size.
+
+       So when `params.pdf.image_format` is set (config/pdf/config.toml, the
+       `pdf` environment only) this hook emits one JPEG at print resolution
+       instead of a WebP with a responsive srcset. There is no viewport to be
+       responsive to on paper, and the extra variants would only be build time
+       spent on files nothing loads.
+
+       Unset everywhere else, so the web build is untouched. */ -}}
+{{- $printFormat := site.Param "pdf.image_format" -}}
+{{- $printWidth := int (default 1600 (site.Param "pdf.image_width")) -}}
+{{- $printQuality := int (default 88 (site.Param "pdf.image_quality")) -}}
+
 {{- /* Wrap in <figure> only when a markdown title was supplied; otherwise
        emit a bare <img>. Keeps the DOM minimal for the 99% caption-less case. */ -}}
 {{- if $caption -}}<figure>{{- end -}}
 
-{{- if and $r $isRaster -}}
+{{- if and $r $isRaster $printFormat -}}
+  {{- /* Never upscale: a screenshot narrower than the text column gains
+         nothing from being stretched, and the bytes are real. */ -}}
+  {{- $w := cond (lt $r.Width $printWidth) $r.Width $printWidth -}}
+  {{- $v := $r.Resize (printf "%dx %s q%d" $w $printFormat $printQuality) -}}
+  <img src="{{ $v.RelPermalink }}"
+       width="{{ $v.Width }}"
+       height="{{ $v.Height }}"
+       alt="{{ $alt }}">
+{{- else if and $r $isRaster -}}
   {{- /* Build WebP variants. Skip any width >= the natural width to avoid
          upscaling — upscaling is wasted bytes with no quality gain. The full
          natural-width variant is appended last so it's the highest-w entry
