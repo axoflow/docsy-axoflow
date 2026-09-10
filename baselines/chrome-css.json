@@ -1,0 +1,818 @@
+{
+  "_comment": "axoflow.com's CSS for the chrome this site reproduces, normalized by scripts/check_chrome_css.py. Not a stylesheet: a baseline, so that a change to live's own design is visible as a diff. Regenerate with --write once the change is understood.",
+  "prefixes": [
+    "v3-navbar",
+    "v3-footer",
+    "v2-banner",
+    "v2-button",
+    "v3-dropdown-chevron"
+  ],
+  "rules": {
+    ".v2-banner_component": [
+      "background-color: var(--_colors-v2---background-color--background-alternate-2)",
+      "color: var(--_colors-v2---link-color--link-alternate)",
+      "font-size: .75rem",
+      "font-weight: 300",
+      "text-align: center"
+    ],
+    ".v2-banner_text-wrapper": [
+      "padding: .3125rem",
+      "width: 100%"
+    ],
+    ".v2-button": [
+      "background-color: var(--_colors-v2---background-color--background-tertiary)",
+      "border-bottom-color: var(--_colors-v2---border-color--border-primary)",
+      "border-bottom-style: solid",
+      "border-bottom-width: 1px",
+      "border-left-color: var(--_colors-v2---border-color--border-primary)",
+      "border-left-style: solid",
+      "border-left-width: 1px",
+      "border-radius: .5rem",
+      "border-right-color: var(--_colors-v2---border-color--border-primary)",
+      "border-right-style: solid",
+      "border-right-width: 1px",
+      "border-top-color: var(--_colors-v2---border-color--border-primary)",
+      "border-top-style: solid",
+      "border-top-width: 1px",
+      "color: var(--_colors-v2---link-color--link-alternate)",
+      "display: block",
+      "font-family: Stolzl,Arial,sans-serif",
+      "font-size: .875rem",
+      "font-weight: 500",
+      "line-height: 185%",
+      "padding: .5rem 1.5rem",
+      "text-align: center",
+      "text-decoration: none",
+      "transition-duration: .1s,.1s,.1s",
+      "transition-property: border-color,color,background-color",
+      "transition-timing-function: ease-out,ease-out,ease-out"
+    ],
+    ".v2-button-group": [
+      "align-items: center",
+      "display: flex",
+      "flex-flow: wrap",
+      "flex: none",
+      "grid-column-gap: 1rem",
+      "grid-row-gap: 1rem",
+      "justify-content: flex-start"
+    ],
+    ".v2-button-group.is-center": [
+      "align-items: center",
+      "justify-content: center"
+    ],
+    ".v2-button-group.mt-auto": [
+      "margin-top: auto"
+    ],
+    ".v2-button.is-icon": [
+      "align-items: center",
+      "display: flex",
+      "grid-column-gap: .5rem",
+      "grid-row-gap: .5rem",
+      "justify-content: center"
+    ],
+    ".v2-button.is-secondary": [
+      "background-color: var(--_colors-v2---base-color-neutral--transparent)",
+      "color: var(--_colors-v2---link-color--link-tertiary)"
+    ],
+    ".v2-button.is-secondary:hover": [
+      "border-color: var(--_colors-v2---border-color--border-secondary)"
+    ],
+    ".v2-button.secondary-dark": [
+      "background-color: var(--_colors-v2---base-color-neutral--transparent)",
+      "border-color: var(--_colors-v2---border-color--border-alternate)",
+      "color: var(--_colors-v2---link-color--link-secondary)"
+    ],
+    ".v2-button.secondary-dark:hover": [
+      "background-color: var(--_colors-v2---background-color--background-primary)",
+      "border-color: var(--_colors-v2---link-color--link-primary)",
+      "color: var(--_colors-v2---link-color--link-primary)"
+    ],
+    ".v2-button:hover": [
+      "background-color: var(--_colors-v2---base-color-shades--orange-50)",
+      "border-color: var(--_colors-v2---base-color-shades--orange-50)"
+    ],
+    ".v2-button:hover:where(.w-variant-5602a606-2fee-334e-da02-f01b7c1953c5)": [
+      "background-color: var(--_colors-v2---background-color--background-secondary)",
+      "border-color: var(--_colors-v2---border-color--border-alternate)"
+    ],
+    ".v2-button:hover:where(.w-variant-c2fddd02-abec-232e-9bf4-4bd14883b1bf)": [
+      "background-color: var(--_colors-v2---background-color--background-tertiary-2)",
+      "border-color: var(--_colors-v2---border-color--border-secondary)",
+      "color: var(--_colors-v2---link-color--link-tertiary)"
+    ],
+    ".v2-button:hover:where(.w-variant-d8de7c6c-36db-5746-5c2a-14faa012ae12)": [
+      "background-color: var(--_colors-v2---background-color--background-secondary)",
+      "border-color: var(--_colors-v2---link-color--link-primary)",
+      "color: var(--_colors-v2---link-color--link-primary)"
+    ],
+    ".v2-button:hover:where(.w-variant-da9a01a3-d4b2-f750-7e5b-d5b5e8f3d61c)": [
+      "background-color: var(--_colors-v2---background-color--background-secondary)",
+      "border-color: var(--_colors-v2---border-color--border-alternate)",
+      "color: var(--_colors-v2---link-color--link-secondary)"
+    ],
+    ".v2-button:hover:where(.w-variant-e2e8d0cf-7fad-eb75-6d4d-c7f93bee8a2b)": [
+      "background-color: var(--_colors-v2---base-color-neutral--transparent)",
+      "border-color: var(--_colors-v2---border-color--border-tertiary)",
+      "color: var(--_colors-v2---base-color-shades--blue-20)"
+    ],
+    ".v2-button:where(.w-variant-5602a606-2fee-334e-da02-f01b7c1953c5)": [
+      "background-color: var(--_colors-v2---background-color--background-primary)",
+      "border-style: none",
+      "color: var(--_colors-v2---link-color--link-secondary)"
+    ],
+    ".v2-button:where(.w-variant-c2fddd02-abec-232e-9bf4-4bd14883b1bf)": [
+      "background-color: var(--_colors-v2---background-color--background-primary)",
+      "color: var(--_colors-v2---link-color--link-tertiary)"
+    ],
+    ".v2-button:where(.w-variant-d8de7c6c-36db-5746-5c2a-14faa012ae12)": [
+      "background-color: var(--_colors-v2---base-color-neutral--transparent)",
+      "border-color: var(--_colors-v2---border-color--border-alternate)",
+      "color: var(--_colors-v2---link-color--link-secondary)"
+    ],
+    ".v2-button:where(.w-variant-da9a01a3-d4b2-f750-7e5b-d5b5e8f3d61c)": [
+      "background-color: var(--_colors-v2---background-color--background-alternate)",
+      "border-color: var(--_colors-v2---border-color--border-alternate)"
+    ],
+    ".v2-button:where(.w-variant-e2e8d0cf-7fad-eb75-6d4d-c7f93bee8a2b)": [
+      "background-color: var(--_colors-v2---base-color-neutral--transparent)",
+      "border-color: var(--_colors-v2---border-color--border-tertiary)",
+      "color: var(--_colors-v2---link-color--link-alternate)"
+    ],
+    ".v3-dropdown-chevron-lg": [
+      "align-items: center",
+      "color: var(--_colors-v2---border-color--border-primary)",
+      "display: flex",
+      "flex-direction: column",
+      "flex: none",
+      "height: 1.5rem",
+      "justify-content: center",
+      "transition: transform .1s ease-out",
+      "width: 1.5rem"
+    ],
+    ".v3-dropdown-chevron-lg.is-after-link-lg": [
+      "display: inline-block",
+      "height: 1.5rem",
+      "vertical-align: middle",
+      "width: 1.5rem"
+    ],
+    ".v3-dropdown-chevron-lg.is-after-link-sm": [
+      "display: inline-block",
+      "height: 1.25rem",
+      "vertical-align: sub",
+      "width: 1.25rem"
+    ],
+    ".v3-dropdown-chevron-sm": [
+      "align-items: center",
+      "color: var(--_colors-v2---border-color--border-primary)",
+      "display: flex",
+      "flex-direction: column",
+      "height: 1rem",
+      "justify-content: center",
+      "transition: transform .1s ease-out",
+      "width: 1rem"
+    ],
+    ".v3-footer_row-1": [
+      "border-top: 1px solid var(--_colors-v2---border-color--border-tertiary-2)",
+      "padding-bottom: 3.75rem",
+      "padding-top: 3.75rem"
+    ],
+    ".v3-footer_row-1_columns": [
+      "grid-column-gap: 2rem",
+      "grid-row-gap: 2rem",
+      "grid-template-columns: 1fr 1fr 1fr 1fr 1fr",
+      "grid-template-rows: auto"
+    ],
+    ".v3-footer_row-1_label": [
+      "color: var(--_colors-v2---text-color--text-tertiary)",
+      "font-size: 1.125rem",
+      "font-weight: 700",
+      "margin-bottom: 1.25rem",
+      "text-transform: uppercase"
+    ],
+    ".v3-footer_row-1_links": [
+      "font-size: .875rem",
+      "font-weight: 500",
+      "grid-column-gap: .75rem",
+      "grid-row-gap: .75rem",
+      "line-height: 1.625rem"
+    ],
+    ".v3-footer_row-2": [
+      "align-items: center",
+      "border-top: 1px solid var(--_colors-v2---border-color--border-tertiary-2)",
+      "grid-column-gap: 2.5rem",
+      "grid-row-gap: 2.5rem",
+      "justify-content: flex-start",
+      "padding-bottom: 3.75rem",
+      "padding-top: 2.5rem"
+    ],
+    ".v3-footer_row-2_divider": [
+      "border-right: .1875rem solid var(--_colors-v2---border-color--border-primary)",
+      "height: 3.375rem"
+    ],
+    ".v3-footer_row-2_iso-image": [
+      "display: block",
+      "max-height: 100%",
+      "object-fit: contain"
+    ],
+    ".v3-footer_row-2_iso-link": [
+      "max-height: 7.5rem"
+    ],
+    ".v3-footer_row-2_iso-links": [
+      "grid-column-gap: 2rem",
+      "grid-row-gap: 2rem",
+      "margin-left: auto"
+    ],
+    ".v3-footer_row-2_logo": [
+      "align-items: center",
+      "display: flex",
+      "flex-direction: column",
+      "height: 3.375rem",
+      "justify-content: center",
+      "width: 13.375rem"
+    ],
+    ".v3-footer_row-2_logo-link": [
+      "color: var(--link-color--link-alternate)"
+    ],
+    ".v3-footer_row-3": [
+      "align-items: center",
+      "grid-column-gap: 2rem",
+      "grid-row-gap: 2rem",
+      "justify-content: flex-start",
+      "padding-bottom: 6rem"
+    ],
+    ".v3-footer_row-3_social-icon": [
+      "height: 100%",
+      "width: 100%"
+    ],
+    ".v3-footer_row-3_social-link": [
+      "height: 2rem",
+      "width: 2rem"
+    ],
+    ".v3-footer_row-3_social-links": [
+      "grid-column-gap: 1rem",
+      "grid-row-gap: 1rem",
+      "margin-left: auto"
+    ],
+    ".v3-navbar-component": [
+      "left: 0",
+      "margin-bottom: calc(-1*var(--_numbers---nav))",
+      "position: sticky",
+      "right: 0",
+      "top: 0",
+      "z-index: 999"
+    ],
+    ".v3-navbar_component": [
+      "align-items: center",
+      "background-color: var(--_colors-v2---background-color--background-secondary)",
+      "border-bottom: 1px solid #141d621a",
+      "color: var(--text-color--text-alternate)",
+      "display: flex",
+      "font-size: .875rem",
+      "font-weight: 400",
+      "height: auto",
+      "padding: 1.25rem 2.5rem",
+      "transition: padding .2s ease-out,background-color .2s ease-out",
+      "width: 100%"
+    ],
+    ".v3-navbar_component.is-not-scrolled": [
+      "background-color: var(--_colors-v2---background-color--background-primary)",
+      "padding-bottom: 2rem",
+      "padding-top: 2rem"
+    ],
+    ".v3-navbar_container": [
+      "align-items: center",
+      "display: flex",
+      "flex-flow: row",
+      "height: 100%",
+      "justify-content: space-between",
+      "margin-left: auto",
+      "margin-right: auto",
+      "max-width: 80rem",
+      "position: relative",
+      "width: 100%"
+    ],
+    ".v3-navbar_dropdown-link": [
+      "display: inline-block",
+      "padding: .5rem 2.5rem",
+      "white-space: break-spaces",
+      "width: 100%"
+    ],
+    ".v3-navbar_dropdown-link.w--current": [
+      "color: var(--base-color-neutral--black)"
+    ],
+    ".v3-navbar_dropdown-link:hover": [
+      "background-color: var(--_colors-v2---background-color--background-secondary)"
+    ],
+    ".v3-navbar_dropdown-link_nested": [
+      "display: inline-block",
+      "padding: .5rem 2.5rem",
+      "white-space: break-spaces",
+      "width: 100%"
+    ],
+    ".v3-navbar_dropdown-link_nested.w--current": [
+      "color: var(--base-color-neutral--black)"
+    ],
+    ".v3-navbar_dropdown-list": [
+      "box-shadow: 0 5rem 5rem #00000026",
+      "font-size: .875rem",
+      "position: absolute"
+    ],
+    ".v3-navbar_dropdown-list.w--open": [
+      "background-color: var(--_colors-v2---background-color--background-primary)",
+      "color: var(--_colors-v2---link-color--link-primary)",
+      "margin-left: -1rem",
+      "padding-bottom: 2rem",
+      "padding-top: 2rem",
+      "width: 17rem"
+    ],
+    ".v3-navbar_dropdown-list_nested": [
+      "color: var(--link-color--link-alternate)",
+      "font-size: .875rem",
+      "inset: 0% 0% auto auto",
+      "margin-left: 0",
+      "margin-top: -2rem",
+      "overflow: hidden",
+      "padding-bottom: 2rem",
+      "padding-top: 2rem",
+      "transform: translate(100%)"
+    ],
+    ".v3-navbar_dropdown-list_nested.w--open": [
+      "background-color: var(--_colors-v2---background-color--background-primary)",
+      "color: var(--link-color--link-secondary)",
+      "margin-left: -1rem",
+      "padding-bottom: 2rem",
+      "padding-top: 2rem"
+    ],
+    ".v3-navbar_dropdown-toggle": [
+      "align-items: center",
+      "color: var(--_colors-v2---link-color--link-secondary)",
+      "display: flex",
+      "grid-column-gap: .5rem",
+      "padding: .5rem .75rem"
+    ],
+    ".v3-navbar_dropdown-toggle.w--open": [
+      "color: var(--_colors-v2---link-color--link-tertiary)"
+    ],
+    ".v3-navbar_dropdown-toggle.w--open .v3-dropdown-chevron-sm": [
+      "transform: rotate(180deg)"
+    ],
+    ".v3-navbar_dropdown-toggle_link": [
+      "inset: 0%",
+      "position: absolute"
+    ],
+    ".v3-navbar_dropdown-toggle_nested": [
+      "align-items: center",
+      "color: var(--text-color--text-alternate)",
+      "display: flex",
+      "grid-column-gap: .5rem",
+      "justify-content: space-between",
+      "padding: .5rem 2.5rem"
+    ],
+    ".v3-navbar_dropdown-toggle_nested.w--open .v3-dropdown-chevron-lg": [
+      "transform: rotate(180deg)"
+    ],
+    ".v3-navbar_dropdown-toggle_nested.w--open .v3-dropdown-chevron-sm": [
+      "transform: rotate(-90deg)"
+    ],
+    ".v3-navbar_dropdown-toggle_nested:hover": [
+      "background-color: var(--_colors-v2---background-color--background-secondary)"
+    ],
+    ".v3-navbar_link": [
+      "color: var(--text-color--text-primary)",
+      "padding: .5rem 1rem"
+    ],
+    ".v3-navbar_link.w--current": [
+      "color: var(--base-color-neutral--black)"
+    ],
+    ".v3-navbar_logo": [
+      "align-items: center",
+      "display: flex",
+      "flex-direction: column",
+      "justify-content: center",
+      "max-width: 8.75rem",
+      "transition: max-width .1s ease-out",
+      "width: 100%"
+    ],
+    ".v3-navbar_logo-link": [
+      "color: inherit",
+      "flex: 1",
+      "padding-left: 0"
+    ],
+    ".v3-navbar_logo.is-not-scrolled": [
+      "max-width: 12rem"
+    ],
+    ".v3-navbar_mega-dropdown-col-right": [
+      "grid-column-gap: 2rem",
+      "grid-row-gap: 2rem",
+      "grid-template-columns: 1fr max-content 1fr",
+      "grid-template-rows: auto",
+      "padding: 2.5rem"
+    ],
+    ".v3-navbar_mega-dropdown-col.is-solutions-highlight": [
+      "background-color: var(--_colors-v2---background-color--background-alternate)",
+      "color: var(--_colors-v2---text-color--text-alternate)",
+      "padding: 2.5rem"
+    ],
+    ".v3-navbar_mega-dropdown-content": [
+      "grid-column-gap: 4.5rem",
+      "grid-row-gap: 4.5rem",
+      "grid-template-columns: 2fr",
+      "grid-template-rows: auto"
+    ],
+    ".v3-navbar_mega-dropdown-content.is-solutions": [
+      "grid-column-gap: 0rem",
+      "grid-row-gap: 0rem",
+      "grid-template-columns: 3fr 1fr"
+    ],
+    ".v3-navbar_mega-dropdown-divider-horizontal": [
+      "border-top: 1px solid var(--_colors-v2---border-color--border-tertiary-2)"
+    ],
+    ".v3-navbar_mega-dropdown-divider-vertical": [
+      "border-right: 1px solid var(--_colors-v2---border-color--border-tertiary-2)"
+    ],
+    ".v3-navbar_mega-dropdown-item-bottom": [
+      "align-items: flex-start",
+      "display: flex",
+      "flex-flow: column",
+      "grid-column-gap: 1rem",
+      "grid-row-gap: 1rem",
+      "justify-content: flex-start"
+    ],
+    ".v3-navbar_mega-dropdown-item-wrapper": [
+      "align-items: stretch",
+      "grid-column-gap: 2.5rem",
+      "grid-row-gap: 2.5rem",
+      "justify-content: flex-start",
+      "padding-bottom: 1rem",
+      "padding-top: 1rem"
+    ],
+    ".v3-navbar_mega-dropdown-item_nested": [
+      "display: flex",
+      "grid-column-gap: .75rem",
+      "grid-row-gap: .75rem"
+    ],
+    ".v3-navbar_mega-dropdown-list": [
+      "box-shadow: 0 5rem 5rem #00000026",
+      "font-size: .875rem",
+      "position: absolute"
+    ],
+    ".v3-navbar_mega-dropdown-list.is-solutions.w--open": [
+      "padding: 0"
+    ],
+    ".v3-navbar_mega-dropdown-list.w--open": [
+      "background-color: var(--_colors-v2---background-color--background-primary)",
+      "color: var(--_colors-v2---link-color--link-primary)",
+      "left: -1rem",
+      "padding: 2.5rem 6rem 4.5rem",
+      "width: calc(100% + 2rem)"
+    ],
+    ".v3-navbar_mega-dropdown-toggle": [
+      "align-items: center",
+      "display: flex",
+      "grid-column-gap: .5rem",
+      "padding: .5rem .75rem"
+    ],
+    ".v3-navbar_mega-dropdown-toggle.w--open": [
+      "color: var(--_colors-v2---text-color--text-tertiary)"
+    ],
+    ".v3-navbar_mega-dropdown-toggle.w--open .v3-dropdown-chevron-sm": [
+      "transform: rotate(180deg)"
+    ],
+    ".v3-navbar_mega-dropdown_collection-item": [
+      "display: block"
+    ],
+    ".v3-navbar_mega-dropdown_collection-list": [
+      "display: flex",
+      "flex-flow: column",
+      "grid-column-gap: 1rem",
+      "grid-row-gap: 1rem"
+    ],
+    ".v3-navbar_mega-dropdown_collection-wrapper": [
+      "margin-top: 1.5rem"
+    ],
+    ".v3-navbar_mega-dropdown_link": [
+      "display: inline",
+      "font-weight: 500",
+      "padding: 0",
+      "white-space: break-spaces",
+      "width: 100%"
+    ],
+    ".v3-navbar_mega-dropdown_link.w--current": [
+      "color: inherit"
+    ],
+    ".v3-navbar_mega-dropdown_link:hover": [
+      "text-decoration: underline"
+    ],
+    ".v3-navbar_mega-icon-lg": [
+      "height: 2.5rem",
+      "width: 2.5rem"
+    ],
+    ".v3-navbar_mega-icon-sm": [
+      "flex: none",
+      "height: 2rem",
+      "width: 2rem"
+    ],
+    ".v3-navbar_mega-link": [
+      "align-items: center",
+      "color: var(--_colors-v2---link-color--link-secondary)",
+      "display: inline-flex",
+      "font-size: 1.375rem",
+      "font-weight: 500",
+      "grid-column-gap: .25rem",
+      "grid-row-gap: .25rem",
+      "justify-content: flex-start",
+      "line-height: 1.45"
+    ],
+    ".v3-navbar_mega-link.has-no-hover:hover": [
+      "text-decoration: none"
+    ],
+    ".v3-navbar_mega-link:hover": [
+      "text-decoration: underline"
+    ],
+    ".v3-navbar_mega-menu-dropdown": [
+      "position: static",
+      "word-break: normal"
+    ],
+    ".v3-navbar_menu": [
+      "align-items: center",
+      "display: flex",
+      "justify-content: flex-end",
+      "position: static"
+    ],
+    ".v3-navbar_menu-buttons": [
+      "align-items: center",
+      "display: flex",
+      "grid-auto-columns: 1fr",
+      "grid-column-gap: 1rem",
+      "grid-row-gap: 1rem",
+      "grid-template-columns: 1fr 1fr",
+      "grid-template-rows: auto",
+      "margin-left: 2rem"
+    ],
+    ".v3-navbar_menu-dropdown": [
+      "word-break: normal"
+    ],
+    ".v3-navbar_menu-dropdown_nested": [
+      "display: block",
+      "min-width: 15rem",
+      "width: 100%"
+    ],
+    ".v3-navbar_menu-links": [
+      "white-space: normal",
+      "word-break: keep-all"
+    ],
+    ".v3-navbar_mobile-contents": [
+      "display: none"
+    ],
+    ".v3-navbar_mobile-menu-label": [
+      "display: none"
+    ],
+    ".v3-navbar_mobile-menu-link": [
+      "display: none",
+      "padding: .5rem 2.5rem",
+      "white-space: break-spaces",
+      "width: 100%"
+    ],
+    ".v3-navbar_mobile-menu-link.w--current": [
+      "color: var(--base-color-neutral--black)"
+    ],
+    "@media screen and (max-width:479px) | .v3-footer_row-1_columns": [
+      "grid-template-columns: 1fr"
+    ],
+    "@media screen and (max-width:767px) | .v3-footer_row-1": [
+      "flex-flow: column",
+      "grid-column-gap: 3rem",
+      "grid-row-gap: 3rem",
+      "padding-right: 0"
+    ],
+    "@media screen and (max-width:767px) | .v3-footer_row-1_columns": [
+      "grid-template-columns: 1fr 1fr 1fr"
+    ],
+    "@media screen and (max-width:767px) | .v3-footer_row-2": [
+      "align-items: flex-start",
+      "flex-flow: column",
+      "justify-content: flex-start"
+    ],
+    "@media screen and (max-width:767px) | .v3-footer_row-2_divider": [
+      "display: none"
+    ],
+    "@media screen and (max-width:767px) | .v3-footer_row-2_iso-link": [
+      "height: 6rem",
+      "width: 5rem"
+    ],
+    "@media screen and (max-width:767px) | .v3-footer_row-2_iso-links": [
+      "grid-column-gap: 1rem",
+      "grid-row-gap: 1rem",
+      "margin-left: 0"
+    ],
+    "@media screen and (max-width:767px) | .v3-footer_row-3": [
+      "flex-flow: wrap",
+      "grid-row-gap: 1rem"
+    ],
+    "@media screen and (max-width:767px) | .v3-footer_row-3_social-links": [
+      "margin-left: 0"
+    ],
+    "@media screen and (max-width:767px) | .v3-navbar_component": [
+      "padding-left: 1.25rem",
+      "padding-right: 1.25rem"
+    ],
+    "@media screen and (max-width:767px) | .v3-navbar_dropdown-link_nested": [
+      "padding-left: 2.5rem",
+      "padding-right: 2.5rem"
+    ],
+    "@media screen and (max-width:767px) | .v3-navbar_dropdown-toggle_nested": [
+      "padding-left: 1.25rem",
+      "padding-right: 1.25rem"
+    ],
+    "@media screen and (max-width:767px) | .v3-navbar_logo-link": [
+      "padding-left: 0"
+    ],
+    "@media screen and (max-width:767px) | .v3-navbar_mobile-menu-label": [
+      "padding-left: 1.25rem",
+      "padding-right: 1.25rem"
+    ],
+    "@media screen and (max-width:767px) | .v3-navbar_mobile-menu-link": [
+      "padding-left: 1.25rem",
+      "padding-right: 1.25rem"
+    ],
+    "@media screen and (max-width:991px) | .v3-dropdown-chevron-lg": [
+      "inset: auto 0% auto auto"
+    ],
+    "@media screen and (max-width:991px) | .v3-dropdown-chevron-sm": [
+      "inset: auto 0% auto auto"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_component": [
+      "padding-bottom: 1.25rem",
+      "padding-top: 1.25rem"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_container": [
+      "position: static"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_desktop-contents": [
+      "display: none"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_dropdown-link": [
+      "color: var(--link-color--link-alternate)",
+      "display: block",
+      "font-size: 1rem",
+      "margin-left: 1rem",
+      "padding: .75rem 0",
+      "width: auto"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_dropdown-link.w--current": [
+      "color: inherit"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_dropdown-link_nested": [
+      "border-bottom: 1px solid var(--_colors-v2---border-color--border-tertiary-2)",
+      "display: block",
+      "font-weight: 300",
+      "padding: 1.125rem 2.5rem 1.25rem 5rem",
+      "text-align: left",
+      "width: auto"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_dropdown-link_nested.w--current": [
+      "color: inherit"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_dropdown-list": [
+      "height: 0",
+      "overflow: hidden",
+      "position: relative"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_dropdown-list.w--open": [
+      "background-color: inherit",
+      "border-style: none",
+      "color: var(--link-color--link-alternate)",
+      "font-size: 1rem",
+      "height: auto",
+      "padding: 0"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_dropdown-list_nested": [
+      "font-size: 1rem",
+      "height: 0",
+      "overflow: hidden",
+      "position: relative"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_dropdown-list_nested.w--open": [
+      "font-size: .875rem",
+      "height: auto",
+      "margin-left: 0",
+      "margin-top: 0",
+      "padding-bottom: 0",
+      "padding-top: 0",
+      "transform: none"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_dropdown-toggle": [
+      "align-items: center",
+      "display: flex",
+      "padding-bottom: .75rem",
+      "padding-left: 0",
+      "padding-top: .75rem"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_dropdown-toggle_nested": [
+      "align-items: center",
+      "border-bottom: 1px solid var(--_colors-v2---border-color--border-tertiary-2)",
+      "color: var(--link-color--link-alternate)",
+      "display: flex",
+      "font-size: .875rem",
+      "font-weight: 500",
+      "padding-bottom: 1.25rem",
+      "padding-top: 1.125rem"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_dropdown-toggle_nested:hover": [
+      "background-color: var(--_colors-v2---base-color-neutral--transparent)"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_link": [
+      "display: none",
+      "padding: .75rem 0",
+      "width: auto"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_mega-dropdown-list": [
+      "height: 0",
+      "overflow: hidden",
+      "position: relative"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_mega-dropdown-list.w--open": [
+      "background-color: inherit",
+      "border-style: none",
+      "color: var(--link-color--link-alternate)",
+      "font-size: 1rem",
+      "height: auto",
+      "padding: 0"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_mega-dropdown-toggle": [
+      "align-items: center",
+      "display: flex",
+      "padding-bottom: .75rem",
+      "padding-left: 0",
+      "padding-top: .75rem"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_mega-dropdown_link": [
+      "color: var(--link-color--link-alternate)",
+      "display: block",
+      "font-size: 1rem",
+      "margin-left: 1rem",
+      "padding: .75rem 0",
+      "width: auto"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_mega-dropdown_link.w--current": [
+      "color: inherit"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_menu": [
+      "background-color: var(--_colors-v2---background-color--background-primary)",
+      "height: calc(100dvh - var(--_numbers---nav))",
+      "overflow: auto",
+      "padding-bottom: 2rem",
+      "padding-top: 0",
+      "position: absolute"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_menu-buttons": [
+      "align-items: stretch",
+      "flex-direction: column",
+      "grid-column-gap: 1.5rem",
+      "grid-row-gap: 1.5rem",
+      "grid-template-columns: 1fr",
+      "grid-template-rows: auto auto",
+      "margin-left: 0",
+      "padding: 2rem"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_menu-dropdown": [
+      "display: block",
+      "font-size: 1rem"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_menu-dropdown_nested": [
+      "display: block",
+      "font-size: 1rem",
+      "padding-left: 2.5rem",
+      "width: 100%"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_menu-links": [
+      "font-size: 1rem"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_mobile-contents": [
+      "display: block"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_mobile-menu-label": [
+      "border-bottom: 1px solid var(--_colors-v2---border-color--border-tertiary-2)",
+      "color: var(--_colors-v2---text-color--text-tertiary)",
+      "display: block",
+      "font-weight: 700",
+      "padding: 2rem 2.5rem .75rem",
+      "text-align: left",
+      "text-transform: uppercase",
+      "width: 100%"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_mobile-menu-link": [
+      "border-bottom: 1px solid var(--_colors-v2---border-color--border-tertiary-2)",
+      "display: block",
+      "font-size: .875rem",
+      "font-weight: 500",
+      "padding-bottom: 1.25rem",
+      "padding-top: 1.125rem",
+      "text-align: left"
+    ],
+    "@media screen and (max-width:991px) | .v3-navbar_mobile-menu-link.w--current": [
+      "color: inherit"
+    ]
+  },
+  "source": "https://axoflow.com/"
+}

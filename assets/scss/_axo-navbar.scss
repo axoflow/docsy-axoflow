@@ -654,57 +654,111 @@ html[data-axo-wide] {
         padding: 0;
     }
 
-    // Three columns because both mega panels carry exactly three groups, and the
-    // third is the dark one: live gives the last column of both a #141d62 fill
-    // that runs the panel's full height and bleeds to its right edge. It is 25%
-    // of the panel on the nose at two widths: 328/1312 at 1440, 308/1232 at 1280.
-    // The fill is placed on the last track explicitly, so a fourth group would
-    // wrap into the white area rather than take the dark column from the group
-    // that belongs there.
+    // TWO TRACKS, NOT THREE COLUMNS. This block used to say "three columns
+    // because both mega panels carry exactly three groups" and place the dark
+    // fill on `:last-child`. That held while a panel was a flat list of three
+    // groups; marketing rebuilt Products in September around five named
+    // components and it now carries seven, four of them stacked in the first
+    // column, so a group is no longer a column and `:nth-child` no longer finds
+    // one. The data states the layout instead — `column` and `sub` per group,
+    // read off live's own DOM — and this block reproduces live's boxes:
+    //
+    //   .v3-navbar_mega-dropdown-content.is-solutions   3fr 1fr, gap 0
+    //     .v3-navbar_mega-dropdown-col-right            1fr max-content 1fr,
+    //                                                   gap 2rem, padding 2.5rem
+    //       .v3-navbar_mega-dropdown-col                sections, divider between
+    //         .v3-navbar_mega-dropdown-item-wrapper     gap 2.5rem, padding 1rem 0
+    //     .v3-navbar_mega-dropdown-col.is-solutions-highlight   padding 2.5rem
+    //
+    // 3fr/1fr is the same 25% the old rule measured — 328/1312 at 1440, 308/1232
+    // at 1280 — but the white side is now one box that holds any number of
+    // columns, which is what Products needs and Solutions still gets right with
+    // one group per column.
     .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-panel-inner {
         display: grid;
-        grid-template-columns: 1fr 1fr 25%;
+        grid-template-columns: 3fr 1fr;
     }
 
     .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-group {
-        padding: 2.5rem; // live's columns are inset 40px from the panel's edges
         margin: 0;
     }
 
     // Live does not spend 40+40 between the two white columns: they share one
     // 40px-padded box and are separated by 32 | 1px | 32, so their content runs
-    // 104..523.5 and 588.5..1008 at 1440. 32 on each side of the divider gives
-    // 104..524 and 588..1008 without inventing a wrapper the data does not have.
-    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-group:first-child:not(:last-child) {
-        padding-inline-end: 2rem;
+    // 104..523.5 and 588.5..1008 at 1440. The rule is a border rather than the
+    // `max-content` track live gives it, which puts 32 on each side of it and
+    // lands the columns on 104..524 and 588..1008.
+    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-cols {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+        padding: 2.5rem;
     }
 
-    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-group:nth-child(2):not(:last-child) {
+    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-col + .axo-nav-col {
+        margin-inline-start: 2rem;
         padding-inline-start: 2rem;
+        border-inline-start: 1px solid var(--axo-nav-rule);
     }
 
-    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-group:last-child:not(:first-child) {
-        grid-column: 3;
+    // Sections of one column, separated by `divider-horizontal` with live's
+    // 1rem above and below it (`.item-wrapper`'s own `padding: 1rem 0`).
+    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-col > * + * {
+        margin-block-start: 1rem;
+        padding-block-start: 1rem;
+        border-block-start: 1px solid var(--axo-nav-rule);
+    }
+
+    // The two product columns side by side. Live's 2.5rem gap has the vertical
+    // rule in the middle of it, so the border takes 2.5rem on each side.
+    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-subcols {
+        display: flex;
+        align-items: stretch;
+    }
+
+    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-subcol {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-subcol + .axo-nav-subcol {
+        // `margin-block-start: 0` because a sub-column is still an
+        // `.axo-nav-group`, and the 1rem that stacks groups would otherwise drop
+        // the right-hand column a line below the left one.
+        margin-block-start: 0;
+        margin-inline-start: 2.5rem;
+        padding-inline-start: 2.5rem;
+        border-inline-start: 1px solid var(--axo-nav-rule);
+    }
+
+    // A sub-column heading is not a card title: live gives `Pipeline` and
+    // `Storage` `.text-size-small` + `.text-weight-medium` on the tertiary
+    // colour — 14px/1.8 — against the 22px the group cards carry.
+    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-subcol > .axo-nav-group-title {
+        margin-block-end: 0.5rem;
+        color: var(--axo-nav-on-dark, var(--axo-nav-desc));
+        font-size: 0.875rem;
+        line-height: 1.8;
+    }
+
+    // The dark column: live's `.is-solutions-highlight`, a #141d62 fill that
+    // runs the panel's full height and bleeds to its right edge.
+    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-col--highlight {
+        padding: 2.5rem;
         background-color: var(--axo-nav-brand-blue);
         // Everything in the dark column is white on the live site: the 22px
         // title, the 12px blurb and the 14px links alike.
         --axo-nav-on-dark: #fff;
     }
+}
 
-    // The 1px rule between the two white columns; live draws it as its own grid
-    // track. #e7e8ef sampled off the live panel.
-    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-group + .axo-nav-group:not(:last-child) {
-        position: relative;
-    }
-
-    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-group + .axo-nav-group:not(:last-child)::before {
-        content: "";
-        position: absolute;
-        inset-block: 2.5rem;
-        inset-inline-start: 0;
-        width: 1px;
-        background-color: var(--axo-nav-rule);
-    }
+// The wrappers are only a grid inside the bar's mega panel. In the compact
+// panel, and below md, they are plain blocks, so the 1rem that separates two
+// groups has to come from them as well or two sections run together.
+.td-navbar .axo-nav-cols > * + *,
+.td-navbar .axo-nav-col > * + *,
+.td-navbar .axo-nav-subcols > * + * {
+    margin-top: 1rem;
 }
 
 // =============================================================================
@@ -868,7 +922,30 @@ html[data-axo-wide] {
             text-decoration: underline;
         }
 
-        // ---- the three Products cards ---------------------------------------
+        // ---- rows that carry a one-line description -------------------------
+        // Live's `.v3-navbar_mega-link` is 22px/500 wherever it appears, the
+        // product rows in the `Pipeline` and `Storage` sub-columns included —
+        // and those lost their icons when marketing rebuilt the panel, so the
+        // icon can no longer be what marks a row as one of these. The
+        // description can: an ordinary mega link has none.
+        li:has(.axo-nav-link-desc) a {
+            font-size: 1.375rem;
+            font-weight: 500;
+            line-height: 1.45;
+        }
+
+        // No extra space between them, unlike the icon cards below: live stacks
+        // these in `.v3-navbar_mega-dropdown-item-bottom`, whose `gap: 1rem` is
+        // what `.axo-nav-links` already spends. The cards' 24px came from a
+        // container the sub-columns do not use.
+
+        // ---- the Products cards ---------------------------------------------
+        // DEAD AGAINST THE CURRENT DATA, and kept deliberately: marketing
+        // dropped the 32px icons from the product rows in September, so no link
+        // in nav-menu.yaml carries `icon` any more and nothing matches
+        // `li.axo-nav-card`. The rules cost nothing, purgecss keeps them
+        // because the class is still in navbar-group.html, and they are what a
+        // link with an icon should look like if one comes back.
         // Live gives the Axoflow Platform column a different row: a 32px icon,
         // the 22px link beside it and a 12px blurb under that, 54.69px tall
         // against the 21.2px of an ordinary mega link. It is the same link data

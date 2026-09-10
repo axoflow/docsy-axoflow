@@ -22,3 +22,9 @@ go.work
 
 # Editor backup files
 *~
+
+# Bytecode from the scripts importing scripts/axoflow_site.py
+__pycache__/
+
+# Hugo drops this in the theme directory when a build runs
+.hugo_build.lock
