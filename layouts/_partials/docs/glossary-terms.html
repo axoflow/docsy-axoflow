@@ -1,0 +1,24 @@
+{{/*
+  The glossary's term pages, as a page-resource slice.
+
+  The terms are page resources of a LEAF bundle — the glossary directory holds
+  index.md rather than _index.md — which is what keeps a couple of dozen
+  one-paragraph definitions off the sidebar and out of the URL space while still
+  letting each one be a page with front matter of its own.
+
+  Returns the slice rather than setting it on `.Scratch`, so callers can reach it
+  through `partialCached`. That matters for the tooltip shortcode: a page with 20
+  tooltips on it calls this once per shortcode, and the Kubernetes original this
+  descends from walks the bundle all 20 times.
+
+  Erroring here rather than returning an empty slice is deliberate: every caller
+  is already committed to rendering a term, so an unfound bundle is a broken
+  build and not a page with a gap in it. A site with no glossary at all never
+  reaches this partial.
+*/ -}}
+{{- $path := partialCached "docs/glossary-path.html" . -}}
+{{- $bundle := site.GetPage $path -}}
+{{- if not $bundle -}}
+  {{- errorf "Glossary bundle not found at %q: create content%s/index.md, or set params.glossary.path" $path $path -}}
+{{- end -}}
+{{- return $bundle.Resources.ByType "page" -}}

@@ -1,0 +1,97 @@
+{{/*
+  The glossary page. Reached by `layout: glossary` on the index.md of the leaf
+  bundle at `params.glossary.path`; setting up a site's glossary is written up in
+  this theme's CLAUDE.md.
+
+  NO JAVASCRIPT. The Kubernetes original this descends from ships 178 lines of
+  jQuery — a reference-counted tag filter, an expand/collapse toggle, a hover
+  permalink and a query-string sync — and Docsy drops jQuery in 0.18. Each of
+  those four is a thing the platform now does on its own:
+
+    tag filter    the `:has()` rules below and in _glossary.scss
+    expand        <details>, which also gets the site's own chevron treatment
+    permalink     always visible; no hover handler to attach
+    ?all=true     `li:has(:target)`, so a deep link outranks the filter
+
+  What is left is one <style> block, generated from data/canonical-tags/ so that
+  adding a tag needs no second edit.
+*/ -}}
+{{ define "main" }}
+{{ $tags := sort (index hugo.Data "canonical-tags") "name" }}
+<div id="glossary" class="td-content">
+  <h1>{{ .Title }}</h1>
+  {{ with .Params.description }}<div class="lead">{{ . | markdownify }}</div>{{ end }}
+
+  {{/* THE FILTER, AND WHY IT IS INVERTED.
+
+    _glossary.scss hides every term, and each rule below reveals the terms of one
+    tag. Showing beats hiding, so a term carrying three tags stays visible while
+    any one of them is ticked, and vanishes when the last one is unticked — the
+    OR semantics the original emulated in JavaScript with a `data-show-count`
+    reference counter on every <li>.
+
+    The weight works out because `:has()` takes the specificity of its most
+    specific argument: `#glossary-filter-x` inside it is an ID, so these rules
+    carry two of them against the single class of the `display: none` in the
+    stylesheet.
+
+    In the body rather than the head because the rules are per-tag and the head
+    belongs to the theme; a project-level head-end hook would shadow
+    themes/docsy-axoflow's. */ -}}
+  <style>
+    {{- range $tags }}
+    #glossary:has(#glossary-filter-{{ .id }}:checked) .glossary-terms > li.tag-{{ .id }} { display: list-item; }
+    {{- end }}
+  </style>
+
+  <form class="glossary-filter">
+    <fieldset>
+      <legend>{{ T "glossary_filter_legend" }}</legend>
+      {{ range $tags }}
+      {{/* The input is the state and the label is the control, so they have to
+        stay adjacent: _glossary.scss styles the chip through `:checked + label`. */ -}}
+      <input type="checkbox" class="glossary-filter__input visually-hidden" id="glossary-filter-{{ .id }}" checked>
+      <label class="glossary-filter__tag" for="glossary-filter-{{ .id }}" title="{{ .description }}">{{ .name }}</label>
+      {{ end }}
+      {{/* Reset restores the `checked` above, which is every tag — so this is
+        "select all" without a line of script. */ -}}
+      <input type="reset" class="glossary-filter__reset" value="{{ T "glossary_select_all" }}">
+    </fieldset>
+  </form>
+
+  <p class="glossary-empty">{{ T "glossary_empty" }}</p>
+
+  <ul class="glossary-terms">
+    {{ range sort (partialCached "docs/glossary-terms.html" . site.Language.Lang) "Title" }}
+    {{ $anchor := printf "term-%s" .Params.id }}
+    {{ $rest := .Content | strings.TrimPrefix .Summary }}
+    {{/* The id sits on the <li> itself rather than on an empty offset div
+      inside it, which is how the original clears the fixed navbar. `:target`
+      then matches the term, and `scroll-margin-top` does the clearing. */ -}}
+    <li id="{{ $anchor }}" class="{{ range .Params.tags }}tag-{{ . }} {{ end }}">
+      <div class="term-name">
+        <b>{{ .Title }}</b>
+        <a class="term-permalink" href="#{{ $anchor }}" aria-label="{{ printf (T "glossary_permalink") .Title }}">#</a>
+      </div>
+      {{ with .Params.aka }}
+      <div class="term-aka">{{ T "glossary_aka" }}: <i>{{ delimit . ", " }}</i></div>
+      {{ end }}
+      <div class="term-definition">
+        {{ .Summary }}
+        {{/* No <details> when there is nothing behind it. The Kubernetes page
+          renders the toggle unconditionally and some of its terms expand to
+          nothing; Falco fixed that and the fix is worth carrying. */ -}}
+        {{ with $rest }}
+        <details>
+          <summary>{{ T "glossary_show_more" }}</summary>
+          {{ . | safeHTML }}
+        </details>
+        {{ end }}
+      </div>
+    </li>
+    {{ end }}
+  </ul>
+
+  {{ partial "page-meta-lastmod.html" . }}
+</div>
+{{ end }}

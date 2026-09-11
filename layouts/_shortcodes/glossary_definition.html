@@ -1,0 +1,44 @@
+{{/*
+  Inlines a glossary term's definition into a page, so a concept page and the
+  glossary cannot drift apart.
+
+      {{< glossary_definition term_id="axorouter" length="short" >}}
+      {{< glossary_definition term_id="axorouter" length="all" prepend="In this deployment," >}}
+
+  `length` is "short" (the first paragraph) or "long"/"all" (the whole
+  definition). `prepend` splices your own opening onto the first sentence and
+  lower-cases what followed, for reading the definition into a sentence of the
+  host page's own.
+*/ -}}
+{{- $id := .Get "term_id" -}}
+{{- $length := .Get "length" -}}
+{{- $prepend := .Get "prepend" -}}
+{{- $items := partialCached "docs/glossary-terms.html" . site.Language.Lang -}}
+{{- $term := $items.GetMatch (printf "%s.md" $id) -}}
+{{- $full := false -}}
+{{- if or (eq "long" $length) (eq "all" $length) -}}
+  {{- $full = true -}}
+{{- else if ne "short" $length -}}
+  {{- errorf "%q: invalid glossary definition length %q, expected short, long, or all" .Page.Path $length -}}
+{{- end -}}
+{{/* `with` rather than an early `if not`: reaching for .Content on a nil page
+  buries the message below in a template error, which is what the Falco copy of
+  this shortcode still does. */ -}}
+{{- with $term -}}
+  {{- $first := index (findRE "(?s)<p>.*?</p>" .Content 1) 0 -}}
+  {{- $first = $first | strings.TrimSuffix "</p>" | strings.TrimPrefix "<p>" -}}
+  {{- if $prepend -}}
+    {{- $opened := printf "<p>%s %s%s</p>" $prepend (slicestr $first 0 1 | lower) (slicestr $first 1) -}}
+    {{- if $full -}}
+      {{- replace .Content $first $opened | safeHTML -}}
+    {{- else -}}
+      {{- $opened | safeHTML -}}
+    {{- end -}}
+  {{- else if $full -}}
+    {{- .Content -}}
+  {{- else -}}
+    {{- $first | safeHTML -}}
+  {{- end -}}
+{{- else -}}
+  {{- errorf "%q: %q is not a valid glossary term_id, see %s for the full list" .Page.Path $id (partialCached "docs/glossary-path.html" .) -}}
+{{- end -}}

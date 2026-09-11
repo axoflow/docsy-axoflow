@@ -1,0 +1,25 @@
+# Strings this site's own layouts ask for. Docsy's own live in
+# themes/docsy/i18n/en.toml and are not repeated here.
+#
+# config.toml sets `enableMissingTranslationPlaceholders = true`, so a key a
+# template names and this file does not define renders as the key itself on the
+# page rather than as empty space.
+
+[glossary_filter_legend]
+other = "Filter the terms by tag"
+
+[glossary_select_all]
+other = "Select all"
+
+[glossary_empty]
+other = "No tags are selected, so no terms are shown. Pick a tag above, or select all of them."
+
+[glossary_show_more]
+other = "Read more"
+
+[glossary_aka]
+other = "Also known as"
+
+# Takes the term's title.
+[glossary_permalink]
+other = "Link to %s"

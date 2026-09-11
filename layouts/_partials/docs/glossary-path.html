@@ -1,0 +1,18 @@
+{{/*
+  Where this site keeps its glossary bundle, as a site-root-relative path.
+
+  Set by `params.glossary.path`; config/_default/config.toml in this theme
+  carries the default, so the `with` below is belt-and-braces for a site that
+  overrode `params.glossary` with something that is not a map.
+
+  Read by both glossary shortcodes and by docs/glossary-terms.html, so a site
+  that files its glossary somewhere other than /reference/glossary/ changes one
+  config line rather than three templates.
+*/ -}}
+{{- $path := "/reference/glossary" -}}
+{{- with site.Params.glossary -}}
+  {{- with .path -}}
+    {{- $path = . -}}
+  {{- end -}}
+{{- end -}}
+{{- return strings.TrimSuffix "/" $path -}}

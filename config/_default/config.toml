@@ -50,6 +50,14 @@
   errorLevel = "warning"   # ignore (default), warning, or error (fails the build)
   highlightBroken = true   # adds .broken class to anchors in dev mode for visual triage
 
+  # Where the glossary's leaf bundle lives, read by _partials/docs/
+  # glossary-path.html and through it by both glossary shortcodes and the
+  # glossary layout. A site files its glossary elsewhere by setting this, and a
+  # site with no glossary at all never reads it — nothing in the theme touches
+  # the bundle until a page asks for a term.
+  [params.glossary]
+  path = "/reference/glossary"
+
   [params.ui]
   # Enable the light/dark mode toggle in the navbar. Also activates the
   # dark-mode JS bundle and FOUC-prevention init in head.html / baseof.html.

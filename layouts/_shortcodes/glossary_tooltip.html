@@ -1,0 +1,36 @@
+{{/*
+  Links a term to the glossary and shows its short description on hover.
+
+      {{< glossary_tooltip term_id="axorouter" >}}
+      {{< glossary_tooltip term_id="axorouter" text="the router" >}}
+
+  `text` defaults to the term's title. An unknown `term_id` fails the build
+  rather than shipping a dead link.
+
+  No JavaScript of ours: Docsy's own base.js initializes every
+  `[data-bs-toggle="tooltip"]` on the page, and it does so both in 0.15 (jQuery)
+  and in the vanilla rewrite that lands in 0.18, so this markup survives the
+  theme dropping jQuery. The Bootstrap 4 spelling — `data-toggle` — is what the
+  Falco copy of this shortcode still uses, and it is inert on Bootstrap 5.
+*/ -}}
+{{- $id := .Get "term_id" -}}
+{{- $text := .Get "text" -}}
+{{- $items := partialCached "docs/glossary-terms.html" . site.Language.Lang -}}
+{{- $term := $items.GetMatch (printf "%s.md" $id) -}}
+{{- if not $term -}}
+  {{- errorf "%q: %q is not a valid glossary term_id, see %s for the full list" .Page.Path $id (partialCached "docs/glossary-path.html" .) -}}
+{{- else -}}
+  {{- $text = $text | default $term.Title -}}
+  {{/* A term's own short description may name other terms, which renders a
+    nested anchor; the title attribute takes text only, so unwrap it. */ -}}
+  {{- $tooltip := $term.Params.short_description | markdownify -}}
+  {{- $tooltip = $tooltip | replaceRE `(?s)<a class="glossary-tooltip".*?>(.*?).*</a>` "$1" | plainify -}}
+  {{/* `trim` takes the cutset LAST, so it cannot be written as `| trim " \n"`:
+    that trims the cutset with the string, and every tooltip ships empty. */ -}}
+  {{- $tooltip = trim $tooltip " \n" -}}
+  {{/* No `?all=true` on the link, unlike the Kubernetes original: the filter
+    there can hide the term the reader just followed a link to, and
+    _glossary.scss answers that with `li:target` instead of a query parameter. */ -}}
+  {{- $link := $term.Params.full_link | default (printf "%s/#term-%s" (partialCached "docs/glossary-path.html" .) $id) -}}
+  <a class="glossary-tooltip" href="{{ $link | relLangURL }}" title="{{ $tooltip }}" data-bs-toggle="tooltip" data-bs-placement="top">{{- $text -}}</a>
+{{- end -}}

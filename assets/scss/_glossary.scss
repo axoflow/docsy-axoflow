@@ -1,0 +1,212 @@
+// The glossary: the term list, its tag filter, and the inline tooltip links the
+// glossary_tooltip shortcode leaves on every other page.
+//
+// Colours are the shared tokens from themes/docsy-axoflow/assets/scss/
+// _axo-tokens.scss, which carries a light and a dark value for each, so nothing
+// here needs a `[data-bs-theme="dark"]` block of its own.
+//
+// The active chip reuses the notice triplet — `--axo-notice-bg`,
+// `--axo-notice-rule`, `--axo-text-notice` — rather than inventing a second warm
+// pair. That triplet is the one place in the palette where a warm fill and warm
+// text were measured against each other and kept readable in both themes; the
+// brand orange on white is 2.95:1 and would not survive being a chip label.
+
+// -----------------------------------------------------------------------------
+// The tooltip link, which appears on every page that names a term
+// -----------------------------------------------------------------------------
+// Body colour with a dotted accent underline, not an accent-coloured link. Two
+// reasons: it separates "this word has a definition" from "this is a link to
+// another page", and it keeps the words at the body text's contrast instead of
+// the accent's.
+//
+// Written out to `.td-main .td-content a.glossary-tooltip` rather than to the
+// class alone, and that is the whole point of the selector: _axo-content.scss
+// states `.td-main .td-content a { color: var(--axo-content-accent) }` at three
+// classes, so a bare `.glossary-tooltip` loses to it wherever this file is
+// imported and every tooltip ships orange.
+.td-main .td-content a.glossary-tooltip {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dotted var(--axo-text-accent, #ff6500);
+    cursor: help;
+
+    &:hover,
+    &:focus-visible {
+        color: var(--axo-text-accent, #ff6500);
+        border-bottom-style: solid;
+    }
+}
+
+#glossary {
+    // -------------------------------------------------------------------------
+    // The filter
+    // -------------------------------------------------------------------------
+    .glossary-filter {
+        margin: 2rem 0 1.5rem;
+
+        fieldset {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem;
+            border: 0;
+            border-block: 1px solid var(--axo-hairline, #e7e8ef);
+            padding: 1rem 0;
+        }
+
+        legend {
+            // Bootstrap floats a legend full-width; inside a flex fieldset that
+            // leaves it overlapping the first chip. Take it out of the flow and
+            // set it as a label over the row instead.
+            float: none;
+            width: 100%;
+            margin: 0 0 0.75rem;
+            padding: 0;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--axo-text-faint, #657780);
+        }
+    }
+
+    .glossary-filter__tag {
+        margin: 0;
+        padding: 0.3rem 0.9rem;
+        border: 1px solid var(--axo-control-border, #d0d2e0);
+        border-radius: 2rem;
+        font-size: 0.875rem;
+        line-height: 1.4;
+        color: var(--axo-text-muted, #42555f);
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.12s ease, border-color 0.12s ease;
+
+        &:hover {
+            border-color: var(--axo-notice-rule, #ef5900);
+        }
+    }
+
+    .glossary-filter__input:checked + .glossary-filter__tag {
+        background: var(--axo-notice-bg, #fff0e5);
+        border-color: var(--axo-notice-rule, #ef5900);
+        color: var(--axo-text-notice, #c73900);
+    }
+
+    // The checkbox is clipped, not removed, so it keeps taking focus. The ring
+    // has to be drawn on the label, which is the thing the reader can see.
+    .glossary-filter__input:focus-visible + .glossary-filter__tag {
+        outline: 2px solid var(--axo-text-accent, #ff6500);
+        outline-offset: 2px;
+    }
+
+    .glossary-filter__reset {
+        margin-inline-start: auto;
+        padding: 0.3rem 0.25rem;
+        border: 0;
+        background: none;
+        font-size: 0.875rem;
+        color: var(--axo-text-faint, #657780);
+        text-decoration: underline;
+
+        &:hover {
+            color: var(--axo-text-accent, #ff6500);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // The term list
+    // -------------------------------------------------------------------------
+    .glossary-terms {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    // EVERY TERM IS HIDDEN HERE and revealed by the per-tag rules the layout
+    // generates from data/canonical-tags/. Inverting it this way is what gives
+    // the filter OR semantics without a script: any ticked tag reveals its own
+    // terms, and a term with several tags survives until the last of them is
+    // unticked. The reasoning is written out in layouts/docs/glossary.html.
+    .glossary-terms > li {
+        display: none;
+        padding: 1.25rem 0 1.25rem 1rem;
+        border-top: 1px solid var(--axo-hairline, #e7e8ef);
+        // Clears the fixed navbar when a permalink or a tooltip link lands here.
+        scroll-margin-top: 6rem;
+        // The left rule below is drawn transparent rather than added on :target,
+        // so the text does not shift sideways when a term is jumped to.
+        border-inline-start: 3px solid transparent;
+    }
+
+    // A followed link outranks the filter. This is the whole of what the
+    // Kubernetes page needs `?all=true` on every tooltip link for.
+    .glossary-terms > li:target {
+        display: list-item;
+        border-inline-start-color: var(--axo-text-accent, #ff6500);
+        background: var(--axo-notice-bg, #fff0e5);
+    }
+
+    .term-name b {
+        // The heading ramp flattens h4 and below to body size and separates by
+        // weight; a term name is an h4 in everything but markup, so it takes the
+        // same 500. 700 is what `<b>` would resolve to, and it is too loud for a
+        // list of two dozen of them.
+        font-weight: 500;
+    }
+
+    .term-permalink {
+        margin-inline-start: 0.4rem;
+        color: var(--axo-text-faint, #657780);
+        text-decoration: none;
+        opacity: 0.6;
+
+        &:hover,
+        &:focus-visible {
+            color: var(--axo-text-accent, #ff6500);
+            opacity: 1;
+        }
+    }
+
+    .term-aka {
+        font-size: 0.875rem;
+        color: var(--axo-text-faint, #657780);
+    }
+
+    // .Summary arrives as its own <p>; the prose rules give that a bottom margin
+    // that would separate a one-sentence definition from its own "Read more".
+    .term-definition > p:last-of-type {
+        margin-bottom: 0.5rem;
+    }
+
+    // The <details> treatment itself comes from _axo-content.scss — the 2px
+    // leading rule and the chevron that every hand-written <details> under
+    // content/ gets. Only the spacing is this page's.
+    .term-definition details {
+        margin: 0.5rem 0 0;
+    }
+
+    // -------------------------------------------------------------------------
+    // Nothing selected
+    // -------------------------------------------------------------------------
+    .glossary-empty {
+        display: none;
+        color: var(--axo-text-faint, #657780);
+    }
+
+    &:not(:has(.glossary-filter__input:checked)) .glossary-empty {
+        display: block;
+    }
+}
+
+// On paper there is no filter to operate, so the page is the whole glossary.
+@media print {
+    #glossary {
+        .glossary-filter,
+        .glossary-empty {
+            display: none;
+        }
+
+        .glossary-terms > li {
+            display: list-item;
+        }
+    }
+}
