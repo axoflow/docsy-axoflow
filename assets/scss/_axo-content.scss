@@ -689,20 +689,33 @@ $axo-code-dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 // and Shiki paints it, so a terminal block's own `color` is not the page default —
 // it is the string colour, which is what 89% of those characters measure as.
 //
+// WHY THE LIGHT STRING COLOUR IS WARM. Chroma's Bash lexer barely tokenises what
+// this site puts in a ```shell fence, which is AxoSyslog config rather than shell:
+// on /chapter-configuration-file/configuration-syntax/ the five shell blocks emit
+// `o` for `{ } ( )`, `p` for `;`, one `nb`, and nothing else — every other
+// character is unclassed. Two buckets, and 1307 of content/'s fences are tagged
+// this way. Dark survives that because its pair is warm against cool, #ecc48d
+// text with #d6deeb punctuation; light's pair was #3b61b0 against #403f53, cool
+// against cool, and read as one colour. So the string token is an amber here
+// rather than a second blue, and the two other collapses — `kw` and `green` both
+// sitting on the #403f53 default, which painted a keyword and a shell variable as
+// punctuation — are undone. Every value measures at or above 4.5:1 on the
+// #f3f4f7 code surface: #8a5a2b is 5.34, #096d71 is 5.55, #3b61b0 is 5.42.
+//
 // Custom properties rather than two copies of the table: `variables: false` in
 // postcss.config.js keeps PurgeCSS off them, and the dark theme then restates ten
 // values instead of forty selectors.
 .td-main .td-content .axo-code-block {
     --axo-tok-fg: #403f53; // default, punctuation, operators
-    --axo-tok-str: #3b61b0; // strings, literals, builtins, and a shell command
+    --axo-tok-str: #8a5a2b; // strings, literals, builtins, and a shell command
     --axo-tok-blue: #3b61b0; // double-quoted strings, function names
     --axo-tok-red: #984e4d; // single-quoted string bodies
-    --axo-tok-green: #403f53; // shell variables
+    --axo-tok-green: #096d71; // shell variables
     --axo-tok-comment: #5f636f;
     --axo-tok-tag: #111111; // YAML keys, XML tags, attributes
     --axo-tok-num: #aa0982;
     --axo-tok-const: #a24848; // true/false/null
-    --axo-tok-kw: #403f53; // keywords, interpolation
+    --axo-tok-kw: #3b61b0; // keywords, interpolation
     --axo-tok-purple: #8844ae; // word operators
 
     // `!important` on every one of these, because the Docsy theme paints all code
