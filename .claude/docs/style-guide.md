@@ -89,6 +89,42 @@ Use project-absolute (hugo-style) paths if possible (start with `/`, relative to
 
 Hugo checks only that the referenced file exists, it doesn’t check the anchor, so using an invalid anchor won’t fail the build (and won’t produce a warning).
 
+## Glossary terms
+
+Link the **first mention in running prose** on each page to the glossary, and
+leave every later mention plain. The reader gets the definition where they first
+meet the term, without the page turning into a field of links.
+
+```markdown
+{{< glossary_tooltip term_id="axorouter" >}} collects data from your sources and
+delivers it to your destinations. Configure {{< router >}} from {{< console >}}.
+```
+
+Term ids are the filenames in `content/reference/glossary/`. Pass `text` to
+inflect the term into the sentence — the link text defaults to the term's title:
+
+```markdown
+Data arrives on the {{< glossary_tooltip term_id="edge" text="edge hosts" >}} you provisioned.
+```
+
+**Do not use the tooltip in these places.** Use the plain product shortcode, or
+the term as text:
+
+- **In a heading.** The heading then carries two links, the term's and the
+  heading's own self-link, and clicking the heading navigates away.
+- **Inside markdown link text**, as in `[{{< router >}}]({{< relref … >}})`. The
+  result is an anchor inside an anchor, which is invalid HTML: the browser
+  auto-closes the outer one and silently discards the link you wrote.
+- **In an image caption, an alt text, a table cell that is already a link, or
+  any shortcode parameter.** Same nesting problem, or the shortcode simply does
+  not run there.
+- **On the page the term's own `full_link` points at.** The tooltip would link
+  the reader to the page they are already reading. Check the term's front matter
+  before adding the tooltip.
+
+When the first mention falls in one of these, use the plain shortcode there and
+put the tooltip on the first prose mention that follows, if there is one.
+
 ## Images
 
 - Store images in the same directory as the page that uses them (page bundle).

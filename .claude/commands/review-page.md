@@ -34,6 +34,36 @@ Then check for:
    back to a page, so the build warns. Use
    `[text]({{< relref "path.md#anchor" >}})` instead.
 9. **Terminology** — correct spelling of AxoSyslog, syslog-ng, etc.
+10. **Glossary terms** — the first mention of a glossary term in running prose
+    should link to the glossary; later mentions stay plain. Report both
+    directions: a first prose mention that is still plain, and any second or
+    third tooltip for the same term on one page.
+
+    ```markdown
+    {{< glossary_tooltip term_id="axorouter" >}} collects data from your sources.
+    Configure {{< router >}} from {{< console >}}.
+    ```
+
+    Term ids are the filenames in `content/reference/glossary/`. Do not suggest
+    a tooltip, and flag it as an error where one is already used, in any of
+    these — each renders broken rather than merely untidy:
+
+    - **In a heading** — the heading ends up with the term's link beside its own
+      self-link, so clicking the heading navigates away.
+    - **Inside markdown link text**, as in `[{{< router >}}]({{< relref … >}})` —
+      an anchor inside an anchor. Invalid HTML: the browser auto-closes the
+      outer one and drops the author's link target silently.
+    - **In an image caption, alt text, or a shortcode parameter** — same nesting
+      problem, or the shortcode does not run there at all.
+    - **On the page the term's `full_link` points at** — the tooltip links the
+      reader to the page they are already on. Read the term's front matter in
+      `content/reference/glossary/<term_id>.md` to check.
+
+    To find every tooltip on the page and spot duplicates:
+
+    ```
+    grep -n 'glossary_tooltip' <file>
+    ```
 
 Return a prioritized list of issues with the line numbers and suggested fixes.
 Do not make changes until I confirm.
