@@ -130,8 +130,6 @@
         display: none;
         padding: 1.25rem 0 1.25rem 1rem;
         border-top: 1px solid var(--axo-hairline, #e7e8ef);
-        // Clears the fixed navbar when a permalink or a tooltip link lands here.
-        scroll-margin-top: 6rem;
         // The left rule below is drawn transparent rather than added on :target,
         // so the text does not shift sideways when a term is jumped to.
         border-inline-start: 3px solid transparent;
@@ -139,22 +137,40 @@
 
     // A followed link outranks the filter. This is the whole of what the
     // Kubernetes page needs `?all=true` on every tooltip link for.
-    .glossary-terms > li:target {
+    //
+    // `:has(:target)` rather than `:target`: the id sits on the term's <h2>, so
+    // that heading is what matches, and the row around it is what has to appear.
+    .glossary-terms > li:has(:target) {
         display: list-item;
         border-inline-start-color: var(--axo-text-accent, #ff6500);
         background: var(--axo-notice-bg, #fff0e5);
     }
 
-    .term-name b {
-        // The heading ramp flattens h4 and below to body size and separates by
-        // weight; a term name is an h4 in everything but markup, so it takes the
-        // same 500. 700 is what `<b>` would resolve to, and it is too loud for a
-        // list of two dozen of them.
-        font-weight: 500;
+    .term-name {
+        // <h2> is a block, so the permalink beside it needs a row of its own to
+        // sit in rather than the inline flow a <b> used to give it.
+        display: flex;
+        align-items: baseline;
+        gap: 0.4rem;
+
+        h2 {
+            // NOT the h2 of the heading ramp, which is 35px. A term name is an
+            // h4 in everything but the outline it belongs to: the ramp flattens
+            // h4 and below to body size and separates them by weight, and that
+            // is the size this list is set at. The element is an h2 so that the
+            // page has a document outline and a contents column, not because it
+            // is a section title.
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: inherit;
+            // Clears the fixed navbar when a permalink, a contents row, or a
+            // tooltip lands on this term.
+            scroll-margin-top: 6rem;
+        }
     }
 
     .term-permalink {
-        margin-inline-start: 0.4rem;
         color: var(--axo-text-faint, #657780);
         text-decoration: none;
         opacity: 0.6;

@@ -72,12 +72,23 @@
       page happens to link to still has its full_link validated. Both calls are
       cached on the term id, so this costs one check per term per build. */ -}}
     {{ partialCached "docs/glossary-validate-link.html" . .Params.id }}
-    {{/* The id sits on the <li> itself rather than on an empty offset div
-      inside it, which is how the original clears the fixed navbar. `:target`
-      then matches the term, and `scroll-margin-top` does the clearing. */ -}}
-    <li id="{{ $anchor }}" class="{{ range .Params.tags }}tag-{{ . }} {{ end }}">
+    {{/* A REAL HEADING, not bold text. Two dozen term names set in <b> give the
+      page no outline at all: one <h1> and nothing under it, so a screen reader
+      has no way to move term by term and the browser has nothing to build a
+      contents list from.
+
+      <h2> is also what puts the terms in the right-hand contents column, which
+      tocbot builds from `.td-content h2, h3, h4` (_partials/scripts.html). On
+      this page that column becomes a jump list of every term. A site that does
+      not want it sets `notoc: true` on the glossary's index.md.
+
+      The id moves off the <li> and onto the heading, because that is what the
+      contents column and the permalink link to, so `scroll-margin-top` has to
+      travel with it. _glossary.scss reads `li:has(:target)` rather than
+      `li:target` for the same reason. */ -}}
+    <li class="{{ range .Params.tags }}tag-{{ . }} {{ end }}">
       <div class="term-name">
-        <b>{{ .Title }}</b>
+        <h2 id="{{ $anchor }}">{{ .Title }}</h2>
         <a class="term-permalink" href="#{{ $anchor }}" aria-label="{{ printf (T "glossary_permalink") .Title }}">#</a>
       </div>
       {{ with .Params.aka }}
