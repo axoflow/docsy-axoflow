@@ -15,7 +15,7 @@ This is the generic Axoflow style guide. Use it together with the project-specif
 - Avoid Latin abbreviations (e.g., i.e.) — use "for example" and "that is".
 - Follow the Microsoft Manual of Style if possible.
 
-Use the /ste-writer to write the documentation.
+Use the /ste100-writer to write the documentation.
 
 ## Terminology
 
