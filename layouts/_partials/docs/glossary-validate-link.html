@@ -37,10 +37,24 @@
       {{- $contentPath = .Path -}}
     {{- end -}}
     {{- if $u.IsAbs -}}
-      {{/* An absolute URL in full_link is a hardcoded site URL, which the style
-        guide forbids for internal links; external targets cannot be checked. */ -}}
-      {{- $msg := printf "glossary term %q sets an absolute full_link %q; use a site-relative path" $contentPath $link -}}
-      {{- if eq $errorLevel "error" }}{{ errorf $msg }}{{ else }}{{ warnf $msg }}{{ end -}}
+      {{/* An absolute URL is only wrong when it points back at THIS site: that is
+        the hardcoded internal link the style guide forbids, and it should be a
+        path so the link survives a move.
+
+        A URL somewhere else is legitimate and is left alone. The sibling
+        documentation sets are the case that matters — AxoSyslog's docs sit at
+        axoflow.com/docs/axosyslog-core/ while this site is at
+        axoflow.com/docs/axoflow/ — so comparing hosts would reject them. The
+        test is the whole site root, not the host.
+
+        site.Home.Permalink rather than site.BaseURL because it is resolved in
+        every environment; config/_default sets baseurl to "/". The cost is that
+        a hardcoded internal URL goes unreported on a development build and is
+        caught on the production one, which is what CI runs. */ -}}
+      {{- if hasPrefix $link site.Home.Permalink -}}
+        {{- $msg := printf "glossary term %q sets full_link %q as an absolute URL into this site; use a site-relative path" $contentPath $link -}}
+        {{- if eq $errorLevel "error" }}{{ errorf $msg }}{{ else }}{{ warnf $msg }}{{ end -}}
+      {{- end -}}
     {{- else -}}
       {{- with $u.Path -}}
         {{- $p := or (site.GetPage .) (site.GetPage (strings.TrimRight "/" .)) -}}
