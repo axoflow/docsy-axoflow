@@ -80,6 +80,39 @@ Override with explicit text:
 
 The path is relative to `content/`.
 
+## Glossary
+
+Terms live in one leaf bundle, `content/reference/glossary/` by default, with
+one file per term named after the term's `id`. Setting up a glossary for a site
+is documented in `themes/docsy-axoflow/CLAUDE.md`.
+
+### Link a term inline
+
+```markdown
+{{< glossary_tooltip term_id="axorouter" >}}
+{{< glossary_tooltip term_id="axorouter" text="the router" >}}
+```
+
+Renders the term as a link that shows its short definition on hover. `text`
+defaults to the term's title; use it to inflect the term into the sentence
+("edge hosts", "tap into a running data flow"). An unknown `term_id` fails the
+build, so a typo cannot ship as a dead link.
+
+Where the term's front matter sets `full_link`, the link goes to that page.
+Otherwise it goes to the term's own entry in the glossary.
+
+### Inline a definition
+
+```markdown
+{{< glossary_definition term_id="axorouter" length="short" >}}
+{{< glossary_definition term_id="axorouter" length="all" prepend="In this deployment," >}}
+```
+
+Pulls a definition out of the glossary, so a concept page and the glossary
+cannot drift apart. `length` is `short` (the first paragraph) or `long`/`all`
+(the whole definition). `prepend` splices your own opening onto the first
+sentence and lower-cases what followed.
+
 ---
 
 *If you need a shortcode that is not listed here, ask the user before
