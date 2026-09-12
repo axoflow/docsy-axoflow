@@ -1,0 +1,65 @@
+{{/*
+  Validates one term's `full_link` against the site, and reports through the
+  same channel the markdown link render hook uses.
+
+  WHY THIS EXISTS. `full_link` is front matter, not markdown, so
+  _markup/render-link.html never sees it — the one internal link on a glossary
+  term is the one link on the site that nothing checks. A renamed target page
+  leaves every tooltip for that term pointing at a 404, silently, and the
+  glossary is exactly where a stale link costs most: it is the page a reader
+  goes to when they are already unsure.
+
+  Honours `params.render_hooks.link.errorLevel` rather than always failing, so
+  the glossary reports at whatever level the site already chose for its
+  markdown links.
+
+  Fragments go to the render hook's own `validate-fragment` inline partial. That
+  is deliberate reuse and not just economy: it carries three fallbacks a naive
+  `.Fragments.Identifiers` check does not have — hand-placed `<a name="x">`
+  anchors, anchors that arrive through an include-headless snippet, and the
+  `skip_fragment_validation` opt-out for pages whose anchors a shortcode
+  generates at render time. Reimplementing it here would report false breakage
+  on all three.
+
+  Call through `partialCached` keyed by the term id: the message then appears
+  once per build rather than once per tooltip.
+
+  @context {page} The glossary term page.
+*/ -}}
+{{- $term := . -}}
+{{- with $term.Params.full_link -}}
+  {{- $errorLevel := or site.Params.render_hooks.link.errorLevel "ignore" | lower -}}
+  {{- if ne $errorLevel "ignore" -}}
+    {{- $link := . -}}
+    {{- $u := urls.Parse $link -}}
+    {{- $contentPath := $term.Path -}}
+    {{- with $term.File -}}
+      {{- $contentPath = .Path -}}
+    {{- end -}}
+    {{- if $u.IsAbs -}}
+      {{/* An absolute URL in full_link is a hardcoded site URL, which the style
+        guide forbids for internal links; external targets cannot be checked. */ -}}
+      {{- $msg := printf "glossary term %q sets an absolute full_link %q; use a site-relative path" $contentPath $link -}}
+      {{- if eq $errorLevel "error" }}{{ errorf $msg }}{{ else }}{{ warnf $msg }}{{ end -}}
+    {{- else -}}
+      {{- with $u.Path -}}
+        {{- $p := or (site.GetPage .) (site.GetPage (strings.TrimRight "/" .)) -}}
+        {{- if not $p -}}
+          {{- $msg := printf "glossary term %q has an unresolvable full_link %q" $contentPath $link -}}
+          {{- if eq $errorLevel "error" }}{{ errorf $msg }}{{ else }}{{ warnf $msg }}{{ end -}}
+        {{- else -}}
+          {{- with $u.Fragment -}}
+            {{- partial "inline/h-rh-l/validate-fragment.html" (dict
+              "contentPath" $contentPath
+              "errorLevel" $errorLevel
+              "page" $p
+              "parsedURL" $u
+              "position" (printf "%s (full_link)" $contentPath)
+              "renderHookName" "glossary_tooltip"
+            ) -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

@@ -63,6 +63,7 @@ A filterable glossary page plus an inline tooltip shortcode, shared by every sit
 | `layouts/docs/glossary.html` | The page. Reached by `layout: glossary`. |
 | `layouts/_partials/docs/glossary-path.html` | Returns `params.glossary.path`. One place, three readers. |
 | `layouts/_partials/docs/glossary-terms.html` | Returns the term pages as a resource slice. |
+| `layouts/_partials/docs/glossary-validate-link.html` | Checks each term's `full_link` at the site's own `errorLevel`. |
 | `layouts/_shortcodes/glossary_tooltip.html` | Inline term link with a hover definition. |
 | `layouts/_shortcodes/glossary_definition.html` | Inlines a definition into another page. |
 | `assets/scss/_glossary.scss` | Imported from `_styles_project.scss` here, so a site needs no stylesheet of its own. |
@@ -126,13 +127,29 @@ A site supplies the content and the tags. Nothing in the theme touches the bundl
    | `title` | Required. Sorts the list, and is the tooltip's default link text. |
    | `id` | Required. Must equal the filename stem. |
    | `short_description` | Required. The hover text. **Front matter, so no shortcodes** — write product names out literally. |
-   | `full_link` | Optional. Where the tooltip links instead of the glossary entry. Use it wherever a real concept page exists. |
+   | `full_link` | Optional. Where the tooltip links instead of the glossary entry. Use it wherever a real concept page exists. Site-relative, and validated — see below. |
    | `aka` | Optional list. Renders as "Also known as". |
    | `tags` | Required. Must match ids in `data/canonical-tags/`. A term with no matching checked tag is invisible. |
 
 4. Use it. `{{< glossary_tooltip term_id="axorouter" >}}`, or with `text="the router"` to inflect it. An unknown `term_id` **fails the build** rather than shipping a dead link.
 
    `{{< glossary_definition term_id="axorouter" length="short" >}}` inlines the definition into a concept page, so the two cannot drift. `length` is `short` (first paragraph) or `long`/`all`; `prepend="Here," ` splices your own opening onto the first sentence.
+
+### `full_link` is checked, unlike other front matter
+
+`full_link` is the one internal link on the site that `_markup/render-link.html` cannot see, because front matter is not markdown. Left alone, a renamed target page points every tooltip for that term at a 404, silently — on the page a reader opens precisely when they are already unsure.
+
+`glossary-validate-link.html` closes that. It reports three things at whatever `params.render_hooks.link.errorLevel` the site already sets for its markdown links (`ignore` disables it entirely):
+
+```
+WARN  glossary term "reference/glossary/flow.md" has an unresolvable full_link "/data-management/moved-away/"
+WARN  glossary term "reference/glossary/siem.md" sets an absolute full_link "https://…"; use a site-relative path
+WARN  The "glossary_tooltip" render hook was unable to find heading ID "no-such-heading" in architecture/_index.md. Linked from reference/glossary/axorouter.md (full_link)
+```
+
+Fragments go to the render hook's own `inline/h-rh-l/validate-fragment.html`, which is reuse worth being deliberate about: that validator carries three fallbacks a plain `.Fragments.Identifiers` check does not — hand-placed `<a name="x">` anchors, anchors arriving through an `include-headless` snippet, and the `skip_fragment_validation` opt-out for pages whose anchors a shortcode generates at render time. A second implementation would report false breakage on all three.
+
+Both the layout and the tooltip shortcode call it through `partialCached`, keyed by term id, so each term is checked once per build no matter how many tooltips point at it. The layout's call is what covers terms that no page happens to link to.
 
 ### How the filter works without a script
 

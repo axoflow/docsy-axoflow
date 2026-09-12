@@ -28,6 +28,10 @@
   {{/* `trim` takes the cutset LAST, so it cannot be written as `| trim " \n"`:
     that trims the cutset with the string, and every tooltip ships empty. */ -}}
   {{- $tooltip = trim $tooltip " \n" -}}
+  {{/* Front matter is not markdown, so the link render hook never sees
+    `full_link`. Checked here instead, at the site's own errorLevel. Cached by
+    term id: once per build, not once per tooltip. */ -}}
+  {{- partialCached "docs/glossary-validate-link.html" $term $id -}}
   {{/* No `?all=true` on the link, unlike the Kubernetes original: the filter
     there can hide the term the reader just followed a link to, and
     _glossary.scss answers that with `li:target` instead of a query parameter. */ -}}
