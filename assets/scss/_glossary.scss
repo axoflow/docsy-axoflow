@@ -171,6 +171,22 @@
         color: var(--axo-text-faint, #657780);
     }
 
+    // The way out of the glossary, to the page that documents the term. Left at
+    // the accent link colour the content rules give it, so it separates from the
+    // permalink above, which is faint on purpose: one is "go read about this",
+    // the other is "point someone at this entry".
+    .term-link {
+        display: inline-block;
+        margin-top: 0.35rem;
+        font-size: 0.875rem;
+
+        &::after {
+            // A glyph rather than an icon font: the arrow has to survive
+            // whatever Font Awesome is or is not doing on the page.
+            content: " \2192";
+        }
+    }
+
     // .Summary arrives as its own <p>; the prose rules give that a bottom margin
     // that would separate a one-sentence definition from its own "Read more".
     .term-definition > p:last-of-type {

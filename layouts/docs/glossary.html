@@ -65,6 +65,13 @@
     {{ range sort (partialCached "docs/glossary-terms.html" . site.Language.Lang) "Title" }}
     {{ $anchor := printf "term-%s" .Params.id }}
     {{ $rest := .Content | strings.TrimPrefix .Summary }}
+    {{/* Captured because `$` inside this range is the glossary page, not the
+      term, so the link label below cannot reach the term's title through it. */ -}}
+    {{ $title := .Title }}
+    {{/* Checked here as well as from the tooltip shortcode, so a term that no
+      page happens to link to still has its full_link validated. Both calls are
+      cached on the term id, so this costs one check per term per build. */ -}}
+    {{ partialCached "docs/glossary-validate-link.html" . .Params.id }}
     {{/* The id sits on the <li> itself rather than on an empty offset div
       inside it, which is how the original clears the fixed navbar. `:target`
       then matches the term, and `scroll-margin-top` does the clearing. */ -}}
@@ -86,6 +93,16 @@
           <summary>{{ T "glossary_show_more" }}</summary>
           {{ . | safeHTML }}
         </details>
+        {{ end }}
+        {{/* OUTSIDE the <details>, deliberately. `full_link` is the term's own
+          page, and until this row existed the glossary was the one place it
+          could not be reached: the definition text links to every OTHER term's
+          page through the tooltip shortcode, and never to its own.
+
+          Inside the expander it would be hidden from the reader who most needs
+          it — the one who read the preview and wants more. */ -}}
+        {{ with .Params.full_link }}
+        <a class="term-link" href="{{ . | relLangURL }}">{{ printf (T "glossary_full_link") $title }}</a>
         {{ end }}
       </div>
     </li>

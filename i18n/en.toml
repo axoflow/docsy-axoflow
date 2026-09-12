@@ -23,3 +23,9 @@ other = "Also known as"
 # Takes the term's title.
 [glossary_permalink]
 other = "Link to %s"
+
+# The link from a glossary entry to the page that documents the term. Takes the
+# term's title, so the label says where it goes rather than repeating "Read more"
+# two dozen times down the page.
+[glossary_full_link]
+other = "More about %s"
