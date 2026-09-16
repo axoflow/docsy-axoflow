@@ -60,10 +60,11 @@
     // instruction on 2026-08-29 and the whole light palette is #ff6500 now; the
     // ratios are recorded on --axo-text-accent in _axo-tokens.scss.
     --axo-nav-hover: #ff6500;
-    // The drawer's section headings, below md. The same #ff6500, and a different
-    // job from the hover above — named separately so the note beside that one
-    // ("do not widen it") is not quietly widened by reuse. Its own contrast is
-    // recorded where it is used.
+    // Section headings: the drawer's below md, and the mega panel's sub-column
+    // labels (`Pipeline`, `Storage`, `Detection`). The same #ff6500, and a
+    // different job from the hover above — named separately so the note beside
+    // that one ("do not widen it") is not quietly widened by reuse. Its own
+    // contrast is recorded where it is used.
     --axo-nav-section: #ff6500;
     --axo-nav-title: #141d62; // mega group titles, and the dark column's fill
     --axo-nav-panel-link: #0f1425; // both panel kinds paint their links this navy
@@ -667,7 +668,7 @@ html[data-axo-wide] {
     //     .v3-navbar_mega-dropdown-col-right            1fr max-content 1fr,
     //                                                   gap 2rem, padding 2.5rem
     //       .v3-navbar_mega-dropdown-col                sections, divider between
-    //         .v3-navbar_mega-dropdown-item-wrapper     gap 2.5rem, padding 1rem 0
+    //         .v3-navbar_mega-dropdown-item-wrapper     gap 1rem, padding 1rem 0
     //     .v3-navbar_mega-dropdown-col.is-solutions-highlight   padding 2.5rem
     //
     // 3fr/1fr is the same 25% the old rule measured — 328/1312 at 1440, 308/1232
@@ -709,16 +710,24 @@ html[data-axo-wide] {
         border-block-start: 1px solid var(--axo-nav-rule);
     }
 
-    // The two product columns side by side. Live's 2.5rem gap has the vertical
-    // rule in the middle of it, so the border takes 2.5rem on each side.
+    // The product columns side by side. Live's gap has the vertical rule in the
+    // middle of it, so the border takes half of it on each side. Marketing
+    // tightened `.v3-navbar_mega-dropdown-item-wrapper` from 2.5rem to 1rem when
+    // Detection made it three columns; at 2.5rem a column is ~42px too narrow
+    // here and `AxoConsole`'s chevron wraps to its own line.
     .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-subcols {
         display: flex;
         align-items: stretch;
     }
 
+    // No `min-width: 0` here, deliberately. Live's two white columns are
+    // `1fr max-content 1fr`, but they do not render equal: `1fr` is
+    // `minmax(auto, 1fr)`, so the product column is held at the min-content of
+    // its three sub-columns — 543px against Integrations' 338 at 1440. A
+    // `min-width: 0` waives that minimum, which split the white area 475/405
+    // here and left each product name too narrow for its own chevron.
     .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-subcol {
-        flex: 1 1 0;
-        min-width: 0;
+        flex: 1 1 auto;
     }
 
     .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-subcol + .axo-nav-subcol {
@@ -726,17 +735,18 @@ html[data-axo-wide] {
         // `.axo-nav-group`, and the 1rem that stacks groups would otherwise drop
         // the right-hand column a line below the left one.
         margin-block-start: 0;
-        margin-inline-start: 2.5rem;
-        padding-inline-start: 2.5rem;
+        margin-inline-start: 0.5rem;
+        padding-inline-start: 0.5rem;
         border-inline-start: 1px solid var(--axo-nav-rule);
     }
 
-    // A sub-column heading is not a card title: live gives `Pipeline` and
-    // `Storage` `.text-size-small` + `.text-weight-medium` on the tertiary
-    // colour — 14px/1.8 — against the 22px the group cards carry.
+    // A sub-column heading is not a card title: live gives `Pipeline`, `Storage`
+    // and `Detection` `.text-size-small` + `.text-weight-medium` — 14px/1.8 —
+    // against the 22px the group cards carry, and paints them the section
+    // orange, not the blurbs' grey.
     .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-subcol > .axo-nav-group-title {
         margin-block-end: 0.5rem;
-        color: var(--axo-nav-on-dark, var(--axo-nav-desc));
+        color: var(--axo-nav-on-dark, var(--axo-nav-section));
         font-size: 0.875rem;
         line-height: 1.8;
     }
@@ -928,7 +938,15 @@ html[data-axo-wide] {
         // and those lost their icons when marketing rebuilt the panel, so the
         // icon can no longer be what marks a row as one of these. The
         // description can: an ordinary mega link has none.
+        // `inline-flex` for the same reason the card rows and the two linked
+        // titles have it: the chevron is an inline-block *after* the text, so in
+        // an inline anchor it is its own break opportunity and `AxoConsole ›`
+        // breaks after the word. It also puts the chevron into the row's
+        // min-content, which is what sizes the sub-columns below.
         li:has(.axo-nav-link-desc) a {
+            display: inline-flex;
+            gap: 0.25rem;
+            align-items: center;
             font-size: 1.375rem;
             font-weight: 500;
             line-height: 1.45;

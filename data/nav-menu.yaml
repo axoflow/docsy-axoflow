@@ -126,6 +126,14 @@ items:
     label: Storage
   - kind: links
     column: '1'
+    sub: true
+    links:
+    - label: AxoDetect
+      href: https://axoflow.com/axodetect?utm_source=docs&utm_medium=menu
+      description: Detection workbench (Beta)
+    label: Detection
+  - kind: links
+    column: '1'
     links: []
     label: AxoSyslog commercial version
     description: The only fully supported syslog-ng alternative
@@ -168,6 +176,8 @@ items:
       href: https://axoflow.com/capabilities/security-data-storage?utm_source=docs&utm_medium=menu
     - label: Management
       href: https://axoflow.com/capabilities/security-data-pipeline-management?utm_source=docs&utm_medium=menu
+    - label: Detection (Beta)
+      href: https://axoflow.com/capabilities/detection?utm_source=docs&utm_medium=menu
     label: Capabilities
     description: The building blocks of the Axoflow data pipeline
     icon: <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M23.3813 7.05408C24.0447 4.17081 26.3358 1.87654 29.2207 1.21154C31.6353 0.657365 34.1085 1.20362 36.0101 2.71413C37.9116 4.22622 39.0026 6.48566 39.0026 8.91293C39.0026 11.5476 37.69 13.997 35.4907 15.468C34.7228 15.9826 34.2478 16.9484 34.251 17.9902L34.2541 21.5813H27.9192V17.9839C27.9192 16.9437 27.4457 15.981 26.6826 15.4727C23.926 13.6297 22.6308 10.3269 23.3829 7.05725L23.3813 7.05408ZM28.4401 12.8365C29.3315 13.4318 30.0044 14.2757 30.4588 15.2463H31.7065C32.1609 14.2773 32.837 13.4318 33.7284 12.8365C35.0458 11.9545 35.8327 10.4884 35.8327 8.91293C35.8327 7.45625 35.1788 6.10091 34.0356 5.19207C33.1822 4.51281 32.1641 4.16131 31.0938 4.16131C30.7106 4.16131 30.3227 4.20564 29.93 4.29589C28.2469 4.68539 26.8551 6.07874 26.4656 7.76342C26.0033 9.7711 26.7617 11.7139 28.4401 12.8365Z" fill="#FF6500"/> <path d="M34.3326 24.7462H37.7954C37.1224 26.4641 36.1867 28.0855 34.9754 29.5406C34.5083 30.1011 34.2518 30.8104 34.2518 31.5403V38.9963H13.6683V34.2463H10.1106C7.73713 34.2463 5.71362 32.4713 5.4017 30.1201L4.69078 24.7462H1V21.2438C1 21.2438 1.81384 19.3961 2.15268 18.6186C4.01786 14.342 5.78012 10.3013 7.68647 7.94532C9.81132 5.10638 12.7484 2.98786 16.1447 1.86686C18.42 1.11635 20.7918 0.875682 23.2017 1.09577C22.3166 1.98877 21.6041 3.04328 21.0641 4.19279C19.7278 4.24029 18.4105 4.45246 17.1359 4.87204C14.3587 5.7888 11.9552 7.52415 10.1834 9.88808C8.51139 11.9575 6.75388 15.9855 5.05495 19.8822C4.80795 20.449 4.56094 21.0142 4.31394 21.5763H7.4648L8.53831 29.7005C8.64281 30.4842 9.31731 31.0764 10.109 31.0764H16.8335V35.8264H31.0836V31.5372C31.0836 30.0694 31.6013 28.6381 32.5402 27.5107C33.2543 26.6525 33.8449 25.7199 34.3326 24.743V24.7462Z" fill="white"/> </svg>
@@ -190,6 +200,8 @@ items:
     links:
     - label: Overview
       href: https://axoflow.com/webinars?utm_source=docs&utm_medium=menu
+    - label: AxoSyslog Foundations
+      href: https://axoflow.com/webinars/axosyslog-foundations-2026-09?utm_source=docs&utm_medium=menu
     - label: Show me your Labels and I’ll tell you who you are!
       href: https://axoflow.com/webinars/show-me-your-labels-and-ill-tell-you-who-you-are?utm_source=docs&utm_medium=menu
     - label: Resilient Syslog Architectures
@@ -343,6 +355,8 @@ mobile:
         href: https://axoflow.com/capabilities/security-data-storage?utm_source=docs&utm_medium=menu
       - label: Management
         href: https://axoflow.com/capabilities/security-data-pipeline-management?utm_source=docs&utm_medium=menu
+      - label: Detection (Beta)
+        href: https://axoflow.com/capabilities/detection?utm_source=docs&utm_medium=menu
       label: Capabilities
     - kind: submenu
       links:
@@ -399,6 +413,8 @@ mobile:
         href: https://axoflow.com/axostore?utm_source=docs&utm_medium=menu
       - label: AxoLake
         href: https://axoflow.com/axolake-petabyte-security-data-storage?utm_source=docs&utm_medium=menu
+      - label: AxoDetect (Beta)
+        href: https://axoflow.com/axodetect?utm_source=docs&utm_medium=menu
     - kind: links
       links:
       - label: AxoSyslog commercial version
@@ -421,6 +437,8 @@ mobile:
       links:
       - label: Overview
         href: https://axoflow.com/webinars?utm_source=docs&utm_medium=menu
+      - label: AxoSyslog Foundations
+        href: https://axoflow.com/webinars/axosyslog-foundations-2026-09?utm_source=docs&utm_medium=menu
       - label: Show me your Labels and I’ll tell you who you are!
         href: https://axoflow.com/webinars/show-me-your-labels-and-ill-tell-you-who-you-are?utm_source=docs&utm_medium=menu
       - label: Resilient Syslog Architectures

@@ -440,8 +440,8 @@
     ],
     ".v3-navbar_mega-dropdown-item-wrapper": [
       "align-items: stretch",
-      "grid-column-gap: 2.5rem",
-      "grid-row-gap: 2.5rem",
+      "grid-column-gap: 1rem",
+      "grid-row-gap: 1rem",
       "justify-content: flex-start",
       "padding-bottom: 1rem",
       "padding-top: 1rem"
