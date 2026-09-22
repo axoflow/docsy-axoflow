@@ -4,6 +4,7 @@ ASAP
 ASCII
 auditable
 authpriv
+Avro
 Axoflow
 Axolet
 AxoRouter
