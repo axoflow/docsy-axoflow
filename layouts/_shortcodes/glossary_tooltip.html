@@ -36,5 +36,11 @@
     there can hide the term the reader just followed a link to, and
     _glossary.scss answers that with `li:target` instead of a query parameter. */ -}}
   {{- $link := $term.Params.full_link | default (printf "%s/#term-%s" (partialCached "docs/glossary-path.html" .) $id) -}}
-  <a class="glossary-tooltip" href="{{ $link | relLangURL }}" title="{{ $tooltip }}" data-bs-toggle="tooltip" data-bs-placement="top">{{- $text -}}</a>
+  {{/* The leading slash has to go before relLangURL sees it. Hugo reads a
+    rooted path as already site-absolute and returns it untouched, so on a site
+    published under a subpath — axoflow.com/docs/axoflow/ — every tooltip
+    pointed above that subpath and 404'd. Slashless, the baseURL path is
+    prepended. Same reason the theme's other relURL calls take "js/prism.js"
+    rather than "/js/prism.js". */ -}}
+  <a class="glossary-tooltip" href="{{ strings.TrimPrefix "/" $link | relLangURL }}" title="{{ $tooltip }}" data-bs-toggle="tooltip" data-bs-placement="top">{{- $text -}}</a>
 {{- end -}}

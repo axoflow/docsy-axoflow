@@ -113,7 +113,9 @@
           Inside the expander it would be hidden from the reader who most needs
           it — the one who read the preview and wants more. */ -}}
         {{ with .Params.full_link }}
-        <a class="term-link" href="{{ . | relLangURL }}">{{ printf (T "glossary_full_link") $title }}</a>
+        {{/* TrimPrefix for the same reason as in glossary_tooltip.html: Hugo
+          hands a rooted path back unchanged, dropping the baseURL subpath. */ -}}
+        <a class="term-link" href="{{ strings.TrimPrefix "/" . | relLangURL }}">{{ printf (T "glossary_full_link") $title }}</a>
         {{ end }}
       </div>
     </li>
