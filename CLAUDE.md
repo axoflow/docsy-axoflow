@@ -59,6 +59,12 @@ The header's `description` is only written when the page sets one in its front m
 
 `layouts/_default/index.llms.txt` writes `/llms.txt`, an index of these Markdown copies grouped by top-level section. A site turns it on by adding `LLMS` to `outputs.home`.
 
+## Canonical links and structured data
+
+`layouts/_partials/head.html` emits a self-referencing `<link rel="canonical">` on every page except `redirect` pages. Archived versions point at themselves too: they are `noindex`, and a canonical pointing at the latest release would contradict that.
+
+`layouts/_partials/structured-data.html` adds JSON-LD: a `TechArticle` per content page (`WebSite` on the home page) and a `BreadcrumbList` from the site home down to the current page. Taxonomy pages get neither. `description` is only set from front matter, and `version` comes from the build's `buildVersion`, with `latest` resolved to the `latest` entry of `data/versions.yaml`. `params.publisher_name` overrides the publisher (default: Axoflow).
+
 ## Glossary
 
 A filterable glossary page plus an inline tooltip shortcode, shared by every site using this theme. Descended from `kubernetes/website`'s glossary by way of `falcosecurity/falco-website`, and rewritten to carry **no JavaScript** — Docsy drops jQuery in 0.18, and all four behaviours the original needed a script for are things the platform now does on its own.

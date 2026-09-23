@@ -100,8 +100,18 @@
   {{ end -}}
 </title>
 <meta name="description" content="{{ partial "page-description.html" . }}">
+{{/* Self-referencing on every page, archived versions included: those are
+     noindex, and pointing their canonical at the latest release would send
+     search engines conflicting signals. Pages with a `redirect` have no content
+     of their own. */ -}}
+{{ if not .Params.redirect -}}
+<link rel="canonical" href="{{ .Permalink }}">
+{{ end -}}
 {{ partial "opengraph.html" . -}}
 {{ partial "schema.html" . -}}
+{{ if and (not .Params.redirect) (not (in (slice "taxonomy" "term") .Kind)) -}}
+{{ partial "structured-data.html" . -}}
+{{ end -}}
 {{ partial "twitter_cards.html" . -}}
 {{ partialCached "head-css.html" . "head-css-cache-key" -}}
 <!-- jQuery loaded with `defer` only (no `async`) so it executes in document

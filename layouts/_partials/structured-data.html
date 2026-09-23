@@ -1,0 +1,54 @@
+{{/*
+  JSON-LD for search engines and agents: a TechArticle for each content page,
+  and a BreadcrumbList that follows the page's ancestry from the site home.
+
+  The trail here includes the current page, unlike the visible one in
+  breadcrumb.html: structured data names the page the trail leads to.
+  The documentation hub crumb from hooks/breadcrumb-lead.html is left out,
+  because it is another site's page, not part of this one's hierarchy.
+
+  `params.publisher_name` overrides the publisher (default: Axoflow).
+*/ -}}
+{{ $build := partialCached "build-info.html" . "build-info" -}}
+{{ $siteLabel := default site.Title site.Params.breadcrumb_site_label -}}
+
+{{ $article := dict
+  "@context" "https://schema.org"
+  "@type" (cond .IsHome "WebSite" "TechArticle")
+  "url" .Permalink
+  "name" (cond .IsHome site.Title .Title)
+  "inLanguage" site.Language.LanguageCode
+  "publisher" (dict "@type" "Organization" "name" (default "Axoflow" site.Params.publisher_name))
+-}}
+{{/* Front matter only: Hugo's summary fallback glues headings into the text. */ -}}
+{{ with .Description }}{{ $article = merge $article (dict "description" (. | plainify | htmlUnescape)) }}{{ end -}}
+{{ if not .IsHome -}}
+  {{ $article = merge $article (dict
+    "headline" .Title
+    "mainEntityOfPage" .Permalink
+    "isPartOf" (dict "@type" "WebSite" "name" site.Title "url" site.Home.Permalink)
+  ) -}}
+  {{ with .Lastmod }}{{ if not .IsZero }}{{ $article = merge $article (dict "dateModified" (.Format "2006-01-02T15:04:05Z07:00")) }}{{ end }}{{ end -}}
+  {{ with .PublishDate }}{{ if not .IsZero }}{{ $article = merge $article (dict "datePublished" (.Format "2006-01-02T15:04:05Z07:00")) }}{{ end }}{{ end -}}
+  {{/* CI builds the current release as "latest"; name its real number instead. */ -}}
+  {{ $version := $build.version -}}
+  {{ if eq $version "latest" -}}
+    {{ $version = "" -}}
+    {{ range hugo.Data.versions }}{{ if .latest }}{{ $version = printf "%v" .version }}{{ end }}{{ end -}}
+  {{ end -}}
+  {{ with $version }}{{ $article = merge $article (dict "version" .) }}{{ end -}}
+{{ end -}}
+<script type="application/ld+json">{{ $article | jsonify | safeJS }}</script>
+
+{{ if not .IsHome -}}
+  {{ $trail := slice -}}
+  {{ range .Ancestors.Reverse -}}
+    {{ $trail = $trail | append (dict "name" (cond .IsHome $siteLabel .LinkTitle) "url" .Permalink) -}}
+  {{ end -}}
+  {{ $trail = $trail | append (dict "name" .LinkTitle "url" .Permalink) -}}
+  {{ $items := slice -}}
+  {{ range $i, $c := $trail -}}
+    {{ $items = $items | append (dict "@type" "ListItem" "position" (add $i 1) "name" $c.name "item" $c.url) -}}
+  {{ end -}}
+<script type="application/ld+json">{{ dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $items | jsonify | safeJS }}</script>
+{{ end -}}

@@ -40,8 +40,9 @@
          convention puts an ellipsis in the MIDDLE of a trail, and only once the
          trail is too long with its ends intact. This one is not.
 
-         Nothing here emits BreadcrumbList structured data, so the trail's shape
-         is a visual decision only -- checked before making it. */ -}}
+         The BreadcrumbList structured data is built separately, in
+         structured-data.html, and does name the current page, so the trail's
+         shape here is a visual decision only. */ -}}
   {{- if not $isActive }}
   <li class="breadcrumb-item">
     <a href="{{ .p1.RelPermalink }}">{{ .p1.LinkTitle }}</a>
