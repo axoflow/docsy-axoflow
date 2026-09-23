@@ -1,10 +1,17 @@
-{{ $_hugo_config := `{ "version": 1 }` }}
-{{ $color := .Get "color" | default "primary" }}
+{{- /* Every action here is whitespace-trimmed on purpose, as in include-headless.
+     Called as {{% %}}, or through a {{% include-headless %}}, the output is
+     re-parsed by Goldmark: the untrimmed actions left a blank line that ended
+     the <div> HTML block, and the 4-space indent before .Inner then turned the
+     note's text into an indented code block. */ -}}
+{{- $_hugo_config := `{ "version": 1 }` -}}
+{{- $color := .Get "color" | default "primary" -}}
 <div class="alert alert-{{ $color }}" role="alert">
-{{ with .Get "title" }}<span class="alert-heading">{{ . | safeHTML }}</span>{{ end }}
-{{ if eq .Page.File.Ext "md" }}
-    {{ .Inner | markdownify }}
-{{ else }}
-    {{ .Inner | htmlUnescape | safeHTML }}
-{{ end }}
+{{- with .Get "title" }}
+<span class="alert-heading">{{ . | safeHTML }}</span>
+{{- end }}
+{{ if eq .Page.File.Ext "md" -}}
+{{ .Inner | markdownify }}
+{{- else -}}
+{{ .Inner | htmlUnescape | safeHTML }}
+{{- end }}
 </div>
