@@ -32,6 +32,9 @@ from markdownify import MarkdownConverter
 # Taxonomy listings are link lists without content of their own.
 SKIP_BODY_CLASSES = {"td-taxonomy", "td-term"}
 
+# First line of every Markdown page; the llms.txt URL follows it.
+LLMS_DIRECTIVE = "> For the complete documentation index, see [llms.txt]"
+
 
 class DocsConverter(MarkdownConverter):
     def convert_a(self, el, text, parent_tags):
@@ -194,6 +197,9 @@ def html_file_to_markdown(
         bullets="-",
         code_language_callback=code_language,
         strip=["figure", "figcaption"],
+        # An underscore inside a word never starts emphasis in CommonMark, and
+        # agents read the raw text: `disk\_queue\_capacity` is not the metric name.
+        escape_underscores=False,
     ).convert_soup(content)
     md = re.sub(r"[ \t]+\n", "\n", md)
     md = re.sub(r"\n{3,}", "\n\n", md).strip() + "\n"
@@ -207,6 +213,9 @@ def html_file_to_markdown(
     }
     # json.dumps output is a valid YAML scalar, so no YAML dependency is needed.
     lines = [f"{k}: {json.dumps(v, ensure_ascii=False)}" for k, v in header.items() if v]
+    # Agents that land on one page find the rest through llms.txt.
+    if site_prefix:
+        md = f"{LLMS_DIRECTIVE}({site_prefix}llms.txt).\n\n" + md
     return "---\n" + "\n".join(lines) + "\n---\n\n" + md
 
 
@@ -245,8 +254,15 @@ def collect_aliases(html_files, input_dir: Path, site_prefix: str) -> dict[str, 
 LLMS_LINK_RE = re.compile(r"\]\((\S+?/index\.md)\)")
 
 
-def parse_llms_index(path: Path):
-    """Title, summary, and (section title, [page .md URLs]) pairs, in llms.txt order."""
+LLMS_SECTION_RE = re.compile(r"^- \[([^\]]+)\]\((\S+?/llms\.txt)\)")
+
+
+def parse_llms_index(path: Path, input_dir: Path, site_prefix: str):
+    """
+    Title, summary, and (section title, [page .md URLs]) pairs, in llms.txt order.
+    A root entry that links a section's own llms.txt is followed, so this reads
+    both a single index and one split into section files.
+    """
     title = summary = None
     sections = []
     for line in path.read_text(encoding="utf-8").splitlines():
@@ -256,11 +272,19 @@ def parse_llms_index(path: Path):
             summary = line[2:].strip()
         elif line.startswith("## "):
             sections.append((line[3:].strip(), []))
+        elif (m := LLMS_SECTION_RE.match(line)) and m.group(2).startswith(site_prefix):
+            section_index = input_dir / m.group(2)[len(site_prefix) :]
+            if section_index.exists():
+                _, _, parts = parse_llms_index(section_index, input_dir, site_prefix)
+                sections.append((m.group(1), [url for _, urls in parts for url in urls]))
+            else:
+                print(f"[WARN] llms.txt lists {m.group(2)}, which does not exist", file=sys.stderr)
         elif sections and line.lstrip().startswith("- "):
             m = LLMS_LINK_RE.search(line)
             if m:
                 sections[-1][1].append(m.group(1))
-    return title, summary, sections
+    # The root's "## Sections" heading holds no pages of its own.
+    return title, summary, [s for s in sections if s[1]]
 
 
 def page_block(md: str, html_url: str) -> str:
@@ -269,7 +293,10 @@ def page_block(md: str, html_url: str) -> str:
         end = md.find("\n---\n", 4)
         if end != -1:
             md = md[end + 5 :]
-    lines = md.strip().split("\n")
+    # The index pointer is said once, in the full text's own header.
+    lines = [line for line in md.strip().split("\n") if not line.startswith(LLMS_DIRECTIVE)]
+    while lines and not lines[0].strip():
+        lines.pop(0)
     for i, line in enumerate(lines):
         if line.startswith("# "):
             lines.insert(i + 1, f"Source: {html_url}")
@@ -287,7 +314,7 @@ def write_full_texts(input_dir: Path, output_dir: Path, site_prefix: str) -> Non
     index = input_dir / "llms.txt"
     if not index.exists():
         return
-    title, summary, sections = parse_llms_index(index)
+    title, summary, sections = parse_llms_index(index, input_dir, site_prefix)
     index_url = site_prefix + "llms.txt"
 
     def write(path: Path, header: str, blocks: list[str]) -> None:
@@ -312,6 +339,10 @@ def write_full_texts(input_dir: Path, output_dir: Path, site_prefix: str) -> Non
         all_blocks.extend(blocks)
         # A section's first entry is its own landing page, so its directory is the section's.
         section_dir = output_dir / urls[0][len(site_prefix) :]
+        # The root's "Start here" group is the home page: it belongs in the
+        # whole-site file only, which would overwrite a file of its own anyway.
+        if section_dir.parent == output_dir:
+            continue
         write(
             section_dir.parent / "llms-full.txt",
             f"# {section} (full text)\n\n> The full text of the {section} section of {title}. "

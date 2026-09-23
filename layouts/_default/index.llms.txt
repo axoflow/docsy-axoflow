@@ -1,42 +1,63 @@
 {{- /*
   llms.txt (https://llmstxt.org/): a Markdown index of the site for agents.
-  One `##` group per top-level section, pages nested by section, each linking
-  to its Markdown copy. The same script (scripts/hugo_to_markdown.py, run in
-  CI) writes the llms-full.txt files linked here: the whole site in one, and
-  one per section.
+  Split for progressive disclosure: this root file lists the top-level sections,
+  and each section gets its own <section>/llms.txt listing its pages, each
+  linking to its Markdown copy. A single index of every page outgrew the ~100K
+  characters agents read of a fetch; each section file stays well under 50K.
+  The section files are published from here with resources.FromString, so a
+  site needs no extra output format beyond `LLMS` on the home page.
+  The same script (scripts/hugo_to_markdown.py, run in CI) writes the
+  llms-full.txt files linked here, and reads the page order from these files.
   Top-level pages outside any section (legal notice, stubs) are left out.
 */ -}}
+{{- $summary := or site.Home.Description site.Params.description | replaceRE `\s+` " " | strings.TrimSpace -}}
 # {{ site.Title }}
 
-> {{ or site.Home.Description site.Params.description | replaceRE `\s+` " " | strings.TrimSpace }}
+> {{ $summary }}
 
-Every page listed here is Markdown. For the HTML version, drop `index.md` from the end of the URL.
+Each section below links to its own index, which lists every page of the section as Markdown. For the HTML version of a page, drop `index.md` from the end of its URL.
 
-The full text of every page is in [llms-full.txt]({{ site.Home.Permalink }}llms-full.txt). Each section below also links the full text of just that section.
-{{ range site.Home.Sections.ByWeight }}
-## {{ .LinkTitle }}
+The full text of every page is in [llms-full.txt]({{ site.Home.Permalink }}llms-full.txt), and each section index links the full text of just that section.
 
-Full text of this section: [llms-full.txt]({{ .Permalink }}llms-full.txt)
+## Start here
 
-{{ template "llms-entry" (dict "page" . "depth" 0) -}}
-{{ range .Pages.ByWeight }}{{ template "llms-tree" (dict "page" . "depth" 1) }}{{ end -}}
-{{ end -}}
+- [{{ site.Home.LinkTitle }}]({{ site.Home.Permalink }}index.md): The documentation home page.
 
-{{- define "llms-tree" -}}
+## Sections
+
+{{ range site.Home.Sections.ByWeight -}}
+  {{- $notes := .Description | default (.Summary | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 160) -}}
+- [{{ .LinkTitle }}]({{ .Permalink }}llms.txt){{ with $notes }}: {{ . }}{{ end }}
+{{ $pages := "" -}}
+  {{- range .Pages.ByWeight }}{{ $pages = print $pages (partial "inline/llms-tree.txt" (dict "page" . "depth" 1)) }}{{ end -}}
+  {{- $body := printf "# %s\n\n> %s\n\nPart of the %s documentation. Index of all sections: %sllms.txt\n\nEvery page listed here is Markdown. For the HTML version, drop `index.md` from the end of the URL. The full text of this section is in [llms-full.txt](%sllms-full.txt).\n\n## Pages\n\n%s%s"
+      .LinkTitle ($notes | default .LinkTitle) site.Title site.Home.Permalink .Permalink
+      (partial "inline/llms-entry.txt" (dict "page" . "depth" 0)) $pages -}}
+  {{- $path := printf "%sllms.txt" (strings.TrimPrefix site.Home.RelPermalink .RelPermalink) -}}
+  {{- $_ := (resources.FromString $path $body).Publish -}}
+{{- end -}}
+
+{{- define "_partials/inline/llms-tree.txt" -}}
+  {{- $out := "" -}}
   {{- /* Body-less leaf pages have nothing to read, unless their layout renders
          the content (the glossary builds its page from the term files). */ -}}
   {{- if or .page.IsSection .page.WordCount .page.Layout -}}
-    {{- template "llms-entry" . -}}
+    {{- $out = partial "inline/llms-entry.txt" . -}}
   {{- end -}}
   {{- $depth := add .depth 1 -}}
   {{- range .page.Pages.ByWeight -}}
-    {{- template "llms-tree" (dict "page" . "depth" $depth) -}}
+    {{- $out = print $out (partial "inline/llms-tree.txt" (dict "page" . "depth" $depth)) -}}
   {{- end -}}
+  {{- return $out -}}
 {{- end -}}
 
-{{- define "llms-entry" -}}
+{{- define "_partials/inline/llms-entry.txt" -}}
+  {{- $out := "" -}}
   {{- with .page -}}
     {{- $notes := .Description | default (.Summary | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 160) -}}
-    {{- strings.Repeat $.depth "  " }}- [{{ .LinkTitle }}]({{ .Permalink }}index.md){{ with $notes }}: {{ . }}{{ end }}
-{{ end -}}
+    {{- $out = printf "%s- [%s](%sindex.md)" (strings.Repeat $.depth "  ") .LinkTitle .Permalink -}}
+    {{- with $notes }}{{ $out = printf "%s: %s" $out . }}{{ end -}}
+    {{- $out = print $out "\n" -}}
+  {{- end -}}
+  {{- return $out -}}
 {{- end -}}

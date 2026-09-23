@@ -28,7 +28,7 @@ weight: 30
 |-------|------|----------|-------|
 | `title` | string | **Yes** | Displayed as the page heading and in the sidebar. Sentence case. |
 | `weight` | integer | **Yes** | Controls sidebar order within the parent section. Lower = higher. |
-| `description` | string | No | Short description for SEO `<meta>` and section cards. |
+| `description` | string | No | One sentence, about 80–160 characters, as a double-quoted one-liner. Used for the SEO `<meta>`, section cards, `llms.txt`, and the header of the page's Markdown copy. Docsy also shows it as the lead paragraph under the title, so it must not repeat the page's first sentence. Plain text: no shortcodes or Markdown, so write product names out. |
 | `linkTitle` | string | No | Shorter title used in the sidebar when `title` is long. |
 | `aliases` | list of strings | No | Redirect old URLs here after a page is renamed/moved. |
 | `draft` | bool | No | Set `true` only for WIP pages not yet ready to publish. Never commit `draft: true` to main. |
@@ -40,8 +40,7 @@ weight: 30
 title: "Configure the syslog() source"
 linkTitle: "syslog() source"
 weight: 10
-description: >
-  Receive RFC 5424 messages over TCP or UDP using the syslog() source driver.
+description: "Receive RFC 5424 messages over TCP or UDP using the syslog() source driver."
 aliases:
   - /docs/old-path/syslog-source/
 ---

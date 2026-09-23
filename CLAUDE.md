@@ -102,13 +102,17 @@ pip install -r themes/docsy-axoflow/scripts/requirements-markdown.txt
 python3 themes/docsy-axoflow/scripts/hugo_to_markdown.py --input public --output public
 ```
 
-Each `index.md` starts with a YAML header (title, URL, description, last modified date). All links are absolute, and internal ones point at the target's `index.md`, following alias redirects. The site URL comes from the home page's `og:url`, so versioned sub-sites work without `--base-url`. Code fences keep their Chroma language, tab panes are written out one after another under their tab titles, and alerts become blockquotes. Taxonomy pages and alias redirects are skipped.
+Each `index.md` starts with a YAML header (title, URL, description, last modified date), then a one-line blockquote pointing to `llms.txt`. Underscores are not backslash-escaped, so identifiers such as metric names stay copyable. All links are absolute, and internal ones point at the target's `index.md`, following alias redirects. The site URL comes from the home page's `og:url`, so versioned sub-sites work without `--base-url`. Code fences keep their Chroma language, tab panes are written out one after another under their tab titles, and alerts become blockquotes. Taxonomy pages and alias redirects are skipped.
 
 The header's `description` is only written when the page sets one in its front matter: Hugo's fallback to the page summary is detected and dropped, because it only repeats the opening of the body.
 
-`layouts/_default/index.llms.txt` writes `/llms.txt`, an index of these Markdown copies grouped by top-level section. A site turns it on by adding `LLMS` to `outputs.home`.
+`layouts/_default/index.llms.txt` writes `/llms.txt`, a short index of the top-level sections, and publishes one `<section>/llms.txt` per top-level section (through `resources.FromString`) that lists that section's Markdown copies. The split keeps every file well under the ~100K characters agents read of a fetch; a single index of every page had grown past it. A site turns it on by adding `LLMS` to `outputs.home`. The root file also lists the home page under "Start here", so that every page in the sitemap is reachable from it.
 
-When `llms.txt` exists, the script also writes `llms-full.txt` files: one at the site root with every page, and one in each top-level section's directory with just that section. Pages follow the `llms.txt` order, each page's YAML header becomes a `Source:` line under its title, and the script prints each file's size and token estimate. A page that `llms.txt` lists but that has no Markdown copy is a warning. `llms.txt` links all of these files.
+`layouts/sitemap.xml` is Hugo's embedded sitemap with taxonomy and term pages left out, because neither the converter nor `llms.txt` covers them. Leave other non-content pages (a search page, say) out with `sitemap: {disable: true}` in their front matter.
+
+`layouts/_partials/hooks/body-top.html` puts a visually hidden pointer to the page's Markdown copy and to `llms.txt` first in `<body>` on every page that has a copy (when `params.markdownAlternateLink` is set). It has to come before the sidebar and navbar, which are over 500K characters, or agents truncate it away; the `<link rel="alternate">` in `<head>` alone is dropped by HTML to Markdown converters.
+
+When `llms.txt` exists, the script also writes `llms-full.txt` files: one at the site root with every page, and one in each top-level section's directory with just that section. Pages follow the `llms.txt` order (the script follows the root's links into the section files), each page's YAML header becomes a `Source:` line under its title, and the script prints each file's size and token estimate. A page that `llms.txt` lists but that has no Markdown copy is a warning. `llms.txt` links all of these files.
 
 ## Canonical links and structured data
 
