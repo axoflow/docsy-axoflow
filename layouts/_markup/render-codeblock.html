@@ -60,10 +60,19 @@ control's inset off it, and a future decision to draw a bar again has the hook.
 {{- $lang := .Type -}}
 {{- $terminal := in (slice "ansi" "bash" "bat" "batch" "cmd" "console" "nu" "nushell" "powershell" "ps" "ps1" "psd1" "psm1" "sh" "shell" "shellscript" "shellsession" "zsh") $lang -}}
 {{- $result := transform.HighlightCodeBlock . (merge .Options (dict "noClasses" false)) -}}
+{{- /* A fence with no language, or one Chroma does not know, comes back as
+       Hugo's own complete `<pre><code>` rather than highlighted lines, and put
+       inside the <pre><code> below it nested one code block in another. The
+       Markdown converter then wrote a fence inside a fence. Plain text is all
+       such a block needs. */ -}}
+{{- $inner := $result.Inner -}}
+{{- if strings.HasPrefix (string $inner) "<pre" -}}
+  {{- $inner = .Inner | htmlEscape | safeHTML -}}
+{{- end -}}
 {{- /**/ -}}
 <div class="axo-code-block"><figure class="frame{{ if $terminal }} is-terminal{{ end }}">
 {{- if $terminal -}}
 <figcaption class="visually-hidden">Terminal window</figcaption>
 {{- end -}}
-<div class="highlight"><pre class="chroma" tabindex="0"{{ with $lang }} data-language="{{ . }}"{{ end }}><code{{ with $lang }} data-lang="{{ . }}"{{ end }}>{{ $result.Inner }}</code></pre></div>
+<div class="highlight"><pre class="chroma" tabindex="0"{{ with $lang }} data-language="{{ . }}"{{ end }}><code{{ with $lang }} data-lang="{{ . }}"{{ end }}>{{ $inner }}</code></pre></div>
 </figure></div>
