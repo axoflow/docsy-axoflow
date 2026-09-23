@@ -3,139 +3,279 @@
 Convert Hugo rendered HTML pages to Markdown, extracting only the
 main content from <div class="td-content">.
 
+Every page gets a small YAML header (title, canonical URL, description,
+last modified date), and every link and image points to an absolute URL,
+so a page still works when an agent copies it out of context. Internal
+page links point to the Markdown copy of the target (`.../index.md`).
+
 Usage:
-    # Single file
+    # Single file (prints to stdout)
     python hugo_to_markdown.py --input public/docs/my-page/index.html
 
     # Entire Hugo output directory (batch)
-    python hugo_to_markdown.py --input public/ --output markdown/
+    python hugo_to_markdown.py --input public/ --output public/
 
 Dependencies:
-    pip install beautifulsoup4 html2text
+    pip install -r requirements-markdown.txt
 """
 
 import argparse
-import os
+import json
 import re
 import sys
 from pathlib import Path
+from urllib.parse import urljoin
 
-import html2text
 from bs4 import BeautifulSoup
+from markdownify import MarkdownConverter
+
+# Taxonomy listings are link lists without content of their own.
+SKIP_BODY_CLASSES = {"td-taxonomy", "td-term"}
+
+
+class DocsConverter(MarkdownConverter):
+    def convert_a(self, el, text, parent_tags):
+        # Glossary tooltips carry the definition in `title`; in Markdown it is noise.
+        if "glossary-tooltip" in (el.get("class") or []):
+            el.attrs.pop("title", None)
+        return super().convert_a(el, text, parent_tags)
+
+
+def code_language(pre):
+    """Chroma puts the language on <pre data-language> and <code data-lang>."""
+    if pre.get("data-language"):
+        return pre["data-language"]
+    code = pre.find("code")
+    if code is None:
+        return None
+    if code.get("data-lang"):
+        return code["data-lang"]
+    for cls in code.get("class") or []:
+        if cls.startswith("language-"):
+            return cls[len("language-"):]
+    return None
+
+
+def meta(soup, *selectors):
+    for sel in selectors:
+        tag = soup.select_one(sel)
+        if tag and tag.get("content", "").strip():
+            return tag["content"].strip()
+    return None
+
+
+def md_url(url, site_prefix, aliases=None):
+    """Point internal page links at their Markdown copy."""
+    if not url.startswith(site_prefix):
+        return url
+    base, _, anchor = url.partition("#")
+    # Alias pages are redirects and have no Markdown copy, so link the target.
+    base = (aliases or {}).get(base, base)
+    if base.endswith("/"):
+        base += "index.md"
+    elif base.endswith("/index.html"):
+        base = base[: -len("index.html")] + "index.md"
+    return base + (f"#{anchor}" if anchor else "")
+
+
+def flatten_tabs(content, soup):
+    """Tab panes render one after another, each labelled with its tab title."""
+    for nav in content.select("ul.nav-tabs"):
+        labels = {}
+        for btn in nav.select("[data-bs-target]"):
+            labels[btn["data-bs-target"].lstrip("#")] = btn.get_text(" ", strip=True)
+        nav.decompose()
+        for pane_id, label in labels.items():
+            pane = content.find(id=pane_id)
+            if pane is None:
+                continue
+            if not pane.get_text(strip=True):
+                # Docsy uses empty, disabled tabs as row labels ("Package:").
+                pane.decompose()
+                continue
+            heading = soup.new_tag("p")
+            strong = soup.new_tag("strong")
+            strong.string = label
+            heading.append(strong)
+            pane.insert(0, heading)
+
+
+def convert_alerts(content, soup):
+    for alert in content.select("div.alert"):
+        heading = alert.select_one(".alert-heading")
+        if heading:
+            strong = soup.new_tag("strong")
+            strong.string = heading.get_text(" ", strip=True).rstrip(":") + ":"
+            heading.replace_with(strong)
+        alert.name = "blockquote"
+        alert.attrs = {}
+
+
+def absolutize(content, page_url, site_prefix, aliases):
+    for a in content.select("a[href]"):
+        href = a["href"].strip()
+        if href.startswith(("mailto:", "tel:", "javascript:")):
+            continue
+        if href.startswith("#"):
+            a["href"] = md_url(page_url, site_prefix) + href
+            continue
+        a["href"] = md_url(urljoin(page_url, href), site_prefix, aliases)
+    for img in content.select("img[src]"):
+        img["src"] = urljoin(page_url, img["src"].strip())
+        img.attrs.pop("srcset", None)
 
 
 def html_file_to_markdown(
     html_path: Path,
+    page_url: str | None = None,
+    site_prefix: str | None = None,
     content_selector: str = "div.td-content",
-    base_url: str = "",
+    aliases: dict[str, str] | None = None,
 ) -> str | None:
     """
-    Parse an HTML file and convert the selected element to Markdown.
+    Convert one rendered page to Markdown.
 
     Args:
         html_path: Path to the HTML file.
+        page_url: Absolute URL of the page. Read from og:url when omitted.
+        site_prefix: URL prefix of the site; links under it are internal.
         content_selector: CSS selector for the content element.
-        base_url: Optional base URL to resolve relative links.
+        aliases: Map of alias URLs to the URLs they redirect to.
 
     Returns:
-        Markdown string, or None if the selector matched nothing.
+        Markdown string, or None if the page has no content to convert.
     """
-    html = html_path.read_text(encoding="utf-8")
-    soup = BeautifulSoup(html, "html.parser")
+    soup = BeautifulSoup(html_path.read_text(encoding="utf-8"), "html.parser")
+
+    body = soup.body
+    if body and SKIP_BODY_CLASSES & set(body.get("class") or []):
+        return None
 
     content = soup.select_one(content_selector)
     if content is None:
         return None
 
-    # Optional: strip elements you don't want in the LLM output
-    for tag in content.select("script, style, .td-page-meta, nav"):
+    page_url = page_url or meta(soup, 'meta[property="og:url"]')
+    if page_url and site_prefix is None:
+        site_prefix = page_url
+
+    description = meta(soup, 'meta[name="description"]', 'meta[property="og:description"]')
+    if description:
+        description = " ".join(description.split())
+        # Without a front matter description, Hugo falls back to the page summary,
+        # which only repeats the opening of the body. Compared without whitespace,
+        # because plainify glues a heading to the next paragraph.
+        h1 = content.find("h1")
+        body_text = "".join(
+            "".join(t.split())
+            for t in content.find_all(string=True)
+            if not (h1 and h1 in t.parents)
+        )
+        # An empty page falls back further, to the site description.
+        if description == meta(soup, 'meta[property="og:site_name"]') or body_text.startswith(
+            "".join(description.split())[:60]
+        ):
+            description = None
+
+    # Before the cleanup below: tab titles live in <button>s.
+    flatten_tabs(content, soup)
+    for tag in content.select(
+        "script, style, nav, button, .td-page-meta, .td-heading-self-link, .visually-hidden"
+    ):
         tag.decompose()
+    convert_alerts(content, soup)
+    if page_url:
+        absolutize(content, page_url, site_prefix, aliases)
 
-    converter = html2text.HTML2Text()
-    converter.baseurl = base_url       # resolves relative hrefs
-    converter.ignore_links = False     # keep links as [text](url)
-    converter.ignore_images = False    # keep images as ![alt](src)
-    converter.body_width = 0          # no hard line wrapping
-    converter.protect_links = True    # don't mangle URLs
-    converter.wrap_links = False
-    converter.mark_code = True     # use ``` for code blocks
+    md = DocsConverter(
+        heading_style="ATX",
+        bullets="-",
+        code_language_callback=code_language,
+        strip=["figure", "figcaption"],
+    ).convert_soup(content)
+    md = re.sub(r"[ \t]+\n", "\n", md)
+    md = re.sub(r"\n{3,}", "\n\n", md).strip() + "\n"
 
-    md = converter.handle(str(content)).strip()
+    header = {
+        "title": meta(soup, 'meta[property="og:title"]')
+        or (soup.title.get_text(strip=True) if soup.title else None),
+        "url": page_url,
+        "description": description,
+        "last_modified": meta(soup, 'meta[itemprop="dateModified"]'),
+    }
+    # json.dumps output is a valid YAML scalar, so no YAML dependency is needed.
+    lines = [f"{k}: {json.dumps(v, ensure_ascii=False)}" for k, v in header.items() if v]
+    return "---\n" + "\n".join(lines) + "\n---\n\n" + md
 
-    # html2text's mark_code wraps blocks in [code]...[/code] — convert to fences
-    md = re.sub(r"\[code\]\n?", "```\n", md)
-    md = re.sub(r"\n?\[/code\]", "\n```", md)
 
-    return md
-
-
-def fix_internal_links(md: str, output_path: Path, output_dir: Path) -> str:
+def site_prefix_for(html_path: Path, input_dir: Path) -> str | None:
     """
-    Fix internal links produced by html2text:
-    - Appends 'index.md' to directory paths (ending with '/')
-    - Converts absolute site-root paths to relative paths from output_path
+    The site's URL prefix, from a page's og:url minus its path under input_dir.
+    Works for versioned sub-sites too, since each is built with its own baseURL.
     """
-    def replace_link(m):
-        url = m.group(1)
-        # Leave external and pure-anchor links unchanged
-        if url.startswith(("http://", "https://", "mailto:")) or url.startswith("#"):
-            return m.group(0)
-
-        # Split anchor
-        if "#" in url:
-            path_part, anchor = url.split("#", 1)
-            anchor = "#" + anchor
-        else:
-            path_part, anchor = url, ""
-
-        # Add index.md to bare directory paths
-        if path_part.endswith("/"):
-            path_part += "index.md"
-
-        # Convert absolute path to relative
-        abs_target = output_dir / path_part.lstrip("/")
-        rel = os.path.relpath(abs_target, output_path.parent)
-        rel = rel.replace("\\", "/")  # normalise on Windows
-
-        return f"]({rel}{anchor})"
-
-    return re.sub(r"\]\(<([^>]+)>\)", replace_link, md)
+    soup = BeautifulSoup(html_path.read_text(encoding="utf-8"), "html.parser")
+    page_url = meta(soup, 'meta[property="og:url"]')
+    if not page_url:
+        return None
+    rel = html_path.relative_to(input_dir).parent.as_posix()
+    rel = "" if rel == "." else rel + "/"
+    if not page_url.endswith("/" + rel) and rel:
+        return None
+    return page_url[: len(page_url) - len(rel)]
 
 
-def process_single(html_path: Path, output_path: Path | None, verbose: bool = False, output_dir: Path | None = None, **kwargs) -> None:
-    md = html_file_to_markdown(html_path, **kwargs)
-    if md is None:
-        print(f"[WARN] Selector not found in {html_path}", file=sys.stderr)
-        return
-    if output_path is not None and output_dir is not None:
-        md = fix_internal_links(md, output_path, output_dir)
-    if output_path:
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(md, encoding="utf-8")
-        if verbose:
-            print(f"Written: {output_path}")
-    else:
-        print(md)
+REFRESH_RE = re.compile(r'<meta http-equiv="?refresh"? content="?\d+;\s*url=([^">]+)', re.I)
 
 
-def process_directory(input_dir: Path, output_dir: Path, **kwargs) -> None:
-    html_files = list(input_dir.rglob("index.html"))
+def collect_aliases(html_files, input_dir: Path, site_prefix: str) -> dict[str, str]:
+    """Hugo writes each alias as a tiny page that only redirects."""
+    aliases = {}
+    for html_path in html_files:
+        with html_path.open(encoding="utf-8") as f:
+            head = f.read(2048)
+        m = REFRESH_RE.search(head)
+        if m:
+            rel = html_path.relative_to(input_dir).parent.as_posix()
+            aliases[site_prefix + ("" if rel == "." else rel + "/")] = urljoin(site_prefix, m.group(1))
+    return aliases
+
+
+def process_directory(input_dir: Path, output_dir: Path, base_url: str | None, verbose: bool) -> None:
+    html_files = sorted(p for p in input_dir.rglob("index.html") if "_print" not in p.parts)
     if not html_files:
         print(f"No index.html files found under {input_dir}", file=sys.stderr)
         return
 
-    converted = 0
-    for html_path in html_files:
-        # Skip files inside _print directories
-        if "_print" in html_path.parts:
-            continue
-        # Mirror the directory structure, replacing index.html with .md
-        relative = html_path.relative_to(input_dir).parent  # e.g. docs/getting-started
-        output_path = output_dir / relative / "index.md"
-        process_single(html_path, output_path, output_dir=output_dir, **kwargs)
-        converted += 1
+    site_prefix = base_url.rstrip("/") + "/" if base_url else None
+    if site_prefix is None:
+        root = input_dir / "index.html"
+        site_prefix = site_prefix_for(root, input_dir) if root.exists() else None
+    if site_prefix is None:
+        print("[ERROR] Cannot detect the site URL; pass --base-url", file=sys.stderr)
+        sys.exit(1)
 
-    print(f"\nDone. Converted {converted} files.")
+    aliases = collect_aliases(html_files, input_dir, site_prefix)
+
+    converted = skipped = 0
+    for html_path in html_files:
+        relative = html_path.relative_to(input_dir).parent
+        rel = relative.as_posix()
+        page_url = site_prefix + ("" if rel == "." else rel + "/")
+        md = html_file_to_markdown(
+            html_path, page_url=page_url, site_prefix=site_prefix, aliases=aliases
+        )
+        if md is None:
+            # Taxonomy listings and alias redirect pages.
+            skipped += 1
+            continue
+        output_path = output_dir / relative / "index.md"
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(md, encoding="utf-8")
+        converted += 1
+        if verbose:
+            print(f"Written: {output_path}")
+
+    print(f"\nDone. Converted {converted} files, skipped {skipped}.")
 
 
 def main():
@@ -143,19 +283,27 @@ def main():
     parser.add_argument("--input", required=True, help="HTML file or Hugo public/ directory")
     parser.add_argument("--output", default=None, help="Output .md file or directory (omit to print to stdout)")
     parser.add_argument("--selector", default="div.td-content", help="CSS selector for content element")
-    parser.add_argument("--base-url", default="", help="Base URL to resolve relative links (e.g. https://example.com)")
+    parser.add_argument(
+        "--base-url",
+        default=None,
+        help="Site URL, like https://example.com/docs/ (default: detected from og:url of the home page)",
+    )
     parser.add_argument("--verbose", action="store_true", help="Print each written file path")
     args = parser.parse_args()
 
     input_path = Path(args.input)
-    kwargs = dict(content_selector=args.selector, base_url=args.base_url, verbose=args.verbose)
-
     if input_path.is_file():
-        output_path = Path(args.output) if args.output else None
-        process_single(input_path, output_path, **kwargs)
+        md = html_file_to_markdown(input_path, site_prefix=args.base_url, content_selector=args.selector)
+        if md is None:
+            print(f"[WARN] Nothing to convert in {input_path}", file=sys.stderr)
+            return
+        if args.output:
+            Path(args.output).write_text(md, encoding="utf-8")
+        else:
+            print(md)
     elif input_path.is_dir():
         output_dir = Path(args.output) if args.output else input_path.parent / "markdown"
-        process_directory(input_path, output_dir, **kwargs)
+        process_directory(input_path, output_dir, args.base_url, args.verbose)
     else:
         print(f"Error: {input_path} does not exist", file=sys.stderr)
         sys.exit(1)

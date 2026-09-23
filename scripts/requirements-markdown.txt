@@ -1,0 +1,3 @@
+beautifulsoup4>=4.12
+# 1.x: converter hooks take a `parent_tags` argument.
+markdownify>=1.2,<2

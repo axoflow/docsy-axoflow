@@ -49,8 +49,15 @@ What the footer script deliberately does not copy from live, because the data fi
 Converts the built Hugo site to Markdown for LLM consumption. Run after a full build:
 
 ```bash
+pip install -r themes/docsy-axoflow/scripts/requirements-markdown.txt
 python3 themes/docsy-axoflow/scripts/hugo_to_markdown.py --input public --output public
 ```
+
+Each `index.md` starts with a YAML header (title, URL, description, last modified date). All links are absolute, and internal ones point at the target's `index.md`, following alias redirects. The site URL comes from the home page's `og:url`, so versioned sub-sites work without `--base-url`. Code fences keep their Chroma language, tab panes are written out one after another under their tab titles, and alerts become blockquotes. Taxonomy pages and alias redirects are skipped.
+
+The header's `description` is only written when the page sets one in its front matter: Hugo's fallback to the page summary is detected and dropped, because it only repeats the opening of the body.
+
+`layouts/_default/index.llms.txt` writes `/llms.txt`, an index of these Markdown copies grouped by top-level section. A site turns it on by adding `LLMS` to `outputs.home`.
 
 ## Glossary
 
