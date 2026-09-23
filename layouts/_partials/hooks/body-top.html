@@ -36,6 +36,15 @@
     }
   })();
 </script>
+{{- /* Pointer for agents to the Markdown copy and llms.txt. First in <body>:
+       agents truncate a fetch at about 100K characters, and the sidebar and
+       navbar come to over 500K, so anything placed with the content is cut
+       off. The <link rel="alternate"> in <head> is not enough, because HTML to
+       Markdown converters drop the head. Hidden from sight and from screen
+       readers; the Markdown converter skips it too (`.visually-hidden`). */ -}}
+{{ if and site.Params.markdownAlternateLink (in (slice "home" "section" "page") .Kind) -}}
+<div class="visually-hidden" aria-hidden="true">For AI agents: this page is available as Markdown at <a href="{{ .Permalink }}index.md">{{ .Permalink }}index.md</a>. For the complete documentation index, see <a href="{{ site.Home.Permalink }}llms.txt">llms.txt</a>.</div>
+{{ end -}}
 {{ partial "announcement-strip.html" . -}}
 
 {{ if not site.Config.Privacy.GoogleAnalytics.Disable }}
