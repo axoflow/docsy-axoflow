@@ -1,10 +1,35 @@
-# {{ .Site.Title }}
+{{- /*
+  llms.txt (https://llmstxt.org/): a Markdown index of the site for agents.
+  One `##` group per top-level section, pages nested by section, each linking
+  to its Markdown copy (written by scripts/hugo_to_markdown.py in CI).
+  Top-level pages outside any section (legal notice, stubs) are left out.
+*/ -}}
+# {{ site.Title }}
 
-> {{ .Site.Params.description }}
+> {{ or site.Home.Description site.Params.description | replaceRE `\s+` " " | strings.TrimSpace }}
 
-{{ .Site.BaseURL }}
+Every page listed here is Markdown. For the HTML version, drop `index.md` from the end of the URL.
+{{ range site.Home.Sections.ByWeight }}
+## {{ .LinkTitle }}
 
-## Documentation
-{{ range .Site.Pages }}
-- [{{ .Title }}]({{ .Permalink }}index.md): {{ with .Description }}{{ . | htmlUnescape }}{{ else }}{{ .Summary | plainify | htmlUnescape | truncate 120 }}{{ end }}
-{{- end }}
+{{ template "llms-entry" (dict "page" . "depth" 0) -}}
+{{ range .Pages.ByWeight }}{{ template "llms-tree" (dict "page" . "depth" 1) }}{{ end -}}
+{{ end -}}
+
+{{- define "llms-tree" -}}
+  {{- /* Body-less leaf pages have nothing to read. */ -}}
+  {{- if or .page.IsSection .page.WordCount -}}
+    {{- template "llms-entry" . -}}
+  {{- end -}}
+  {{- $depth := add .depth 1 -}}
+  {{- range .page.Pages.ByWeight -}}
+    {{- template "llms-tree" (dict "page" . "depth" $depth) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "llms-entry" -}}
+  {{- with .page -}}
+    {{- $notes := .Description | default (.Summary | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 160) -}}
+    {{- strings.Repeat $.depth "  " }}- [{{ .LinkTitle }}]({{ .Permalink }}index.md){{ with $notes }}: {{ . }}{{ end }}
+{{ end -}}
+{{- end -}}
