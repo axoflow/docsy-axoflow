@@ -240,6 +240,91 @@ def collect_aliases(html_files, input_dir: Path, site_prefix: str) -> dict[str, 
     return aliases
 
 
+LLMS_LINK_RE = re.compile(r"\]\((\S+?/index\.md)\)")
+
+
+def parse_llms_index(path: Path):
+    """Title, summary, and (section title, [page .md URLs]) pairs, in llms.txt order."""
+    title = summary = None
+    sections = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("# ") and title is None:
+            title = line[2:].strip()
+        elif line.startswith("> ") and summary is None:
+            summary = line[2:].strip()
+        elif line.startswith("## "):
+            sections.append((line[3:].strip(), []))
+        elif sections and line.lstrip().startswith("- "):
+            m = LLMS_LINK_RE.search(line)
+            if m:
+                sections[-1][1].append(m.group(1))
+    return title, summary, sections
+
+
+def page_block(md: str, html_url: str) -> str:
+    """A page inside a full-text file: its YAML header becomes one Source line."""
+    if md.startswith("---\n"):
+        end = md.find("\n---\n", 4)
+        if end != -1:
+            md = md[end + 5 :]
+    lines = md.strip().split("\n")
+    for i, line in enumerate(lines):
+        if line.startswith("# "):
+            lines.insert(i + 1, f"Source: {html_url}")
+            break
+    else:
+        lines.insert(0, f"Source: {html_url}")
+    return "\n".join(lines)
+
+
+def write_full_texts(input_dir: Path, output_dir: Path, site_prefix: str) -> None:
+    """
+    llms-full.txt for the whole site, and one per top-level section, with the
+    pages in llms.txt order. Sites without the `LLMS` output format get neither.
+    """
+    index = input_dir / "llms.txt"
+    if not index.exists():
+        return
+    title, summary, sections = parse_llms_index(index)
+    index_url = site_prefix + "llms.txt"
+
+    def write(path: Path, header: str, blocks: list[str]) -> None:
+        text = header + "\n\n" + "\n\n".join(blocks) + "\n"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+        size = len(text.encode("utf-8"))
+        # About four bytes a token for English prose.
+        print(f"Written: {path} ({size / 1024:.0f} KB, ~{size / 4000:.0f}k tokens)")
+
+    all_blocks = []
+    for section, urls in sections:
+        blocks = []
+        for url in urls:
+            md_path = output_dir / url[len(site_prefix) :] if url.startswith(site_prefix) else None
+            if md_path is None or not md_path.exists():
+                print(f"[WARN] llms.txt lists {url}, which has no Markdown copy", file=sys.stderr)
+                continue
+            blocks.append(page_block(md_path.read_text(encoding="utf-8"), url[: -len("index.md")]))
+        if not blocks:
+            continue
+        all_blocks.extend(blocks)
+        # A section's first entry is its own landing page, so its directory is the section's.
+        section_dir = output_dir / urls[0][len(site_prefix) :]
+        write(
+            section_dir.parent / "llms-full.txt",
+            f"# {section} (full text)\n\n> The full text of the {section} section of {title}. "
+            f"Index of the whole site: {index_url}",
+            blocks,
+        )
+
+    write(
+        output_dir / "llms-full.txt",
+        f"# {title} (full text)\n\n> {summary}\n\nThe full text of every page. "
+        f"Index with links to each page and section: {index_url}",
+        all_blocks,
+    )
+
+
 def process_directory(input_dir: Path, output_dir: Path, base_url: str | None, verbose: bool) -> None:
     html_files = sorted(p for p in input_dir.rglob("index.html") if "_print" not in p.parts)
     if not html_files:
@@ -276,6 +361,7 @@ def process_directory(input_dir: Path, output_dir: Path, base_url: str | None, v
             print(f"Written: {output_path}")
 
     print(f"\nDone. Converted {converted} files, skipped {skipped}.")
+    write_full_texts(input_dir, output_dir, site_prefix)
 
 
 def main():

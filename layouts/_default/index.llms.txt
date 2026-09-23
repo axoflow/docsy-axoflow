@@ -1,7 +1,9 @@
 {{- /*
   llms.txt (https://llmstxt.org/): a Markdown index of the site for agents.
   One `##` group per top-level section, pages nested by section, each linking
-  to its Markdown copy (written by scripts/hugo_to_markdown.py in CI).
+  to its Markdown copy. The same script (scripts/hugo_to_markdown.py, run in
+  CI) writes the llms-full.txt files linked here: the whole site in one, and
+  one per section.
   Top-level pages outside any section (legal notice, stubs) are left out.
 */ -}}
 # {{ site.Title }}
@@ -9,16 +11,21 @@
 > {{ or site.Home.Description site.Params.description | replaceRE `\s+` " " | strings.TrimSpace }}
 
 Every page listed here is Markdown. For the HTML version, drop `index.md` from the end of the URL.
+
+The full text of every page is in [llms-full.txt]({{ site.Home.Permalink }}llms-full.txt). Each section below also links the full text of just that section.
 {{ range site.Home.Sections.ByWeight }}
 ## {{ .LinkTitle }}
+
+Full text of this section: [llms-full.txt]({{ .Permalink }}llms-full.txt)
 
 {{ template "llms-entry" (dict "page" . "depth" 0) -}}
 {{ range .Pages.ByWeight }}{{ template "llms-tree" (dict "page" . "depth" 1) }}{{ end -}}
 {{ end -}}
 
 {{- define "llms-tree" -}}
-  {{- /* Body-less leaf pages have nothing to read. */ -}}
-  {{- if or .page.IsSection .page.WordCount -}}
+  {{- /* Body-less leaf pages have nothing to read, unless their layout renders
+         the content (the glossary builds its page from the term files). */ -}}
+  {{- if or .page.IsSection .page.WordCount .page.Layout -}}
     {{- template "llms-entry" . -}}
   {{- end -}}
   {{- $depth := add .depth 1 -}}

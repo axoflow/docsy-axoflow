@@ -59,6 +59,8 @@ The header's `description` is only written when the page sets one in its front m
 
 `layouts/_default/index.llms.txt` writes `/llms.txt`, an index of these Markdown copies grouped by top-level section. A site turns it on by adding `LLMS` to `outputs.home`.
 
+When `llms.txt` exists, the script also writes `llms-full.txt` files: one at the site root with every page, and one in each top-level section's directory with just that section. Pages follow the `llms.txt` order, each page's YAML header becomes a `Source:` line under its title, and the script prints each file's size and token estimate. A page that `llms.txt` lists but that has no Markdown copy is a warning. `llms.txt` links all of these files.
+
 ## Canonical links and structured data
 
 `layouts/_partials/head.html` emits a self-referencing `<link rel="canonical">` on every page except `redirect` pages. Archived versions point at themselves too: they are `noindex`, and a canonical pointing at the latest release would contradict that.
