@@ -165,11 +165,13 @@ def html_file_to_markdown(
         # Without a front matter description, Hugo falls back to the page summary,
         # which only repeats the opening of the body. Compared without whitespace,
         # because plainify glues a heading to the next paragraph.
-        h1 = content.find("h1")
+        # Docsy prints a front matter description as the lead paragraph under
+        # the title, so the lead is left out too, or every real one would match.
+        skip = [t for t in (content.find("h1"), content.select_one(".lead")) if t]
         body_text = "".join(
             "".join(t.split())
             for t in content.find_all(string=True)
-            if not (h1 and h1 in t.parents)
+            if not any(s in t.parents for s in skip)
         )
         # An empty page falls back further, to the site description.
         if description == meta(soup, 'meta[property="og:site_name"]') or body_text.startswith(
