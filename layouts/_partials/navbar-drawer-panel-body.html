@@ -22,7 +22,7 @@
                   </button>
                   <ul class="axo-nav-links axo-nav-submenu-panel" id="{{ $subId }}">
                     {{- range $group.links }}
-                      <li><a href="{{ .href }}"
+                      <li><a href="{{ partial "navbar-href.html" .href }}"
                         {{- if ne $host (urls.Parse .href).Host }} target="_blank" rel="noopener"{{ end }}>{{ .label }}</a></li>
                     {{- end }}
                   </ul>
@@ -37,7 +37,7 @@
                             {{- if eq $group.kind "nested" }} axo-nav-nested{{ end }}">
                   <ul class="axo-nav-links">
                     {{- range $group.links }}
-                      <li><a href="{{ .href }}"
+                      <li><a href="{{ partial "navbar-href.html" .href }}"
                         {{- if ne $host (urls.Parse .href).Host }} target="_blank" rel="noopener"{{ end }}>{{ .label }}</a></li>
                     {{- end }}
                   </ul>

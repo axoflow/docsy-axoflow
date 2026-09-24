@@ -53,7 +53,7 @@
       {{- /* `Login`. Not a menu row on live either — it is the first of the two
              buttons in the block at the foot of the list. */ -}}
       <li class="nav-item">
-        <a class="nav-link axo-nav-link" href="{{ .href }}"
+        <a class="nav-link axo-nav-link" href="{{ partial "navbar-href.html" .href }}"
            {{- if ne $host (urls.Parse .href).Host }} target="_blank" rel="noopener"{{ end }}>{{ .label }}</a>
       </li>
     {{- else }}

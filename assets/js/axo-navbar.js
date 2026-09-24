@@ -67,6 +67,22 @@ if (bar) {
   (window.requestIdleCallback || ((fn) => window.setTimeout(fn, 200)))(loadPanels);
 }
 
+// The campaign suffix the links are rendered without (layouts/_partials/navbar-href.html),
+// put back on a menu link as it is pressed or focused. `pointerdown` comes before
+// the click, the middle click and the context menu, and `focusin` before Enter,
+// so every way of following or copying the link sees the full URL.
+function tagLink(event) {
+  const link = event.target.closest && event.target.closest('a[href]');
+  if (!link || !bar.dataset.axoUtm || link.search) return;
+  if (link.host === window.location.host) return;
+  link.search = bar.dataset.axoUtm;
+}
+
+if (bar) {
+  bar.addEventListener('pointerdown', tagLink);
+  bar.addEventListener('focusin', tagLink);
+}
+
 function setOpen(toggle, panel, open) {
   if (!toggle || !panel) return;
   toggle.setAttribute('aria-expanded', String(open));

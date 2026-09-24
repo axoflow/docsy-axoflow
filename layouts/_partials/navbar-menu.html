@@ -42,7 +42,7 @@
     {{- if eq .kind "link" }}
       {{- $external := ne $host (urls.Parse .href).Host }}
       <li class="nav-item">
-        <a class="nav-link axo-nav-link" href="{{ .href }}"
+        <a class="nav-link axo-nav-link" href="{{ partial "navbar-href.html" .href }}"
            {{- if $external }} target="_blank" rel="noopener"{{ end }}>{{ .label }}</a>
       </li>
     {{- else }}

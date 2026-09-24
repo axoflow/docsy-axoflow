@@ -26,7 +26,7 @@
   {{- end }}
   {{- with $group.label }}
     {{- if $group.href }}
-      <a class="axo-nav-group-title" href="{{ $group.href }}"
+      <a class="axo-nav-group-title" href="{{ partial "navbar-href.html" $group.href }}"
         {{- if ne $host (urls.Parse $group.href).Host }} target="_blank" rel="noopener"{{ end }}>{{ . }}
         <span class="axo-nav-after axo-nav-after--lg">
           {{- partial "navbar-glyph.html" (dict "name" "afterTitle" "menu" $menu) -}}
@@ -50,7 +50,7 @@
           {{- /* `display: contents` unless the link is a card, so the links
                  that are just links keep their layout. */}}
           <div class="axo-nav-link-body">
-            <a href="{{ .href }}"
+            <a href="{{ partial "navbar-href.html" .href }}"
               {{- if ne $host (urls.Parse .href).Host }} target="_blank" rel="noopener"{{ end }}>{{ .label }}
               {{- if $mega }}
                 <span class="axo-nav-after{{ if $card }} axo-nav-after--lg{{ end }}">

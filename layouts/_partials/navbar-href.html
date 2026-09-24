@@ -1,0 +1,9 @@
+{{- /*
+  A menu link's href without the campaign suffix every entry in
+  data/nav-menu.yaml carries (scripts/check_main_menu.py writes it; UTM_SUFFIX
+  there). assets/js/axo-navbar.js puts it back on a link as it is pressed or
+  focused, so axoflow.com still sees `utm_source=docs&utm_medium=menu`, but the
+  page does not repeat it 192 times. The suffix is stated again as
+  `data-axo-utm` on the bar in navbar.html; the three have to agree.
+*/ -}}
+{{- strings.TrimSuffix "?utm_source=docs&utm_medium=menu" . -}}

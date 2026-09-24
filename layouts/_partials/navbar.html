@@ -42,7 +42,8 @@
 
 <nav class="navbar navbar-expand-md td-navbar
             {{- if $cover }} td-navbar-cover{{ end }}"
-     data-axo-panels="{{ partialCached "navbar-panels.html" $menu }}">
+     data-axo-panels="{{ partialCached "navbar-panels.html" $menu }}"
+     data-axo-utm="utm_source=docs&amp;utm_medium=menu">
   <div class="container-fluid">
 
     {{- /* Brand */ -}}
@@ -256,7 +257,7 @@
                group. */ -}}
         <div class="axo-nav-controls">
           {{ with $menu.cta }}
-            <a class="axo-nav-cta" href="{{ .href }}" target="_blank" rel="noopener">{{ .label }}</a>
+            <a class="axo-nav-cta" href="{{ partial "navbar-href.html" .href }}" target="_blank" rel="noopener">{{ .label }}</a>
           {{ end }}
 
           {{ if gt (len .Site.Home.Translations) 0 -}}
