@@ -1,0 +1,29 @@
+{{- /* Hugo's embedded sitemap (v0.160.1), with taxonomy and term pages left
+     out: tag and category listings are link lists with no content of their
+     own, the Markdown converter skips them, and llms.txt does not list them,
+     so a sitemap that did made agent-docs coverage checks report them missing.
+     Other pages opt out with `sitemap: {disable: true}` in front matter. */ -}}
+{{ printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  {{ range where (where .Pages "Sitemap.Disable" "ne" true) "Kind" "not in" (slice "taxonomy" "term") }}
+    {{- if .Permalink -}}
+  <url>
+    <loc>{{ .Permalink }}</loc>{{ if not .Lastmod.IsZero }}
+    <lastmod>{{ safeHTML ( .Lastmod.Format "2006-01-02T15:04:05-07:00" ) }}</lastmod>{{ end }}{{ with .Sitemap.ChangeFreq }}
+    <changefreq>{{ . }}</changefreq>{{ end }}{{ if ge .Sitemap.Priority 0.0 }}
+    <priority>{{ .Sitemap.Priority }}</priority>{{ end }}{{ if .IsTranslated }}{{ range .Translations }}
+    <xhtml:link
+                rel="alternate"
+                hreflang="{{ .Language.Locale }}"
+                href="{{ .Permalink }}"
+                />{{ end }}
+    <xhtml:link
+                rel="alternate"
+                hreflang="{{ .Language.Locale }}"
+                href="{{ .Permalink }}"
+                />{{ end }}
+  </url>
+    {{- end -}}
+  {{ end }}
+</urlset>
