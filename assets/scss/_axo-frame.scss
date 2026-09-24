@@ -1615,3 +1615,20 @@ aside.td-sidebar,
 .td-footer {
     view-transition-name: none;
 }
+
+// Skip links (layouts/docs/baseof.html). Bootstrap's `.visually-hidden-focusable`
+// hides them until focused; focused, they would land at the top of <body>,
+// under the sticky bar (`z-index: 1020`), so they are pinned above it instead.
+.axo-skip-link:focus,
+.axo-skip-link:focus-visible {
+    position: fixed !important;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 1100;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    background: var(--bs-body-bg);
+    color: var(--bs-link-color);
+    font-weight: 500;
+}

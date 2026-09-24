@@ -133,6 +133,12 @@
   </head>
   <body class="td-{{ .Kind }}{{ with .Page.Params.body_class }} {{ . }}{{ end }}" {{ with .Page.Params.body_attribute }} {{ . | safeHTMLAttr }}{{ end }}>
     {{ partial "hooks/body-top.html" . -}}
+    {{- /* Skip links, shown only when focused. The article comes before the
+           documentation tree in the document (see the note at <main>), so the
+           second one is how a keyboard reader gets to the tree without tabbing
+           through the page. Styled in _axo-frame.scss (`.axo-skip-link`). */ -}}
+    <a class="visually-hidden-focusable axo-skip-link" href="#main-content">Skip to content</a>
+    <a class="visually-hidden-focusable axo-skip-link" href="#td-section-nav">Skip to documentation menu</a>
     <header>
       {{ partial "navbar.html" . }}
     </header>
