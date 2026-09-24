@@ -89,6 +89,13 @@ Requires in the consuming project:
 - `puppeteer` and `pagedjs` in devDependencies, `beautifulsoup4` (and
   optionally `pypdf`) for Python.
 
+**Every site using the theme has to declare the `pdf` output format**, even with
+the PDF edition off: without it Hugo does not read `.pdf.` in
+`layouts/docs/{baseof,list}.pdf.html` as an output format, and renders the
+site's HTML section pages with the PDF layout (measured on axosyslog-core-docs:
+493 of 543 pages). Declare `[outputFormats.pdf]` in `config/_default/` and leave
+it out of every `outputs` list; axosyslog-core-docs has the canonical copy.
+
 Theme-side pieces: `layouts/docs/{baseof,list}.pdf.html`,
 `layouts/_partials/pdf/*`, `assets/scss/pdf.scss`. A project can override the
 cover logo by adding its own `assets/icons/pdf-logo.svg`.
@@ -113,6 +120,47 @@ The header's `description` is only written when the page sets one in its front m
 `layouts/_partials/hooks/body-top.html` puts a visually hidden pointer to the page's Markdown copy and to `llms.txt` first in `<body>` on every page that has a copy (when `params.markdownAlternateLink` is set). It has to come before the sidebar and navbar, which are over 500K characters, or agents truncate it away; the `<link rel="alternate">` in `<head>` alone is dropped by HTML to Markdown converters.
 
 When `llms.txt` exists, the script also writes `llms-full.txt` files: one at the site root with every page, and one in each top-level section's directory with just that section. Pages follow the `llms.txt` order (the script follows the root's links into the section files), each page's YAML header becomes a `Source:` line under its title, and the script prints each file's size and token estimate. A page that `llms.txt` lists but that has no Markdown copy is a warning. `llms.txt` links all of these files.
+
+## Page weight and agents
+
+Agents read a fetched page as text, cut it off at about 100K characters, and run
+no scripts. Before these changes a page was ~555K and the article started ~537K
+in, after the navbar (171K) and the sidebar tree (348K). What keeps it down:
+
+- **Content first.** `layouts/docs/baseof.html` puts `<main id="main-content">`
+  before the two navigation columns; `order-first` on the sidebar and Docsy's
+  `order: 2` on the page ToC put them back in place, so nothing moves on screen.
+  Two skip links at the top of `<body>` ("Skip to content", "Skip to
+  documentation menu", `.axo-skip-link` in `_axo-frame.scss`) cover the
+  changed keyboard order.
+- **Menu glyphs as a sprite.** `navbar-glyphs.html` emits the three glyphs of
+  `data/nav-menu.yaml` once as `<symbol>`s; `navbar-glyph.html` references
+  them. They paint with `currentColor`, so the stylesheet still colours them.
+- **Menu panels loaded separately.** `navbar-panels.html` renders every panel's
+  contents (bar, compact and drawer) once into a fingerprinted
+  `js/nav-panels.*.html`; the page keeps empty `.axo-nav-panel`s, and
+  `axo-navbar.js` fills them in when the browser is idle or at the first
+  hover, focus or tap. The panel bodies are `navbar-panel-body.html` and
+  `navbar-drawer-panel-body.html`.
+- **UTM on use.** `navbar-href.html` strips `?utm_source=docs&utm_medium=menu`
+  from menu links, and `axo-navbar.js` puts it back on `pointerdown` and
+  `focusin` (`data-axo-utm` on the bar). It has to match `UTM_SUFFIX` in
+  `scripts/check_main_menu.py`.
+- **Compact sidebar.** With `ui.sidebar_menu_compact`, branches off the current
+  path are empty `<ul data-axo-branch>` lists in the page. Their rows are in one
+  fingerprinted `js/sidebar/<chapter>.*.html` per chapter
+  (`sidebar-branches.html`), which `axo-sidebar-branches.js` loads and fills in
+  when a branch is unfolded. The row template is `sidebar-tree-section.html`.
+  Branch files assume the home page is the tree root (no `sidebar_root_enabled`).
+
+Result on axosyslog-core-docs: the bar is 14K, a page is ~220K, and the article
+starts ~24K in.
+
+`scripts/check_agent_docs.sh` builds the site as deployed, serves it on
+localhost and scores it with [afdocs](https://afdocs.dev); it exits 1 when a
+check fails, so CI can gate on it. It skips the checks a local static server
+cannot answer (content negotiation, cache headers) and `page-size-html`, which
+the navigation keeps failing. Pin the package with `AFDOCS_PACKAGE`.
 
 ## Canonical links and structured data
 
