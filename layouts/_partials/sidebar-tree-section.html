@@ -9,6 +9,7 @@
   {{ $treeRoot := cond (eq .ulNr 0) true false -}}
   {{ $ulNr := .ulNr -}}
   {{ $ulShow := .ulShow -}}
+  {{ $compact := $p.Site.Params.ui.sidebar_menu_compact -}}
   {{ $active := and (not $shouldDelayActive) (eq $s $p) -}}
   {{ $activePath := and (not $shouldDelayActive) (or (eq $p $s) ($p.IsDescendant $s)) -}}
   {{ $show := cond
@@ -60,6 +61,9 @@
         {{ if (not (or $show $p.Site.Params.ui.sidebar_menu_foldable )) }} collapse{{ end -}}
       " {{/**/ -}}
       id="{{ $mid }}-li" {{- /**/ -}}
+      {{- /* Project change: a chapter row names the file its hidden branches
+             load from. See the note on the children below. */ -}}
+      {{- if and $compact (eq $ulNr 1) (not .branch) $withChild }}{{ with partialCached "sidebar-branches.html" $s $s.RelPermalink }} data-axo-branches="{{ . }}"{{ end }}{{ end -}}
     >
     {{ if (and $p.Site.Params.ui.sidebar_menu_foldable (ge $ulNr 1)) -}}
     <input type="checkbox" id="{{ $mid }}-check"{{ if $activePath}} checked{{ end }}/>
@@ -115,8 +119,23 @@
     {{/* project change: the below-title search form is rendered at the top of
          the column instead — see the block at the head of this file. */}}</a>
     {{- end -}}
+    {{- /* Project change: with `sidebar_menu_compact`, a branch that is not
+         shown is not rendered into the page. Docsy's compact mode only marked
+         such a branch `collapse` (and with `sidebar_menu_foldable`, not even
+         that), so every page still carried the whole site tree: 348K of the
+         555K page on axosyslog-core-docs, ahead of the content.
+
+         The branch keeps its heading and fold checkbox, and gets an empty list
+         marked `data-axo-branch` (the branch is named by the row's own id). Its children are in the chapter's branch file
+         (sidebar-branches.html), which assets/js/axo-sidebar-branches.js loads
+         and fills in when the branch is opened. Inside that file (`.branch`)
+         every list is such a placeholder too, so each branch is stored once and
+         the script fills a whole subtree from the one file. */ -}}
     {{ if $withChild -}}
     {{ $ulNr := add $ulNr 1 }}
+    {{ if and $compact (or .branch (not $show)) -}}
+    <ul class="ul-{{ $ulNr }}{{ if (gt $ulNr 1)}} foldable{{end}}" data-axo-branch></ul>
+    {{- else -}}
     <ul class="ul-{{ $ulNr }}{{ if (gt $ulNr 1)}} foldable{{end}}">
       {{/* No "Overview" row here, deliberately — do not add one back.
 
@@ -136,5 +155,6 @@
         {{- end }}
       {{- end }}
     </ul>
+    {{- end }}
     {{- end }}
   </li>

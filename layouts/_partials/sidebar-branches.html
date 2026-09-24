@@ -1,0 +1,47 @@
+{{- /*
+  The branch file of one top-level chapter, for `sidebar_menu_compact`: every
+  branch of the chapter below the always-shown levels, as a
+  <template data-for="<branch id>"> holding that branch's own rows. Returns the
+  file's URL. Call with partialCached, keyed by the chapter: the tree does not
+  depend on the page, so each file is built once per build.
+
+  The page renders a hidden branch as an empty `<ul data-axo-branch>` (see the
+  note in sidebar-tree-section.html), and assets/js/axo-sidebar-branches.js
+  fills it from here when the branch is opened, so a reader can still unfold
+  any branch in place. The rows here are rendered with `shouldDelayActive`,
+  which leaves out the current-page highlighting: a hidden branch never holds
+  the current page, because the path to it is always shown.
+
+  A row's ulNr is its depth below the home page, which is the tree's root on
+  these sites; `sidebar_root_enabled` sites would need the root's depth
+  subtracted.
+
+  Params: the chapter (a top-level section).
+*/ -}}
+{{- $chapter := . -}}
+{{- $truncate := site.Params.ui.sidebar_menu_truncate | default 100 -}}
+{{- $html := "" -}}
+{{- range where site.Pages "Kind" "section" -}}
+  {{- if .IsDescendant $chapter -}}
+    {{- $branch := . -}}
+    {{- $rows := where (union .Pages .Sections).ByWeight ".Params.toc_hide" "!=" true | first $truncate -}}
+    {{- if $rows -}}
+      {{- $ulNr := add (len .Ancestors) 1 -}}
+      {{- $body := "" -}}
+      {{- range $rows -}}
+        {{- $body = print $body (partial "sidebar-tree-section.html" (dict
+              "page" site.Home "section" . "shouldDelayActive" true
+              "sidebarMenuTruncate" $truncate "ulNr" $ulNr "ulShow" 2 "branch" true)) -}}
+      {{- end -}}
+      {{- $html = printf "%s<template data-for=\"m-%s\">%s</template>\n" $html ($branch.RelPermalink | anchorize) $body -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- /* No file, and an empty URL, for a chapter with nothing below the shown
+       levels. Short names, because every page names every chapter's file. */ -}}
+{{- $url := "" -}}
+{{- if $html -}}
+  {{- $name := printf "js/sidebar/%s.html" (path.Base (strings.TrimSuffix "/" $chapter.RelPermalink)) -}}
+  {{- $url = (resources.FromString $name $html | minify | fingerprint "md5").RelPermalink -}}
+{{- end -}}
+{{- return $url -}}

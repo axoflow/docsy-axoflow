@@ -353,5 +353,13 @@
   {{ $js := . | js.Build (dict "minify" hugo.IsProduction) -}}
   <script src="{{ $js.RelPermalink }}" defer></script>
 {{- end }}
+{{- /* Project change: fills in the branches a compact tree leaves out of the
+       page when they are opened (see sidebar-tree-section.html). */ -}}
+{{ if .Site.Params.ui.sidebar_menu_compact -}}
+{{ with resources.Get "js/axo-sidebar-branches.js" -}}
+  {{ $js := . | js.Build (dict "minify" hugo.IsProduction) -}}
+  <script src="{{ $js.RelPermalink }}" defer></script>
+{{- end }}
+{{- end }}
 
 {{- end }}{{/* with $context */ -}}
