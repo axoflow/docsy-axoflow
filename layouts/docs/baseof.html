@@ -159,7 +159,29 @@
     <div class="container-fluid td-outer">
       <div class="td-main">
         <div class="row flex-xl-nowrap">
-          <aside class="col-md-3 col-xl-2 td-sidebar d-print-none mt-5">
+          {{- /* Project change: <main> comes first in the document, and the two
+                 columns after it are put back in place by flexbox order —
+                 `order-first` on the navigation column here, Docsy's own
+                 `order: 2` on the page contents column. Nothing moves on screen.
+
+                 The navigation column is the whole site tree on the current
+                 path, and the bar comes before everything, so with the column
+                 first the article started some 200K characters into the page.
+                 Agents read a fetch as text and cut it off at about 100K, so they
+                 got the menu instead of the page. Content first, it starts after
+                 the bar. Keyboard and screen reader users now reach the article
+                 before the tree; the "Skip to documentation menu"
+                 link at the top of <body> takes them the other way. */ -}}
+          {{/* `ne .Kind "404"` keeps the not-found page out of the search index:
+               a 404 has no content file, so it cannot carry `dontIndex` in front
+               matter, and it is the one page a search result must never land on. */ -}}
+          <main class="col-xs-10 col-md-9 col-xl-8 mt-3 mt-md-5" id="main-content" role="main"{{ if and .Site.Params.offlineSearchPagefind (and (not .Page.Params.dontIndex) (ne .Kind "404")) }} data-pagefind-body{{ end }}>
+            {{- /* The version banner used to be called here; it is above
+                   `.td-outer` now. See the note beside `<header>`.  */ -}}
+            {{ if not .Site.Params.ui.breadcrumb_disable }}{{ partial "breadcrumb.html" . }}{{ end }}
+            {{ block "main" . }}{{ end }}
+          </main>
+          <aside class="col-md-3 col-xl-2 td-sidebar d-print-none mt-5 order-first">
             {{ partial "sidebar.html" . }}
           </aside>
           <aside class="d-none d-xl-block col-2 col-xl-2 td-sidebar-toc d-print-none mt-5 pt-5">
@@ -170,15 +192,6 @@
             {{ partial "hooks/custom-right-sidebar-elements-bottom.html" . }}
             <!-- Adds a hook to add custom sidebar elements -->
           </aside>
-          {{/* `ne .Kind "404"` keeps the not-found page out of the search index:
-               a 404 has no content file, so it cannot carry `dontIndex` in front
-               matter, and it is the one page a search result must never land on. */ -}}
-          <main class="col-xs-10 col-md-9 col-xl-8 mt-3 mt-md-5" role="main"{{ if and .Site.Params.offlineSearchPagefind (and (not .Page.Params.dontIndex) (ne .Kind "404")) }} data-pagefind-body{{ end }}>
-            {{- /* The version banner used to be called here; it is above
-                   `.td-outer` now. See the note beside `<header>`.  */ -}}
-            {{ if not .Site.Params.ui.breadcrumb_disable }}{{ partial "breadcrumb.html" . }}{{ end }}
-            {{ block "main" . }}{{ end }}
-          </main>
         </div>
       </div>
       {{ partial "footer.html" . }}
