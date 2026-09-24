@@ -1,0 +1,101 @@
+{{- /*
+  The inside of one bar or compact menu panel. Rendered into the separate panels
+  file (navbar-panels.html), not into the page: see the note there.
+
+  Params: item (a data/nav-menu.yaml `items` entry), menu, prefix, panelId.
+*/ -}}
+{{- $menu := .menu -}}
+{{- $prefix := .prefix -}}
+{{- $panelId := .panelId -}}
+{{- $host := $menu.host -}}
+{{- with .item -}}
+{{- $mega := .mega }}
+          <div class="axo-nav-panel-inner">
+            {{- if $mega }}
+              {{- /* Live's own layout, carried in the data: the white columns
+                     sit in one `3fr` block and the dark group takes the `1fr`
+                     track beside it, and a column is a stack of sections with a
+                     rule between. Neither is derivable from the group list --
+                     Solutions puts one group in the first column, Products four
+                     — so `column` states it and `sub` marks the pair that sits
+                     side by side. See the `mega_item` note in
+                     scripts/check_main_menu.py. */ -}}
+              {{- /* Partitioned by hand and keyed on the stringified column,
+                     not with `where`: that helper drops entries whose field
+                     type does not match the value compared against, so a panel
+                     holding `column: 1` beside `column: highlight` silently
+                     lost its white columns and rendered the dark one alone. */ -}}
+              {{- $white := slice }}
+              {{- $highlight := slice }}
+              {{- $tracks := slice }}
+              {{- range .groups }}
+                {{- $key := printf "%v" (or .column "") }}
+                {{- if eq $key "highlight" }}
+                  {{- $highlight = $highlight | append . }}
+                {{- else }}
+                  {{- $white = $white | append . }}
+                  {{- if not (in $tracks $key) }}{{ $tracks = $tracks | append $key }}{{ end }}
+                {{- end }}
+              {{- end }}
+              <div class="axo-nav-cols">
+                {{- range $track := $tracks }}
+                  {{- $sections := slice }}
+                  {{- range $white }}
+                    {{- if eq (printf "%v" (or .column "")) $track }}
+                      {{- $sections = $sections | append . }}
+                    {{- end }}
+                  {{- end }}
+                  <div class="axo-nav-col">
+                    {{- range $i, $section := $sections }}
+                      {{- $prevSub := false }}
+                      {{- if gt $i 0 }}{{ $prevSub = (index $sections (sub $i 1)).sub }}{{ end }}
+                      {{- $nextSub := false }}
+                      {{- if lt (add $i 1) (len $sections) }}{{ $nextSub = (index $sections (add $i 1)).sub }}{{ end }}
+                      {{- if and $section.sub (not $prevSub) }}<div class="axo-nav-subcols">{{ end }}
+                      {{- partial "navbar-group.html" (dict
+                            "group" $section "menu" $menu "prefix" $prefix
+                            "mega" true "sub" $section.sub) }}
+                      {{- if and $section.sub (not $nextSub) }}</div>{{ end }}
+                    {{- end }}
+                  </div>
+                {{- end }}
+              </div>
+              {{- range $highlight }}
+                <div class="axo-nav-col axo-nav-col--highlight">
+                  {{- partial "navbar-group.html" (dict
+                        "group" . "menu" $menu "prefix" $prefix
+                        "mega" true "sub" false) }}
+                </div>
+              {{- end }}
+            {{- else }}
+            {{- range $group := .groups }}
+              {{- if eq .kind "submenu" }}
+                {{- $subId := printf "%s-%s" $panelId (urlize .label) }}
+                <div class="axo-nav-group axo-nav-submenu">
+                  {{- /* A real button, not the invisible <a> live overlays on the
+                         row: the destination is already the flyout's first link
+                         (`Overview`), and a row that both navigates and expands
+                         has no keyboard story. */}}
+                  <button type="button" class="axo-nav-submenu-toggle"
+                          aria-expanded="false" aria-controls="{{ $subId }}">
+                    {{ .label }}
+                    <span class="axo-nav-subchevron">
+                      {{- partial "navbar-glyph.html" (dict "name" "toggle" "menu" $menu) -}}
+                    </span>
+                  </button>
+                  <ul class="axo-nav-links axo-nav-submenu-panel" id="{{ $subId }}">
+                    {{- range .links }}
+                      <li><a href="{{ .href }}"
+                        {{- if ne $host (urls.Parse .href).Host }} target="_blank" rel="noopener"{{ end }}>{{ .label }}</a></li>
+                    {{- end }}
+                  </ul>
+                </div>
+              {{- else }}
+                {{- partial "navbar-group.html" (dict
+                      "group" $group "menu" $menu "prefix" $prefix
+                      "mega" $mega "sub" false) }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+          </div>
+{{- end -}}

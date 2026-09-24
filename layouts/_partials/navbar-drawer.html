@@ -61,45 +61,7 @@
       <li class="nav-item axo-nav-item">
         <button type="button" class="nav-link axo-nav-link axo-nav-toggle"
                 aria-expanded="false" aria-controls="{{ $panelId }}">{{ .label }}</button>
-        <div class="axo-nav-panel" id="{{ $panelId }}">
-          <div class="axo-nav-panel-inner">
-            {{- range $gi, $group := .groups }}
-              {{- if eq $group.kind "submenu" }}
-                {{- $subId := printf "%s-%s" $panelId (urlize $group.label) }}
-                <div class="axo-nav-group axo-nav-submenu">
-                  <button type="button" class="axo-nav-submenu-toggle"
-                          aria-expanded="false" aria-controls="{{ $subId }}">
-                    {{ $group.label }}
-                    <span class="axo-nav-subchevron">
-                      {{- partial "navbar-glyph.html" (dict "name" "toggle" "menu" $menu) -}}
-                    </span>
-                  </button>
-                  <ul class="axo-nav-links axo-nav-submenu-panel" id="{{ $subId }}">
-                    {{- range $group.links }}
-                      <li><a href="{{ .href }}"
-                        {{- if ne $host (urls.Parse .href).Host }} target="_blank" rel="noopener"{{ end }}>{{ .label }}</a></li>
-                    {{- end }}
-                  </ul>
-                </div>
-              {{- else }}
-                {{- /* `axo-nav-nested` spelled out, not interpolated from
-                       `$group.kind`: purgecss extracts `[\w-]+` from this
-                       template and would never see a class built at render
-                       time, so the rule that indents these rows would be
-                       stripped from the production stylesheet. */ -}}
-                <div class="axo-nav-group
-                            {{- if eq $group.kind "nested" }} axo-nav-nested{{ end }}">
-                  <ul class="axo-nav-links">
-                    {{- range $group.links }}
-                      <li><a href="{{ .href }}"
-                        {{- if ne $host (urls.Parse .href).Host }} target="_blank" rel="noopener"{{ end }}>{{ .label }}</a></li>
-                    {{- end }}
-                  </ul>
-                </div>
-              {{- end }}
-            {{- end }}
-          </div>
-        </div>
+        <div class="axo-nav-panel" id="{{ $panelId }}"></div>
       </li>
     {{- end }}
   {{- end }}

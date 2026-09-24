@@ -41,7 +41,8 @@
 {{ partial "navbar-glyphs.html" $menu }}
 
 <nav class="navbar navbar-expand-md td-navbar
-            {{- if $cover }} td-navbar-cover{{ end }}">
+            {{- if $cover }} td-navbar-cover{{ end }}"
+     data-axo-panels="{{ partialCached "navbar-panels.html" $menu }}">
   <div class="container-fluid">
 
     {{- /* Brand */ -}}

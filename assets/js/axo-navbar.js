@@ -31,6 +31,42 @@ const hoverCapable = window.matchMedia('(hover: hover) and (pointer: fine)');
 const barWidth = window.matchMedia('(min-width: 800px)');
 const inDrawer = () => !barWidth.matches;
 
+// The panels' contents are not in the page (see layouts/_partials/navbar-panels.html
+// for why): each `.axo-nav-panel` arrives empty, and one fingerprinted file holds
+// a <template data-for="<panel id>"> per panel. Fetched when the browser is idle
+// after load, or at the first hover, focus or tap on the bar if that comes
+// sooner, so a reader almost never opens a panel before its contents are in.
+// Opening one early still works: the panel fills in when the file lands.
+const bar = document.querySelector('.td-navbar[data-axo-panels]');
+let resolvePanels;
+const panelsReady = new Promise((resolve) => { resolvePanels = resolve; });
+let panelsRequested = false;
+
+function loadPanels() {
+  if (panelsRequested || !bar) return;
+  panelsRequested = true;
+  fetch(bar.dataset.axoPanels)
+    .then((response) => (response.ok ? response.text() : Promise.reject(response.status)))
+    .then((html) => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      doc.querySelectorAll('template[data-for]').forEach((template) => {
+        const panel = document.getElementById(template.dataset.for);
+        if (panel && !panel.childElementCount) {
+          panel.append(document.importNode(template.content, true));
+        }
+      });
+      resolvePanels();
+    })
+    // A failed fetch leaves the panels empty; the next interaction retries.
+    .catch(() => { panelsRequested = false; });
+}
+
+if (bar) {
+  ['pointerover', 'focusin', 'touchstart'].forEach((type) =>
+    bar.addEventListener(type, loadPanels, { once: true, passive: true }));
+  (window.requestIdleCallback || ((fn) => window.setTimeout(fn, 200)))(loadPanels);
+}
+
 function setOpen(toggle, panel, open) {
   if (!toggle || !panel) return;
   toggle.setAttribute('aria-expanded', String(open));
@@ -77,6 +113,7 @@ function wire(root, items) {
     if (!toggle || !panel) return;
 
     toggle.addEventListener('click', () => {
+      loadPanels(); // a no-op once loaded; retries a load that failed
       const open = toggle.getAttribute('aria-expanded') === 'true';
       // In the bar, opening one menu closes the others — two mega panels cannot
       // share the space. In the drawer every section is open at once by design
@@ -132,7 +169,25 @@ function wire(root, items) {
     // The flyouts. In the bar these are the three under Resources; in the drawer
     // every labelled group is one. Same rules one level down; no close
     // hysteresis here, because the flyout's left edge is the row's right edge,
-    // so the pointer never crosses a gap.
+    // so the pointer never crosses a gap. They live in the panels' contents, so
+    // they are wired once those have been loaded.
+    panelsReady.then(() => wireFlyouts(item, panel));
+  });
+
+  // Clicking away closes the bar's panels. NOT in the drawer, and this is not a
+  // tidy-up: the press that opens the drawer is itself a click outside this root,
+  // so it bubbled to here and ran `closeAll()` in the same event that
+  // `show.bs.offcanvas` had just opened every section in — measured, all five
+  // toggles back to `aria-expanded="false"` before the drawer had finished
+  // animating. In the drawer there is nothing this rule is needed for either: a
+  // click outside lands on the backdrop and closes the whole panel.
+  document.addEventListener('click', (event) => {
+    if (inDrawer()) return;
+    if (!root.contains(event.target)) closeAll();
+  });
+}
+
+function wireFlyouts(item, panel) {
     const subs = [...item.querySelectorAll('.axo-nav-submenu')];
     subs.forEach((sub) => {
       const subToggle = sub.querySelector('.axo-nav-submenu-toggle');
@@ -175,19 +230,6 @@ function wire(root, items) {
         if (t) t.setAttribute('aria-expanded', 'false');
       });
     });
-  });
-
-  // Clicking away closes the bar's panels. NOT in the drawer, and this is not a
-  // tidy-up: the press that opens the drawer is itself a click outside this root,
-  // so it bubbled to here and ran `closeAll()` in the same event that
-  // `show.bs.offcanvas` had just opened every section in — measured, all five
-  // toggles back to `aria-expanded="false"` before the drawer had finished
-  // animating. In the drawer there is nothing this rule is needed for either: a
-  // click outside lands on the backdrop and closes the whole panel.
-  document.addEventListener('click', (event) => {
-    if (inDrawer()) return;
-    if (!root.contains(event.target)) closeAll();
-  });
 }
 
 document.querySelectorAll('.axo-nav--bar, .axo-nav--drawer').forEach((nav) => {
@@ -256,7 +298,10 @@ function openDrawerSections(drawer) {
 }
 
 document.querySelectorAll('#mainNavOffcanvas').forEach((drawer) => {
-  drawer.addEventListener('show.bs.offcanvas', () => openDrawerSections(drawer));
+  drawer.addEventListener('show.bs.offcanvas', () => {
+    loadPanels();
+    openDrawerSections(drawer);
+  });
   drawer.addEventListener('hidden.bs.offcanvas', collapseAllMenus);
 
   // The hamburger IS the close control, so it has to know it is open.

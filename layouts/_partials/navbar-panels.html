@@ -1,0 +1,41 @@
+{{- /*
+  The contents of every menu panel, published once as a separate file that
+  assets/js/axo-navbar.js loads after the page, instead of inlined into every
+  page. Returns the file's URL. Call with partialCached: the menu is the same on
+  every page, so the file is built once per build.
+
+  Why: the three renders of the menu (bar, compact, drawer) came to 171K on
+  every page, most of it panel contents nobody sees until they open a menu, and
+  all of it ahead of the article. Agents read a fetch as text, truncate it at
+  about 100K characters and run no script, so they got the menu instead of the
+  page. The menu already needs the script to open at all (it writes the
+  `aria-expanded` that the stylesheet shows panels on), so moving the contents
+  behind the same script takes nothing from a reader without it.
+
+  The page keeps each panel as an empty `.axo-nav-panel` with its id; this file
+  holds one <template data-for="<id>"> per panel. Fingerprinted, and under js/
+  so the deploy's immutable-cache pass picks it up: a reader downloads it once.
+
+  Params: the nav-menu data.
+*/ -}}
+{{- $menu := . -}}
+{{- $html := "" -}}
+{{- range $variant := slice "bar" "compact" -}}
+  {{- $prefix := printf "axo-nav-%s" $variant -}}
+  {{- range $menu.items -}}
+    {{- if ne .kind "link" -}}
+      {{- $panelId := printf "%s-%s" $prefix (urlize .label) -}}
+      {{- $body := partial "navbar-panel-body.html" (dict "item" . "menu" $menu "prefix" $prefix "panelId" $panelId) -}}
+      {{- $html = printf "%s<template data-for=\"%s\">%s</template>\n" $html $panelId $body -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- range $menu.mobile.items -}}
+  {{- if ne .kind "link" -}}
+    {{- $panelId := printf "axo-nav-drawer-%s" (urlize .label) -}}
+    {{- $body := partial "navbar-drawer-panel-body.html" (dict "item" . "menu" $menu "panelId" $panelId) -}}
+    {{- $html = printf "%s<template data-for=\"%s\">%s</template>\n" $html $panelId $body -}}
+  {{- end -}}
+{{- end -}}
+{{- $r := resources.FromString "js/nav-panels.html" $html | minify | fingerprint -}}
+{{- return $r.RelPermalink -}}
