@@ -8,7 +8,8 @@
   site needs no extra output format beyond `LLMS` on the home page.
   The same script (scripts/hugo_to_markdown.py, run in CI) writes the
   llms-full.txt files linked here, and reads the page order from these files.
-  Top-level pages outside any section (legal notice, stubs) are left out.
+  Top-level pages outside any section (the legal notice) are listed under
+  Optional, so llms.txt covers every sitemap page. Empty stubs are left out.
 */ -}}
 {{- $summary := or site.Home.Description site.Params.description | replaceRE `\s+` " " | strings.TrimSpace -}}
 # {{ site.Title }}
@@ -36,6 +37,15 @@ The full text of every page is in [llms-full.txt]({{ site.Home.Permalink }}llms-
   {{- $path := printf "%sllms.txt" (strings.TrimPrefix site.Home.RelPermalink .RelPermalink) -}}
   {{- $_ := (resources.FromString $path $body).Publish -}}
 {{- end -}}
+
+{{- $loose := where (where site.Home.RegularPages "Sitemap.Disable" "ne" true) "WordCount" "gt" 0 -}}
+{{- with $loose }}
+## Optional
+
+{{ range .ByWeight -}}
+{{ partial "inline/llms-entry.txt" (dict "page" . "depth" 0) }}
+{{- end -}}
+{{- end }}
 
 {{- define "_partials/inline/llms-tree.txt" -}}
   {{- $out := "" -}}
