@@ -1,0 +1,21 @@
+{{- /*
+  One of the three menu glyphs in data/nav-menu.yaml (afterLink, afterTitle,
+  toggle), drawn as a reference to its <symbol> in navbar-glyphs.html rather than
+  inlined.
+
+  Inlined, they were most of the bar's weight: the menu renders in three
+  variants per page (bar, compact, drawer), afterLink follows every link in
+  all three, and the page carried 74 copies of that one 1.1K icon -- 80K of the
+  bar's 171K, on every page, ahead of the content. Agents truncate a fetch at
+  about 100K characters, so that was content they never saw.
+
+  A <use> copy cannot be styled from outside, which is fine here: all three
+  glyphs paint with `currentColor` and carry no ids, and the stylesheet only
+  sizes the <svg> itself (`width`/`height: 100%` in _axo-navbar.scss, so the
+  reference carries neither; `fill="none"` is on the <symbol>).
+
+  Params: name (glyph key), menu (the nav-menu data, for the viewBox).
+*/ -}}
+{{- $svg := index .menu.glyphs .name -}}
+{{- $viewBox := index (findRESubmatch `viewBox="([^"]+)"` $svg 1) 0 1 -}}
+<svg viewBox="{{ $viewBox }}" aria-hidden="true"><use href="#axo-glyph-{{ .name }}"/></svg>

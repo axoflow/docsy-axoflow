@@ -1,0 +1,15 @@
+{{- /*
+  The menu glyphs as <symbol>s, emitted once per page for navbar-glyph.html to
+  reference. Sized to nothing and taken out of the flow rather than
+  `display: none`, which some engines treat as "do not render" for the symbols
+  inside too.
+
+  Params: the nav-menu data.
+*/ -}}
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false" class="position-absolute">
+{{- range $name, $svg := .glyphs -}}
+  {{- $viewBox := index (findRESubmatch `viewBox="([^"]+)"` $svg 1) 0 1 -}}
+  {{- $inner := replaceRE `(?s)^\s*<svg[^>]*>(.*)</svg>\s*$` "$1" $svg -}}
+  <symbol id="axo-glyph-{{ $name }}" viewBox="{{ $viewBox }}" fill="none">{{ $inner | safeHTML }}</symbol>
+{{- end -}}
+</svg>

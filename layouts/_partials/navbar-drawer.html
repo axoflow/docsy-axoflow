@@ -71,7 +71,7 @@
                           aria-expanded="false" aria-controls="{{ $subId }}">
                     {{ $group.label }}
                     <span class="axo-nav-subchevron">
-                      {{- partial "navbar-svg.html" (dict "svg" $menu.glyphs.toggle "ns" $prefix) -}}
+                      {{- partial "navbar-glyph.html" (dict "name" "toggle" "menu" $menu) -}}
                     </span>
                   </button>
                   <ul class="axo-nav-links axo-nav-submenu-panel" id="{{ $subId }}">

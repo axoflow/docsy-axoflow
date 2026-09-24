@@ -38,6 +38,7 @@
     (not .Site.Params.ui.navbar_translucent_over_cover_disable)
 -}}
 {{ $menu := index site.Data "nav-menu" -}}
+{{ partial "navbar-glyphs.html" $menu }}
 
 <nav class="navbar navbar-expand-md td-navbar
             {{- if $cover }} td-navbar-cover{{ end }}">
@@ -232,7 +233,7 @@
                   aria-expanded="false" aria-controls="axo-nav-compact-list">
             Axoflow
             <span class="axo-nav-chevron">
-              {{- partial "navbar-svg.html" (dict "svg" $menu.glyphs.toggle "ns" "axo-nav-compact") -}}
+              {{- partial "navbar-glyph.html" (dict "name" "toggle" "menu" $menu) -}}
             </span>
           </button>
           {{ partial "navbar-menu.html" (dict "variant" "compact" "menu" $menu) }}

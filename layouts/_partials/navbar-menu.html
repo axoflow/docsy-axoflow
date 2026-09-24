@@ -55,7 +55,7 @@
                 aria-expanded="false" aria-controls="{{ $panelId }}">
           {{ .label }}
           <span class="axo-nav-chevron">
-            {{- partial "navbar-svg.html" (dict "svg" $menu.glyphs.toggle "ns" $prefix) -}}
+            {{- partial "navbar-glyph.html" (dict "name" "toggle" "menu" $menu) -}}
           </span>
         </button>
         <div class="axo-nav-panel
@@ -132,7 +132,7 @@
                           aria-expanded="false" aria-controls="{{ $subId }}">
                     {{ .label }}
                     <span class="axo-nav-subchevron">
-                      {{- partial "navbar-svg.html" (dict "svg" $menu.glyphs.toggle "ns" $prefix) -}}
+                      {{- partial "navbar-glyph.html" (dict "name" "toggle" "menu" $menu) -}}
                     </span>
                   </button>
                   <ul class="axo-nav-links axo-nav-submenu-panel" id="{{ $subId }}">

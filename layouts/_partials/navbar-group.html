@@ -29,7 +29,7 @@
       <a class="axo-nav-group-title" href="{{ $group.href }}"
         {{- if ne $host (urls.Parse $group.href).Host }} target="_blank" rel="noopener"{{ end }}>{{ . }}
         <span class="axo-nav-after axo-nav-after--lg">
-          {{- partial "navbar-svg.html" (dict "svg" $menu.glyphs.afterTitle "ns" $prefix) -}}
+          {{- partial "navbar-glyph.html" (dict "name" "afterTitle" "menu" $menu) -}}
         </span>
       </a>
     {{- else }}
@@ -54,7 +54,7 @@
               {{- if ne $host (urls.Parse .href).Host }} target="_blank" rel="noopener"{{ end }}>{{ .label }}
               {{- if $mega }}
                 <span class="axo-nav-after{{ if $card }} axo-nav-after--lg{{ end }}">
-                  {{- partial "navbar-svg.html" (dict "svg" (cond $card $menu.glyphs.afterTitle $menu.glyphs.afterLink) "ns" $prefix) -}}
+                  {{- partial "navbar-glyph.html" (dict "name" (cond $card "afterTitle" "afterLink") "menu" $menu) -}}
                 </span>
               {{- end -}}
             </a>
