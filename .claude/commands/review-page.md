@@ -8,12 +8,15 @@ vale <file>
 
 Then check for:
 1. Compliance with simplified technical English using /ste100-writer
-1. **Vale findings** — report all errors and warnings from the Vale output above;
+2. **Vale findings** — report all errors and warnings from the Vale output above;
    suppress Vale suggestions unless they reveal a real problem
-2. **Style guide compliance** — read .claude/docs/style-guide.md first
-3. **Front matter** — title, weight, description present and correct
-4. **Heading hierarchy** — no skipped levels, sentence case
-5. **Headings containing shortcodes** — warn on every heading that has a
+3. **Style guide compliance** — read .claude/docs/style-guide.md first
+4. **Front matter** — title, weight, description present and correct. Flag a
+   missing `description`: `llms.txt` lists it as the page summary, and agents
+   use it to decide which page to fetch. Suggest one sentence (under 160
+   characters) that says what the page covers, not "This page describes…".
+5. **Heading hierarchy** — no skipped levels, sentence case
+6. **Headings containing shortcodes** — warn on every heading that has a
    shortcode but no explicit `{#custom-anchor}`, for example
    `### {{< console >}} updates`. Hugo derives the heading ID from the
    *unexpanded* shortcode placeholder, producing garbage like
@@ -26,15 +29,18 @@ Then check for:
    hugo --minify && grep -oE '<h[1-4] id="[^"]*"' public/<page-path>/index.html
    ```
 
-6. **Code blocks** — all have language identifiers
-7. **Shortcodes** — only approved shortcodes from .claude/docs/shortcodes.md
-8. **Links** — internal links use the {{< relref >}} shortcode; no hardcoded
+7. **Code blocks** — all have language identifiers, and every fence is closed.
+   Flag commands and configuration examples that do not work if copied as-is,
+   for example `...` placeholders or a fragment that has no context, unless
+   the text explains what to add
+8. **Shortcodes** — only approved shortcodes from .claude/docs/shortcodes.md
+9. **Links** — internal links use the {{< relref >}} shortcode; no hardcoded
    full URLs. Flag `{{% xref %}}` calls that include an `#anchor`: the shortcode
    emits an already-resolved permalink, which the link render hook can't resolve
    back to a page, so the build warns. Use
    `[text]({{< relref "path.md#anchor" >}})` instead.
-9. **Terminology** — correct spelling of AxoSyslog, syslog-ng, etc.
-10. **Glossary terms** — the first mention of a glossary term in running prose
+10. **Terminology** — correct spelling of AxoSyslog, syslog-ng, etc.
+11. **Glossary terms** — the first mention of a glossary term in running prose
     should link to the glossary; later mentions stay plain. Report both
     directions: a first prose mention that is still plain, and any second or
     third tooltip for the same term on one page.
@@ -64,6 +70,33 @@ Then check for:
     ```
     grep -n 'glossary_tooltip' <file>
     ```
+
+12. **Agent readiness.** Agents often fetch one page, or one section cut at a
+    heading, as Markdown. The rules follow the
+    [Agent-Friendly Documentation Spec](https://agentdocsspec.com/spec/web/).
+    Flag:
+
+    - **Page size**: the page is over about 50,000 characters of Markdown,
+      which agents truncate. Check it with `wc -c <file>` (included snippets
+      add to it). Suggest where to split the page.
+    - **Headings that don't make sense out of context**: generic headings like
+      "Example", "Options", "Step 1", or "Overview". Also headings that repeat
+      on the same page. Suggest a specific heading that names the object, for
+      example "Options of the `http()` destination".
+    - **Sections that depend on earlier text**: "as described above", "the
+      previous section", "see below", or a pronoun that points to another
+      section. Suggest naming the object or linking to the section.
+    - **Content only in images or screenshots**: a UI step that has only a
+      screenshot, a command or configuration shown as an image, or a diagram
+      without alt text.
+    - **Tabs**: the Markdown copy writes the tabs out one after another under
+      their tab titles. Flag tabs whose content doesn't make sense that way,
+      for example because it doesn't say which option it applies to.
+    - **Error messages in prose**: an error message or log line that's
+      paraphrased or shown only in an image. Show it verbatim in `inline code`
+      or a code block, so agents can match it.
+    - **Answer not first**: a long introduction or marketing text before the
+      first useful content.
 
 Return a prioritized list of issues with the line numbers and suggested fixes.
 Do not make changes until I confirm.
