@@ -60,8 +60,6 @@ items:
       href: https://axoflow.com/pipeline-unification?utm_source=docs&utm_medium=menu
     - label: AI SOC Data Layer
       href: https://axoflow.com/ai-soc-data-layer?utm_source=docs&utm_medium=menu
-    - label: Storage Solutions
-      href: https://axoflow.com/storage-solutions-security-data?utm_source=docs&utm_medium=menu
     - label: Log Management
       href: https://axoflow.com/log-management?utm_source=docs&utm_medium=menu
     - label: Cut Your Anthropic Bill, Autonomously
@@ -200,8 +198,6 @@ items:
     links:
     - label: Overview
       href: https://axoflow.com/webinars?utm_source=docs&utm_medium=menu
-    - label: AxoSyslog Foundations
-      href: https://axoflow.com/webinars/axosyslog-foundations-2026-09?utm_source=docs&utm_medium=menu
     - label: Show me your Labels and I’ll tell you who you are!
       href: https://axoflow.com/webinars/show-me-your-labels-and-ill-tell-you-who-you-are?utm_source=docs&utm_medium=menu
     - label: Resilient Syslog Architectures
@@ -370,8 +366,6 @@ mobile:
         href: https://axoflow.com/pipeline-unification?utm_source=docs&utm_medium=menu
       - label: AI SOC Data Layer
         href: https://axoflow.com/ai-soc-data-layer?utm_source=docs&utm_medium=menu
-      - label: Storage Solutions
-        href: https://axoflow.com/storage-solutions-security-data?utm_source=docs&utm_medium=menu
       - label: Log Management
         href: https://axoflow.com/log-management?utm_source=docs&utm_medium=menu
       - label: Cut Your Anthropic Bill, Autonomously
@@ -437,8 +431,6 @@ mobile:
       links:
       - label: Overview
         href: https://axoflow.com/webinars?utm_source=docs&utm_medium=menu
-      - label: AxoSyslog Foundations
-        href: https://axoflow.com/webinars/axosyslog-foundations-2026-09?utm_source=docs&utm_medium=menu
       - label: Show me your Labels and I’ll tell you who you are!
         href: https://axoflow.com/webinars/show-me-your-labels-and-ill-tell-you-who-you-are?utm_source=docs&utm_medium=menu
       - label: Resilient Syslog Architectures

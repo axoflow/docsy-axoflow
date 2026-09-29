@@ -8,5 +8,5 @@
 # Rendered by layouts/_partials/announcement-strip.html.
 
 announcement:
-  href: "https://axoflow.com/news/axoflow-at-gartner-srm-london"
-  label: "👋 Meet with us at Gartner Security & Risk Management Summit, London at booth #306>>>"
+  href: "https://axoflow.com/axodetect"
+  label: "🚨 The industry is automating the wrong mile. Find out why >>>"
