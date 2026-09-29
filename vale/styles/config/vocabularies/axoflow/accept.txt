@@ -1,4 +1,5 @@
 APIs
+APT
 AQL
 ASAP
 ASCII
@@ -12,6 +13,7 @@ AxoSyslog
 Azure Monitor
 backoffs
 backpressure
+Beats
 BigQuery
 boolean
 Brightmail
@@ -80,6 +82,7 @@ gRPC
 gzip
 HAProxy
 hdfs
+HEC
 hostAliases
 hostname
 hostnames
@@ -178,7 +181,9 @@ Ranum
 reachability
 Redis
 rehydration
+RHEL
 Riemann
+RPM
 rsyslog
 ruleset
 rulesets
