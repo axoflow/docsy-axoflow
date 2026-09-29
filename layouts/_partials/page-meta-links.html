@@ -12,6 +12,15 @@
 </a>
 {{ end -}}
 
+{{/* Same URL as the `rel="alternate" type="text/markdown"` link in head.html.
+     Without JavaScript, "Copy" opens the Markdown copy instead. */ -}}
+{{ if and site.Params.markdownAlternateLink (in (slice "home" "section" "page") .Kind) -}}
+  {{ $mdURL := printf "%sindex.md" (.Permalink | safeURL) -}}
+  {{ $claudeURL := printf "https://claude.ai/new?q=%s" (printf (T "page_ask_claude_prompt") $mdURL | urlquery) -}}
+  <a href="{{ $mdURL }}" class="td-page-meta--copy-markdown" role="button" data-axo-copy-markdown data-copied-label="{{ T "page_markdown_copied" }}" data-failed-label="{{ T "page_markdown_copy_failed" }}">{{ with resources.Get "icons/meta-links/copy-markdown.svg" -}}{{ ( . | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "copy") }}{{ end }} <span>{{ T "page_copy_markdown" }}</span></a>
+  <a href="{{ $claudeURL }}" class="td-page-meta--open-in-claude" target="_blank" rel="noopener">{{ with resources.Get "icons/meta-links/open-in-claude.svg" -}}{{ ( . | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "comment") }}{{ end }} {{ T "page_open_in_claude" }}</a>
+{{ end -}}
+
 {{ if $gh_url -}}
   {{ warnf "Warning: use of `github_url` is deprecated. For details, see https://www.docsy.dev/docs/content/repository-links/#github_url-optional" -}}
   <a href="{{ $gh_url }}" target="_blank">{{ partial "icon.html" (dict "name" "pen-to-square") }} {{ T "post_edit_this" }}</a>

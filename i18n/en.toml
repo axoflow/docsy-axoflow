@@ -29,3 +29,20 @@ other = "Link to %s"
 # two dozen times down the page.
 [glossary_full_link]
 other = "More about %s"
+
+# Page actions for handing the page to an AI assistant (page-meta-links.html).
+[page_copy_markdown]
+other = "Copy as Markdown"
+
+[page_markdown_copied]
+other = "Copied!"
+
+[page_markdown_copy_failed]
+other = "Copy failed"
+
+[page_open_in_claude]
+other = "Open in Claude"
+
+# Takes the URL of the page's Markdown copy.
+[page_ask_claude_prompt]
+other = "Read %s so I can ask questions about it."

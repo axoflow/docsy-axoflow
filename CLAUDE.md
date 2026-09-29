@@ -119,6 +119,8 @@ The header's `description` is only written when the page sets one in its front m
 
 `layouts/_partials/hooks/body-top.html` puts a visually hidden pointer to the page's Markdown copy and to `llms.txt` first in `<body>` on every page that has a copy (when `params.markdownAlternateLink` is set). It has to come before the sidebar and navbar, which are over 500K characters, or agents truncate it away; the `<link rel="alternate">` in `<head>` alone is dropped by HTML to Markdown converters.
 
+With the same setting, `layouts/_partials/page-meta-links.html` adds two page actions that point at the same `index.md` URL as the `<link rel="alternate">`: "Copy page as Markdown" (`assets/js/axo-copy-markdown.js` fetches the copy onto the clipboard; without JavaScript the link opens it) and "Open in Claude" (`claude.ai/new?q=` with a prompt naming the URL). Under `hugo server` there are no Markdown copies, so the copy reports "Copy failed".
+
 When `llms.txt` exists, the script also writes `llms-full.txt` files: one at the site root with every page, and one in each top-level section's directory with just that section. Pages follow the `llms.txt` order (the script follows the root's links into the section files), each page's YAML header becomes a `Source:` line under its title, and the script prints each file's size and token estimate. A page that `llms.txt` lists but that has no Markdown copy is a warning. `llms.txt` links all of these files.
 
 ## Page weight and agents
