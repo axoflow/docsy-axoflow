@@ -19,7 +19,7 @@ mkdir -p "$CLAUDE_DIR/commands" "$CLAUDE_DIR/docs" "$CLAUDE_DIR/skills"
 
 COMMANDS=(move-page review-page new-page sync-chrome)
 DOCS=(style-guide shortcodes frontmatter new-section)
-SKILLS=(chrome-parity)
+SKILLS=(chrome-parity docs-ia)
 
 for cmd in "${COMMANDS[@]}"; do
     target="../../$SUBMODULE/.claude/commands/$cmd.md"

@@ -302,6 +302,7 @@ The `.claude/` directory here contains commands and reference docs shared across
 ### Skills
 
 - `.claude/skills/chrome-parity/` — review whether the chrome still *looks* like axoflow.com's, and decide what to change when it does not. The visual half the four checkers deliberately do not cover: it carries `measure.js`, a console snippet that measures rendered geometry and type on either site, plus the tolerances for judging the diff. Needs a browser the user drives — Chrome cannot start under Claude Code's sandbox.
+- `.claude/skills/docs-ia/` — information-architecture audit: Diátaxis classification, mixed pages, reader-journey gaps, and sidebar structure (weights, duplicate titles, orphans, dead ends, unused snippets). `scripts/ia_inventory.py` does the deterministic part (front matter, Hugo-style link and include resolution, per-page type signals); the skill decides what to change and hands moves to `/move-page`.
 
 ### Commands
 
