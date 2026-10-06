@@ -8,8 +8,10 @@
   Excluded:
     no_print      the flag Docsy's print output already honours
     manuallink    sidebar-only entries that redirect elsewhere. They carry no
-                  content of their own — printing them yields a numbered
-                  heading followed by nothing.
+    manuallinkrelref  content of their own — printing them yields a numbered
+                  heading followed by nothing. Either key marks one: the
+                  sidebar reads `manuallink` as the URL, so stubs that link
+                  inside the site set only `manuallinkrelref`.
     toc_hide      kept out of the site's own navigation, so out of the book's
     hide_summary  table of contents too. This is what excludes the Search
     dontIndex     page, whose content is a search form with nothing to print.
@@ -26,6 +28,7 @@
   {{- if and
         (ne .Params.no_print true)
         (not .Params.manuallink)
+        (not .Params.manuallinkrelref)
         (ne .Params.toc_hide true)
         (ne .Params.hide_summary true)
         (ne .Params.dontIndex true) -}}
