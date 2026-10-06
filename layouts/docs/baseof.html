@@ -220,12 +220,15 @@
         {{- $segs := split (strings.Trim $curBase "/") "/" -}}
         {{- $lastSeg := index $segs (sub (len $segs) 1) -}}
         {{- $isLatest := true -}}
-        {{- range . }}{{ if and (not .latest) (eq (printf "%v" .version) $lastSeg) }}{{ $isLatest = false }}{{ end }}{{ end -}}
+        {{- $isHidden := false -}}
+        {{- range . }}{{ if and (not .latest) (eq (printf "%v" .version) $lastSeg) }}{{ $isLatest = false }}{{ $isHidden = .hidden | default false }}{{ end }}{{ end -}}
         {{- /* CHANGED (project override): was `and $isLatest (gt (len .) 1)`.
                Archived builds get the same filter, reading the unified root
-               index — see the header comment. */ -}}
-        {{- $showVersionFilter = gt (len .) 1 -}}
-        {{- if not $isLatest -}}
+               index — see the header comment.
+               A `hidden` (preview) version is kept out of the unified index by
+               CI, so it reads its own per-version index with the plain modal. */ -}}
+        {{- $showVersionFilter = and (not $isHidden) (gt (len .) 1) -}}
+        {{- if and (not $isLatest) (not $isHidden) -}}
           {{- /* Root base = this build's base with its own version segment
                  stripped, exactly as navbar-version-selector.html derives it
                  (strings.TrimSuffix, a real suffix strip, not a replace). */ -}}

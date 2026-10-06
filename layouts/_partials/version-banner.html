@@ -56,9 +56,18 @@
             One sentence for both widths rather than a short phone copy and a
             long desktop one — two strings saying the same thing drift apart, and
             the long one was not carrying its length on the desktop either.  */}}
+      {{- /* `hidden` in data/versions.yaml marks a preview: a version not
+             released yet, so "no longer current" would be wrong. The bare id, not
+             `name`, which for a preview likely says "(preview)" already. */}}
+      {{ if $current.hidden -}}
+      <span>Version {{ $current.version }}
+        of {{ site.Params.product_name }} is a preview and can change before
+        release. See the <a href="{{ $rootBase }}{{ $rel }}">current version</a>.</span>
+      {{- else -}}
       <span>Version {{ $current.name | default (printf "%v" $current.version) }}
         of {{ site.Params.product_name }} is no longer current. See the
         <a href="{{ $rootBase }}{{ $rel }}">current version</a>.</span>
+      {{- end }}
     </p>
   {{- end -}}
 {{- else -}}

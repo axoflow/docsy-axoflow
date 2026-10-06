@@ -50,11 +50,15 @@
       {{- $vBase := $rootBase -}}
       {{- if not .latest }}{{ $vBase = printf "%s%v/" $rootBase .version }}{{ end -}}
       {{- $isActive := and $current (eq (printf "%v" .version) (printf "%v" $current.version)) -}}
+      {{- /* `hidden` versions (previews) are reachable by direct link only:
+             listed in their own build, as the active item, and nowhere else. */ -}}
+      {{- if or (not .hidden) $isActive }}
       <li>
         <a class="dropdown-item{{ if $isActive }} active{{ end }}"
            {{- if $isActive }} aria-current="page"{{ end }}
            href="{{ $vBase }}{{ $rel }}">{{ .name | default (printf "%v" .version) }}</a>
       </li>
+      {{- end }}
     {{- end }}
   </ul>
 {{- end -}}
