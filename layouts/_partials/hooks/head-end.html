@@ -15,6 +15,12 @@
 <meta name="docs-build-time" content="{{ $build.time }}">
 {{ end -}}
 
+{{/* The PDF edition's file name. publish-docs.yaml reads it from the built home
+     page to keep the separately uploaded PDF out of its --delete sync. */ -}}
+{{ if .IsHome -}}{{ with partialCached "pdf/file.html" . "pdf-file" -}}
+<meta name="docs-pdf-file" content="{{ . }}">
+{{ end -}}{{ end -}}
+
 {{ if .Site.Params.offlineSearchPagefind -}}
 <!-- Pagefind 1.5+ Component UI (replaces the legacy PagefindUI / pagefind-ui.js).
      Web components auto-register from these assets — see <pagefind-modal>,

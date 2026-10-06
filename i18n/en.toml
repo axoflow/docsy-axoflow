@@ -46,3 +46,7 @@ other = "Open in Claude"
 # Takes the URL of the page's Markdown copy.
 [page_ask_claude_prompt]
 other = "Read %s so I can ask questions about it."
+
+# The PDF edition of the whole guide (pdf/download-link.html).
+[page_download_pdf]
+other = "Download as PDF"

@@ -67,6 +67,7 @@
   {{ end -}}
 
 {{ end -}}
+{{ partial "pdf/download-link.html" . }}
 {{ with .CurrentSection.AlternativeOutputFormats.Get "print" -}}
  <!-- Replace .Permalink with .RelPermalink, use custom icon if present -->
   <a id="print" href="{{ .RelPermalink | safeURL }}">{{ with resources.Get "icons/meta-links/print.svg" -}}{{ ( . | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "print") }}{{ end }} {{ T "print_entire_section" }}</a>

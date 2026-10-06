@@ -53,7 +53,8 @@ usage() {
 Build the whole documentation set as one PDF.
 
   -o, --output FILE     where to write the PDF
-                        (default: <site>/axoflow-docs-<version>.pdf)
+                        (default: <site>/<product_name>-<version_tag>.pdf,
+                        the name the theme's pdf/file.html decides)
   -e, --engine ENGINE   paged (default) or chrome; see render.mjs
   -p, --port PORT       port for the throwaway HTTP server (default: 8099)
   -d, --build-dir DIR   Hugo output directory (default: <site>/public_pdf)
@@ -80,9 +81,6 @@ done
 cd "$ROOT"
 BUILD_DIR="${BUILD_DIR:-$ROOT/public_pdf}"
 
-VERSION="$(sed -nE 's/^[[:space:]]*version_tag[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p' config/_default/config.toml | head -1)"
-OUT="${OUT:-$ROOT/axoflow-docs${VERSION:+-$VERSION}.pdf}"
-
 # The canonical site URL, so links this document can't resolve internally still
 # work as web links, and so hand-written absolute links get recognised as ours.
 PUBLIC_BASE="$(sed -nE 's/^[[:space:]]*baseurl[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p' config/production/config.toml | head -1)"
@@ -98,6 +96,12 @@ fi
 
 DOC="$BUILD_DIR/_pdf/index.html"
 [[ -f "$DOC" ]] || { echo "no $DOC — is the pdf output format enabled in config/pdf/?" >&2; exit 1; }
+
+# Named by the theme (pdf/file.html), so this file, the upload and the site's
+# download link can't disagree.
+PDF_FILE="$(sed -nE 's/.*<meta name="docs-pdf-file" content="([^"]+)".*/\1/p' "$DOC" | head -1)"
+[[ -n "$PDF_FILE" ]] || { echo "no docs-pdf-file in $DOC — set product_name and version_tag in the site params" >&2; exit 1; }
+OUT="${OUT:-$ROOT/$PDF_FILE}"
 
 echo "==> Preparing the document for print"
 python3 "$SCRIPT_DIR/prepare.py" "$DOC" \
@@ -126,5 +130,11 @@ node "$SCRIPT_DIR/render.mjs" "${LOCAL_BASE}_pdf/index.html" "$OUT" --engine "$E
 
 echo "==> Writing document properties"
 python3 "$SCRIPT_DIR/metadata.py" "$OUT" --html "$DOC"
+
+# In GitHub Actions, hand the workflow the file this build produced.
+if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
+  echo "file=$PDF_FILE" >> "$GITHUB_OUTPUT"
+  echo "path=$OUT" >> "$GITHUB_OUTPUT"
+fi
 
 echo "==> $OUT"

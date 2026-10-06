@@ -50,9 +50,21 @@ with page numbers, running heads, and internal links that jump inside the PDF
 instead of opening a browser.
 
 ```bash
-themes/docsy-axoflow/scripts/pdf/build.sh              # → axoflow-docs-<version>.pdf
+themes/docsy-axoflow/scripts/pdf/build.sh              # → <product_name>-<version_tag>.pdf
 themes/docsy-axoflow/scripts/pdf/build.sh -e chrome    # fallback engine, faster
 ```
+
+**File name and download link.** `layouts/_partials/pdf/file.html` is the only
+place the name is decided: `product_name` lowercased, whitespace to hyphens,
+then `-<version_tag>.pdf` (`axoflow-0.90.0.pdf`). It reaches everything else
+through `<meta name="docs-pdf-file">` — in `_pdf/index.html`, where `build.sh`
+names its output after it and reports it to GitHub Actions as
+`steps.<id>.outputs.file`/`path`, and on the site's home page, where a publish
+workflow can read it to keep the separately uploaded PDF out of its `--delete`
+sync. With `params.pdf.download = true`, `pdf/download-link.html` adds
+"Download guide as PDF" to the page actions, linking `relURL` of the same name —
+so the PDF has to be uploaded next to that version's pages. The link does not
+check that the file exists.
 
 Three parts, each usable on its own:
 
@@ -177,7 +189,7 @@ A filterable glossary page plus an inline tooltip shortcode, shared by every sit
 ### What the theme provides
 
 | File | Job |
-|------|-----|
+| --- | --- |
 | `layouts/docs/glossary.html` | The page. Reached by `layout: glossary`. |
 | `layouts/_partials/docs/glossary-path.html` | Returns `params.glossary.path`. One place, three readers. |
 | `layouts/_partials/docs/glossary-terms.html` | Returns the term pages as a resource slice. |
@@ -241,7 +253,7 @@ A site supplies the content and the tags. Nothing in the theme touches the bundl
    ```
 
    | Field | Notes |
-   |-------|-------|
+   | --- | --- |
    | `title` | Required. Sorts the list, and is the tooltip's default link text. |
    | `id` | Required. Must equal the filename stem. |
    | `short_description` | Required. The hover text. **Front matter, so no shortcodes** — write product names out literally. |
@@ -251,7 +263,7 @@ A site supplies the content and the tags. Nothing in the theme touches the bundl
 
 4. Use it. `{{< glossary_tooltip term_id="axorouter" >}}`, or with `text="the router"` to inflect it. An unknown `term_id` **fails the build** rather than shipping a dead link.
 
-   `{{< glossary_definition term_id="axorouter" length="short" >}}` inlines the definition into a concept page, so the two cannot drift. `length` is `short` (first paragraph) or `long`/`all`; `prepend="Here," ` splices your own opening onto the first sentence.
+   `{{< glossary_definition term_id="axorouter" length="short" >}}` inlines the definition into a concept page, so the two cannot drift. `length` is `short` (first paragraph) or `long`/`all`; `prepend="Here,"` splices your own opening onto the first sentence.
 
 ### `full_link` is checked, unlike other front matter
 
@@ -259,7 +271,7 @@ A site supplies the content and the tags. Nothing in the theme touches the bundl
 
 `glossary-validate-link.html` closes that. It reports three things at whatever `params.render_hooks.link.errorLevel` the site already sets for its markdown links (`ignore` disables it entirely):
 
-```
+```text
 WARN  glossary term "reference/glossary/flow.md" has an unresolvable full_link "/data-management/moved-away/"
 WARN  glossary term "reference/glossary/siem.md" sets an absolute full_link "https://…"; use a site-relative path
 WARN  The "glossary_tooltip" render hook was unable to find heading ID "no-such-heading" in architecture/_index.md. Linked from reference/glossary/axorouter.md (full_link)

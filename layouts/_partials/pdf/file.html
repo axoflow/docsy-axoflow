@@ -1,0 +1,20 @@
+{{- /*
+The PDF edition's file name: `<product_name>-<version_tag>.pdf`, lowercased,
+whitespace in the product name turned into hyphens ("AxoSyslog Core" 0.12.0 →
+axosyslog-core-0.12.0.pdf). Empty when either param is missing.
+
+The one place the name is decided. Everything else reads it from here, never
+recomputes it:
+  - pdf/download-link.html links to it, next to the version's own pages
+  - layouts/docs/baseof.pdf.html and hooks/head-end.html emit it as
+    <meta name="docs-pdf-file">, which scripts/pdf/build.sh names the output
+    after and the publish workflows upload and protect under
+*/ -}}
+{{- $name := "" -}}
+{{- with site.Params.product_name -}}
+  {{- $product := . | lower | strings.TrimSpace | replaceRE `\s+` "-" -}}
+  {{- with site.Params.version_tag -}}
+    {{- $name = printf "%s-%s.pdf" $product . -}}
+  {{- end -}}
+{{- end -}}
+{{- return $name -}}

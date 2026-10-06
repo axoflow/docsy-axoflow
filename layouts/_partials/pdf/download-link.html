@@ -1,0 +1,14 @@
+{{- /*
+"Download guide as PDF", for page-meta-links.html. Rendered only when the site
+sets `params.pdf.download = true`.
+
+The PDF is uploaded next to this version's pages (publish-docs.yaml → pdf.yaml),
+so a relURL resolves for the current release and every archived version alike.
+It is rendered in a separate job that may fail without blocking the release;
+when it does, this link 404s until pdf.yaml is rerun for that version.
+*/ -}}
+{{- if (site.Params.pdf | default dict).download -}}
+  {{- with partialCached "pdf/file.html" . "pdf-file" -}}
+  <a href="{{ . | relURL }}" class="td-page-meta--download-pdf" type="application/pdf" download>{{ with resources.Get "icons/meta-links/download-pdf.svg" -}}{{ ( . | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "file-lines") }}{{ end }} <span>{{ T "page_download_pdf" }}</span></a>
+  {{- end -}}
+{{- end -}}

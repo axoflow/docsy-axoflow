@@ -21,6 +21,8 @@
          around. Same build-provenance tags the HTML pages carry. */ -}}
     <meta name="author" content="{{ .Site.Param "pdf.author" | default (.Site.Param "project_name") | default .Site.Title }}">
     {{ with .Site.Params.version_tag }}<meta name="docs-version" content="{{ . }}">{{ end }}
+    {{/* build.sh names its output after this; see pdf/file.html. */ -}}
+    {{ with partialCached "pdf/file.html" . "pdf-file" }}<meta name="docs-pdf-file" content="{{ . }}">{{ end }}
     {{ $build := partialCached "build-info.html" . "build-info" -}}
     {{ if or $build.ref $build.commit -}}
     <meta name="docs-build-version" content="{{ $build.version }}">
