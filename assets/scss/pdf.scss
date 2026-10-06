@@ -334,6 +334,14 @@ pre {
   break-inside: auto; // long listings may split; clipping them would be worse
 }
 
+// ...but _axo-content.scss keeps `figure` and `.highlight` whole in print, and
+// an ancestor's `avoid` wins. prepare.py marks the listings too long for one
+// page; only those are released, short ones still stay in one piece.
+.td-content .pdf-long-code,
+.td-content .pdf-long-code :is(figure, .highlight) {
+  break-inside: auto !important;
+}
+
 code {
   font-size: 0.92em;
   overflow-wrap: anywhere;
@@ -419,22 +427,21 @@ blockquote {
 // Disclosure widgets
 // ---------------------------------------------------------------------------
 
-// prepare.py opens every <details> — a closed one prints as its summary and
-// nothing else. What's left to do here is drop the affordances that only make
-// sense when there is something to click.
-summary {
-  cursor: auto;
-  list-style: none;
-
-  &::-webkit-details-marker,
-  &::marker {
-    display: none;
-    content: "";
-  }
+// prepare.py turns every <details>/<summary> into .pdf-details/.pdf-summary
+// divs (Paged.js stops the layout at a <details> taller than a page). These
+// restate the site's disclosure block from _axo-content.scss without the
+// chevron, which only means something when there is something to click.
+.pdf-details {
+  margin-block: 1rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--axo-content-hairline, #d1d5db);
+  break-inside: auto;
 }
 
-details {
-  break-inside: auto;
+.pdf-summary {
+  margin-bottom: 1rem;
+  font-weight: 500;
+  break-after: avoid;
 }
 
 // ---------------------------------------------------------------------------

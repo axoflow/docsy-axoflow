@@ -25,7 +25,7 @@
  */
 
 import { existsSync } from 'node:fs';
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import process from 'node:process';
@@ -78,6 +78,45 @@ function findPagedPolyfill() {
     }
   }
   return null;
+}
+
+// Paged.js splits selector lists with a plain `selector.split(",")` in eight
+// handlers (breaks, `+`, nth-of-type, running heads, target-counter…), so
+// `:is(h1, h2) + p` becomes ` h2) + p`, querySelectorAll throws, and the layout
+// stops. Patched here rather than in the CSS: the site's `:is()` lists would
+// otherwise have to be multiplied out, ~900 selectors for the block rhythm alone.
+function splitSelectorList(list) {
+  const parts = [];
+  let depth = 0;
+  let quote = null;
+  let start = 0;
+  for (let i = 0; i < list.length; i += 1) {
+    const ch = list[i];
+    if (quote) {
+      if (ch === '\\') i += 1;
+      else if (ch === quote) quote = null;
+    } else if (ch === '"' || ch === "'") quote = ch;
+    else if (ch === '(' || ch === '[') depth += 1;
+    else if (ch === ')' || ch === ']') depth -= 1;
+    else if (ch === ',' && depth === 0) {
+      parts.push(list.slice(start, i));
+      start = i + 1;
+    }
+  }
+  parts.push(list.slice(start));
+  return parts;
+}
+
+async function patchedPolyfill(file) {
+  let patched = 0;
+  const source = (await readFile(file, 'utf8')).replace(
+    /\b((?:this\.)?selector)\.split\(","\)/g,
+    (_, expr) => { patched += 1; return `__splitSelectorList(${expr})`; },
+  );
+  if (patched === 0) {
+    console.warn('render: found no selector.split(",") to patch in Paged.js — a selector with a comma inside :is()/:not() may stop the layout');
+  }
+  return `const __splitSelectorList = ${splitSelectorList.toString()};\n${source}`;
 }
 
 function parseArgs(argv) {
@@ -150,7 +189,14 @@ try {
     const url = request.url();
     if (new URL(url).host === allowedHost) failures.push(url);
   });
-  page.on('pageerror', (err) => console.warn(`render: page error — ${err.message}`));
+  // An uncaught error once Paged.js runs means the layout has stopped and
+  // __pagedDone never flips, so fail now instead of at the timeout. Errors
+  // before that come from the site's own scripts and stay warnings.
+  let failLayout = null;
+  page.on('pageerror', (err) => {
+    console.warn(`render: page error — ${err.message}`);
+    if (failLayout) failLayout(err);
+  });
 
   console.log(`render: loading ${opts.url}`);
   await page.goto(opts.url, { waitUntil: 'networkidle0', timeout: timeoutMs });
@@ -188,7 +234,11 @@ try {
       window.__pagedDone = false;
       window.PagedConfig = { auto: true, after: () => { window.__pagedDone = true; } };
     });
-    await page.addScriptTag({ path: polyfill });
+    const layoutFailed = new Promise((_, reject) => {
+      failLayout = (err) => reject(new Error(`Paged.js stopped on a page error: ${err.message}`));
+    });
+    layoutFailed.catch(() => {}); // stays pending on success; only the race below reads it
+    await page.addScriptTag({ content: await patchedPolyfill(polyfill) });
 
     // Laying out several hundred pages in JavaScript takes minutes, so report
     // progress instead of going quiet.
@@ -199,10 +249,13 @@ try {
       } catch { /* the page is busy or gone; the wait below owns the outcome */ }
     }, 15000);
     try {
-      await page.waitForFunction(() => window.__pagedDone === true, {
-        timeout: timeoutMs,
-        polling: 1000,
-      });
+      await Promise.race([
+        page.waitForFunction(() => window.__pagedDone === true, {
+          timeout: timeoutMs,
+          polling: 1000,
+        }),
+        layoutFailed,
+      ]);
     } finally {
       clearInterval(ticker);
     }
@@ -222,6 +275,41 @@ try {
     });
     if (!numbered || numbered === 'none' || numbered === '""') {
       console.warn('render: the table of contents has no page numbers — target-counter() did not resolve');
+    }
+
+    // A block Paged.js could not fit on a page (one taller than a page and
+    // marked break-inside: avoid) is left in overflow columns to the right of
+    // the sheet. Chrome counts that spill, clipped or not, and shrinks EVERY
+    // page of the PDF to fit it, by up to 1.5x. Name the culprits.
+    const spills = await page.evaluate(() => {
+      const sheets = [...document.querySelectorAll('.pagedjs_page')];
+      const found = [];
+      sheets.forEach((sheet, i) => {
+        const area = sheet.querySelector('.pagedjs_page_content');
+        if (!area) return;
+        const edge = area.getBoundingClientRect().right - 1;
+        const out = [...area.querySelectorAll('*')].filter((el) => {
+          const box = el.getBoundingClientRect();
+          return box.width > 0 && box.left >= edge;
+        });
+        for (const el of out.filter((e) => !out.includes(e.parentElement))) {
+          const cls = typeof el.className === 'string' && el.className.trim()
+            ? `.${el.className.trim().split(/\s+/).slice(0, 2).join('.')}` : '';
+          found.push({
+            sheet: i + 1,
+            el: `${el.tagName.toLowerCase()}${cls}`,
+            text: el.textContent.trim().replace(/\s+/g, ' ').slice(0, 50),
+            path: sheet.querySelector('[data-path]')?.dataset.path ?? null,
+          });
+        }
+      });
+      return found;
+    });
+    if (spills.length) {
+      console.warn(`render: ${spills.length} block(s) did not fit on their page and spill sideways — Chrome will shrink every page of the PDF. Let them split (see .pdf-long-code in pdf.scss):`);
+      for (const s of spills.slice(0, 8)) {
+        console.warn(`  sheet ${s.sheet}, ${s.path ?? '?'}: ${s.el} "${s.text}"`);
+      }
     }
 
     pdf = await page.pdf({

@@ -51,6 +51,13 @@ ASSET_SUFFIXES = (
 # the page edge. Five is where the default 9pt body size starts to crowd on A4.
 WIDE_TABLE_COLUMNS = 5
 
+# A code block longer than this many printed lines may split across pages. A
+# page holds ~59 lines of 8.5pt code and a line ~95 characters. Kept whole, a
+# listing taller than a page spills sideways in Paged.js, and Chrome then
+# shrinks EVERY page of the PDF to fit the spill.
+LONG_CODE_LINES = 40
+LONG_CODE_LINE_CHARS = 95
+
 # Width in pixels an image should have to look sharp across the A4 text column
 # (174 mm ≈ 233 dpi at this width). Screenshots on this site go up to 3840 px,
 # which is four times more data than the page can show.
@@ -264,20 +271,31 @@ def expand_tabs(soup: BeautifulSoup) -> Counter:
     return stats
 
 
-def open_disclosures(soup: BeautifulSoup) -> int:
-    """Expand every <details> element.
+def flatten_disclosures(soup: BeautifulSoup) -> int:
+    """Turn every <details> into a plain <div>, and its <summary> into another.
 
     A closed disclosure widget renders as its <summary> and nothing else, so
     on paper its content is simply gone — and there is no way to open it. The
     message schema reference is built entirely from nested <details>, which is
     ~25,000 words of reference material that would silently not be in the PDF.
-    CSS can't do this: the closed state is a DOM property, not a style.
+
+    Opening them is not enough: Paged.js splits a <details> taller than the
+    page into a copy without its <summary>, Chrome gives that copy a default
+    "Details" label, and the layout then stops without an error — the PDF ends
+    there. A <div> fragments like any other block. pdf.scss restyles the two
+    classes to look like the site's disclosure block.
     """
     count = 0
     for details in soup.find_all("details"):
-        if not details.has_attr("open"):
-            details["open"] = ""
-            count += 1
+        summary = details.find("summary", recursive=False)
+        if summary is not None:
+            summary.name = "div"
+            summary["class"] = ["pdf-summary", *summary.get("class", [])]
+        details.name = "div"
+        details["class"] = ["pdf-details", *details.get("class", [])]
+        if details.has_attr("open"):
+            del details["open"]
+        count += 1
     return count
 
 
@@ -290,6 +308,18 @@ def mark_wide_tables(soup: BeautifulSoup) -> int:
         columns = len(first_row.find_all(["th", "td"]))
         if columns >= WIDE_TABLE_COLUMNS:
             table["class"] = (table.get("class") or []) + ["pdf-wide-table"]
+            count += 1
+    return count
+
+
+def mark_long_code_blocks(soup: BeautifulSoup) -> int:
+    count = 0
+    for pre in soup.select(".td-content pre"):
+        lines = pre.get_text().rstrip("\n").split("\n")
+        printed = sum(max(1, -(-len(line) // LONG_CODE_LINE_CHARS)) for line in lines)
+        if printed > LONG_CODE_LINES:
+            block = pre.find_parent(class_="axo-code-block") or pre.find_parent(class_="highlight") or pre
+            block["class"] = (block.get("class") or []) + ["pdf-long-code"]
             count += 1
     return count
 
@@ -428,8 +458,9 @@ def main() -> int:
     # Order matters: the tab expander looks panes up by their original id, so
     # it has to run before ids get namespaced.
     tab_stats = expand_tabs(soup)
-    disclosures = open_disclosures(soup)
+    disclosures = flatten_disclosures(soup)
     wide_tables = mark_wide_tables(soup)
+    long_code = mark_long_code_blocks(soup)
     image_stats = fix_images(soup, args.image_width)
     owned = namespace_ids(sections)
     link_stats, unresolved = rewrite_links(
@@ -479,7 +510,8 @@ def main() -> int:
     print(
         f"prepare: {tab_stats['tabs_labelled']} tab panes labelled, "
         f"{tab_stats['empty_panes_dropped']} empty dropped, "
-        f"{disclosures} <details> opened, {wide_tables} wide tables marked"
+        f"{disclosures} <details> flattened, {wide_tables} wide tables marked, "
+        f"{long_code} long code blocks allowed to split"
     )
     print(f"prepare: wrote {out}")
 
