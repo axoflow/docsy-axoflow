@@ -64,8 +64,11 @@
 {{- end -}}
 
 {{- $maxDepth := int (default 0 (.Site.Param "pdf.toc_max_depth")) -}}
+{{- $root := partialCached "pdf/root.html" . "pdf-root" -}}
 
 {{ partial "pdf/cover.html" . }}
+
+{{- if $root.IsHome }}
 
 <nav class="pdf-toc" role="doc-toc">
   <h1 class="pdf-toc-title">{{ default "Contents" (.Site.Param "pdf.toc_title") }}</h1>
@@ -75,3 +78,26 @@
 <div class="pdf-content">
   {{ template "pdf-recurse-content" (dict "section" .CurrentSection "psid" "" "depth" 1 "continues" false) }}
 </div>
+
+{{- else if $root.IsSection }}
+{{- /* One section: its own landing page as an unnumbered introduction (unless
+       it is an empty heading), then its children numbered from 1. */}}
+{{- $stub := partial "pdf/is-stub.html" $root }}
+
+<nav class="pdf-toc" role="doc-toc">
+  <h1 class="pdf-toc-title">{{ default "Contents" (.Site.Param "pdf.toc_title") }}</h1>
+  {{ template "pdf-recurse-toc" (dict "section" $root "psid" "" "depth" 1 "maxDepth" $maxDepth) }}
+</nav>
+
+<div class="pdf-content">
+  {{ if not $stub }}{{ partial "pdf/content.html" (dict "page" $root "sid" "" "depth" 1 "continues" false) }}{{ end }}
+  {{ template "pdf-recurse-content" (dict "section" $root "psid" "" "depth" 1 "continues" false) }}
+</div>
+
+{{- else }}
+{{- /* One page: the cover already names it, so no contents and no number. */}}
+
+<div class="pdf-content">
+  {{ partial "pdf/content.html" (dict "page" $root "sid" "" "depth" 1 "continues" false) }}
+</div>
+{{- end }}

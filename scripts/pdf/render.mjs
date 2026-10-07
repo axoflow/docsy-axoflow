@@ -273,7 +273,8 @@ try {
       if (!first) return null;
       return getComputedStyle(first, '::after').content;
     });
-    if (!numbered || numbered === 'none' || numbered === '""') {
+    // null: no contents at all, which is how a single-page build (--section) is laid out.
+    if (numbered !== null && (!numbered || numbered === 'none' || numbered === '""')) {
       console.warn('render: the table of contents has no page numbers — target-counter() did not resolve');
     }
 

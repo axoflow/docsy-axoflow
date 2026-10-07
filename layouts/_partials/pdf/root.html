@@ -1,0 +1,21 @@
+{{- /*
+  Returns the page the PDF edition is built from: the home page for the whole
+  book, or the section or single page that `params.pdf.root` names (set by
+  `scripts/pdf/build.sh --section`, as HUGO_PARAMS_PDF_ROOT).
+
+  Every PDF partial that needs to know what the book is about reads it from
+  here, so they can't disagree. Stops the build on a path that matches no page:
+  an empty PDF would be the silent alternative.
+
+  @context {page} . Any page; only used to reach the site.
+  @returns {page}
+*/ -}}
+{{- $root := site.Home -}}
+{{- with site.Param "pdf.root" -}}
+  {{- with site.GetPage . -}}
+    {{- $root = . -}}
+  {{- else -}}
+    {{- errorf "pdf: params.pdf.root %q matches no page" . -}}
+  {{- end -}}
+{{- end -}}
+{{- return $root -}}

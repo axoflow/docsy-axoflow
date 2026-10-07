@@ -3,6 +3,10 @@ The PDF edition's file name: `<product_name>-<version_tag>.pdf`, lowercased,
 whitespace in the product name turned into hyphens ("AxoSyslog Core" 0.12.0 →
 axosyslog-core-0.12.0.pdf). Empty when either param is missing.
 
+A partial build (`params.pdf.root`, see pdf/root.html) appends the root page's
+path: axoflow-0.90-deploy-appliance-install.pdf. CI never sets it, so the
+published name and the download link are unaffected.
+
 The one place the name is decided. Everything else reads it from here, never
 recomputes it:
   - pdf/download-link.html links to it, next to the version's own pages
@@ -14,7 +18,11 @@ recomputes it:
 {{- with site.Params.product_name -}}
   {{- $product := . | lower | strings.TrimSpace | replaceRE `\s+` "-" -}}
   {{- with site.Params.version_tag -}}
-    {{- $name = printf "%s-%s.pdf" $product . -}}
+    {{- $suffix := "" -}}
+    {{- with site.Param "pdf.root" -}}
+      {{- $suffix = printf "-%s" (strings.Trim (. | lower | replaceRE `[^a-z0-9]+` "-") "-") -}}
+    {{- end -}}
+    {{- $name = printf "%s-%s%s.pdf" $product . $suffix -}}
   {{- end -}}
 {{- end -}}
 {{- return $name -}}

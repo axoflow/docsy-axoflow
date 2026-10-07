@@ -19,8 +19,16 @@
   <div class="pdf-cover-logo">{{ .Content | safeHTML }}</div>
   {{ end }}
 
+  {{- $root := partialCached "pdf/root.html" . "pdf-root" }}
   <div class="pdf-cover-main">
+    {{- if $root.IsHome }}
     <h1 class="pdf-cover-title">{{ .Site.Title }}</h1>
+    {{- else }}
+    {{/* A partial build: the page or section is the title, the book it came
+         from the kicker above it. */ -}}
+    <p class="pdf-cover-kicker">{{ .Site.Title }}</p>
+    <h1 class="pdf-cover-title">{{ $root.Title }}</h1>
+    {{- end }}
 
     {{ with .Site.Params.version_tag }}
     <p class="pdf-cover-version">Version {{ . }}</p>

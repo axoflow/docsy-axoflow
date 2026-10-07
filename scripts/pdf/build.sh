@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 #
-# Build the whole documentation set as one PDF, locally.
+# Build the whole documentation set as one PDF, locally — or one section or
+# page of it, with the same layout.
 #
 #   themes/docsy-axoflow/scripts/pdf/build.sh
 #   themes/docsy-axoflow/scripts/pdf/build.sh -o /tmp/docs.pdf -e chrome
+#   themes/docsy-axoflow/scripts/pdf/build.sh -s content/deploy/appliance-install.md
 #
 # Steps: Hugo renders every page into one HTML document, prepare.py rewrites
 # its links and images for print, a throwaway HTTP server makes the site's
@@ -47,11 +49,15 @@ PORT="8099"
 BUILD_DIR=""
 STRICT=""
 SKIP_BUILD=""
+SECTION=""
 
 usage() {
   cat <<'USAGE'
 Build the whole documentation set as one PDF.
 
+  -s, --section PATH    build only this section or page, e.g. deploy, or
+                        content/deploy/appliance-install.md; the file name
+                        gets the path appended
   -o, --output FILE     where to write the PDF
                         (default: <site>/<product_name>-<version_tag>.pdf,
                         the name the theme's pdf/file.html decides)
@@ -61,12 +67,14 @@ Build the whole documentation set as one PDF.
       --skip-build      reuse an existing build; for iterating on render.mjs
                         (stylesheet changes need a Hugo build, so not this)
       --strict          fail if any internal link can't be resolved
+                        (ignored with --section: links leaving it are expected)
 USAGE
   exit "${1:-0}"
 }
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    -s|--section) SECTION="$2"; shift 2 ;;
     -o|--output) OUT="$2"; shift 2 ;;
     -e|--engine) ENGINE="$2"; shift 2 ;;
     -p|--port) PORT="$2"; shift 2 ;;
@@ -81,6 +89,25 @@ done
 cd "$ROOT"
 BUILD_DIR="${BUILD_DIR:-$ROOT/public_pdf}"
 
+# Accept a file path as well as a site path, so tab completion works:
+# content/deploy/appliance-install.md and deploy/appliance-install/ both
+# become /deploy/appliance-install, which the theme's pdf/root.html looks up.
+if [[ -n "$SECTION" ]]; then
+  SECTION="${SECTION#./}"
+  SECTION="${SECTION#content/}"
+  SECTION="${SECTION%/}"
+  SECTION="${SECTION%/_index.md}"
+  SECTION="${SECTION%/index.md}"
+  SECTION="${SECTION%.md}"
+  SECTION="/${SECTION#/}"
+  SECTION="${SECTION%/}"
+  [[ -n "$SECTION" ]] || { echo "--section: that is the whole book; leave the option out" >&2; exit 1; }
+  if [[ -n "$STRICT" ]]; then
+    echo "--strict ignored: a section's links to the rest of the docs stay web links" >&2
+    STRICT=""
+  fi
+fi
+
 # The canonical site URL, so links this document can't resolve internally still
 # work as web links, and so hand-written absolute links get recognised as ours.
 PUBLIC_BASE="$(sed -nE 's/^[[:space:]]*baseurl[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p' config/production/config.toml | head -1)"
@@ -90,8 +117,9 @@ LOCAL_BASE="http://127.0.0.1:${PORT}/"
 if [[ -n "$SKIP_BUILD" ]]; then
   echo "==> Reusing the existing build in $BUILD_DIR"
 else
-  echo "==> Hugo build (environment: pdf)"
-  hugo --environment pdf --destination "$BUILD_DIR" --baseURL "$LOCAL_BASE" --cleanDestinationDir
+  echo "==> Hugo build (environment: pdf${SECTION:+, root: $SECTION})"
+  HUGO_PARAMS_PDF_ROOT="$SECTION" \
+    hugo --environment pdf --destination "$BUILD_DIR" --baseURL "$LOCAL_BASE" --cleanDestinationDir
 fi
 
 DOC="$BUILD_DIR/_pdf/index.html"

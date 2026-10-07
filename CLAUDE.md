@@ -52,7 +52,18 @@ instead of opening a browser.
 ```bash
 themes/docsy-axoflow/scripts/pdf/build.sh              # → <product_name>-<version_tag>.pdf
 themes/docsy-axoflow/scripts/pdf/build.sh -e chrome    # fallback engine, faster
+themes/docsy-axoflow/scripts/pdf/build.sh -s content/deploy/appliance-install.md
 ```
+
+**One section or page.** `-s/--section` builds just that part with the same
+layout, for local use; CI never sets it. It takes a site path or a content file
+path, and reaches Hugo as `HUGO_PARAMS_PDF_ROOT`. `layouts/_partials/pdf/root.html`
+resolves it (the build fails on a path that matches no page), and every PDF
+partial reads the root from there. A section prints its own landing page as an
+unnumbered introduction, then its children numbered from 1; a single page gets
+no contents and no number. The cover shows the page title under the site title,
+and the file name gets the path appended (`axoflow-0.90.0-deploy-appliance-install.pdf`).
+Links out of the section stay web links, so `--strict` is ignored.
 
 **File name and download link.** `layouts/_partials/pdf/file.html` is the only
 place the name is decided: `product_name` lowercased, whitespace to hyphens,

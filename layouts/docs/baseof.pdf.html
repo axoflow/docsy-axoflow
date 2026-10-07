@@ -13,7 +13,8 @@
 <html lang="{{ .Site.Language.Lang }}" data-bs-theme="light">
   <head>
     <meta charset="utf-8">
-    <title>{{ .Site.Title }}{{ with .Site.Params.version_tag }} {{ . }}{{ end }}</title>
+    {{- $root := partialCached "pdf/root.html" . "pdf-root" }}
+    <title>{{ if not $root.IsHome }}{{ $root.Title }} – {{ end }}{{ .Site.Title }}{{ with .Site.Params.version_tag }} {{ . }}{{ end }}</title>
     <meta name="robots" content="noindex, nofollow">
 
     {{/* scripts/pdf/metadata.py copies these into the PDF's document

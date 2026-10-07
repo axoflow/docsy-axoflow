@@ -11,7 +11,8 @@
     data-path   the page's site path, used as the lookup key when rewriting
 
   @context {page}   .page       The page to render.
-  @context {string} .sid        Its section number, e.g. "4.2.1".
+  @context {string} .sid        Its section number, e.g. "4.2.1". Empty for an
+                                unnumbered page (a partial build's root).
   @context {int}    .depth      Nesting level, 1 for a top-level chapter.
   @context {bool}   .continues  Set when the page above is an empty section
                                 heading, so this one flows on beneath it
@@ -28,7 +29,7 @@
     {{/* The space is load-bearing: the running head and the PDF bookmarks are
          built from this element's text content, where CSS margins don't
          exist and "2Axoflow architecture" is what you get without it. */ -}}
-    <span class="pdf-page-num">{{ .sid }}</span> {{ $p.Title }}
+    {{ with .sid }}<span class="pdf-page-num">{{ . }}</span> {{ end }}{{ $p.Title }}
   </h1>
   {{ with $p.Params.description }}<p class="pdf-page-lead">{{ . | markdownify }}</p>{{ end }}
   <div class="td-content">

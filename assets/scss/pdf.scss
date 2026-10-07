@@ -146,6 +146,14 @@ body.td-pdf {
   string-set: doctitle content(text);
 }
 
+// Partial builds only: the book a single page or section was taken from.
+.pdf-cover-kicker {
+  margin: 0 0 4mm;
+  font-size: 12pt;
+  font-weight: 600;
+  color: $pdf-muted;
+}
+
 .pdf-cover-version {
   margin: 6mm 0 0;
   font-size: 14pt;
