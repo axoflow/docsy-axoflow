@@ -8,8 +8,10 @@ authpriv
 Avro
 Axoflow
 Axolet
+AxoLocker
 AxoRouter
 AxoSyslog
+AxoWizard
 Azure Monitor
 backoffs
 backpressure
@@ -52,6 +54,7 @@ eBPF
 ECS
 Entra
 ePolicy
+ESXi
 eventlog
 EVTX
 execmem
@@ -156,6 +159,8 @@ OpenSearch
 openssl
 osquery
 OTLP
+OVA
+OVF
 pacct
 Paho
 Palo
@@ -252,8 +257,10 @@ UUCP
 vCenter
 Vectra
 Viptela
+VMDK
 VMware
 Vormetric
+vSphere
 vThunder
 Websense
 WEC
