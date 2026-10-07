@@ -32,6 +32,23 @@ reader working through a how-to is annoyed by background theory. A reader
 looking up an option is annoyed by steps. The annoyance points at the part
 that belongs elsewhere.
 
+For reference versus explanation, ask where the reader would use it: in the
+middle of a task (reference), or in a waiting room, away from the keyboard
+(explanation).
+
+### Verb mood
+
+Instructions are imperative ("Run the installer"); facts are declarative
+("The cache refreshes every 30 seconds"). A shift in mood is a cheap way to
+spot mixed pages, with one exception:
+
+- **Declarative sentences inside steps are fine.** Step results ("The
+  service restarts.") and short notes that belong to a step are part of a
+  how-to. Don't count them as mixing.
+- **Declarative paragraphs outside steps are a signal.** Prose before,
+  between, or after the steps that explains how something works is
+  explanation inside a procedure.
+
 ## The four types
 
 ### Tutorial: learning by doing
@@ -39,9 +56,13 @@ that belongs elsewhere.
 A lesson. The reader doesn't know enough to choose their own path yet, so the
 page chooses for them and guarantees they succeed.
 
-- Signals: "In this tutorial", "you will", a single fixed path, a concrete
-  end result ("you now have a relay forwarding logs to…"), frequent "you
-  should see…" checks.
+- Signals: an upfront learning goal ("In this tutorial, you build…"), a
+  single fixed path, a concrete end result ("you now have a relay
+  forwarding logs to…"), frequent "you should see…" checks.
+- Not a signal: "you will" scattered through steps or results ("You will
+  need to restart the service"). That's informal style, common on how-tos.
+  Only a deliberate goal statement near the top counts. Steps without one
+  make a how-to, however the steps are written.
 - Good: minimal explanation (one sentence, then a link), no options or
   alternatives, every step works on a fresh machine.
 - In Axoflow docs: rare. `quickstart/` pages are the closest. Many "getting
@@ -141,6 +162,15 @@ page's main type and move the rest out, with a link back.
 | High | Several strong signals agree, and the page has one clear purpose. |
 | Medium | The main type is clear, but part of the page could be another type, or the page is short. |
 | Low | Weak or conflicting signals. Say what you'd need to know (for example, "is this meant as a first-run guide?"), and don't propose a split on low confidence. |
+
+A type counts only when **two or more** of its signals are present: one
+signal is noise, two is a pattern. The same applies to a second type on a
+mixed page. One explanatory paragraph doesn't make a how-to mixed; a
+recurring pattern does.
+
+When confidence stays low, ask the user. The person who wrote or requested
+the page usually knows what it was meant to be, even if it didn't turn out
+that way.
 
 ## Patterns in Axoflow docs
 

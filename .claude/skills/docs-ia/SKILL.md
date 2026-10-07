@@ -118,7 +118,11 @@ Look at the section as a reader would, not as a list of files:
   and I can troubleshoot it"? Check the stages in
   `references/structure-checks.md#reader-journey` and name the missing ones.
 - **Type balance.** A section that's all reference with no how-to for its
-  most common task is a gap, not a style problem.
+  most common task is a gap, not a style problem. So is a section with
+  how-tos but nowhere that explains what the component is and when to use
+  it: neither an explanation page nor a landing page that does it. The
+  concept text is then usually scattered across how-to intros; gather it
+  into the landing page or a new explanation page.
 - **Findability.** Sidebar labels: do they say what the page is for? Are
   siblings in a sensible order (weights)? Are two pages competing for the
   same query (duplicate titles, overlapping content)?
@@ -177,7 +181,10 @@ rules rather than generic advice.
 ### 6. Act (only when the user asks)
 
 Apply fixes in small, reviewable steps, one kind at a time, and run
-`hugo --minify` after each batch:
+`hugo --minify` after each batch. Do the changes that keep URLs first
+(front matter, landing-page rewrites, splits, new pages), and confirm with
+the user before the moves and merges that change paths. That way the
+content changes can be reviewed and reverted without broken links mixed in.
 
 - **Front matter fixes** (weights, `linkTitle`, `description`): edit
   directly. Descriptions follow `/review-page` rules: one sentence, under
