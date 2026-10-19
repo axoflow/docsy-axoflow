@@ -1,0 +1,24 @@
+{{/* The og:/twitter: image details Hugo's embedded opengraph.html and
+     twitter_cards.html leave out. Those emit og:image and switch twitter:card
+     to summary_large_image on their own once the site sets `params.images`;
+     this adds, while the page shows that site-wide image rather than its own,
+     the dimensions (known only when the image is in assets/) and
+     `params.socialImageAlt`. Renders nothing without `params.images`. */ -}}
+{{ with site.Params.images -}}
+  {{ $site := index . 0 -}}
+  {{ $res := resources.GetMatch $site -}}
+  {{ $sitePermalink := absURL $site -}}
+  {{ with $res }}{{ $sitePermalink = .Permalink }}{{ end -}}
+  {{ with partial "_funcs/get-page-images" $ -}}
+    {{ if eq (index . 0).Permalink $sitePermalink -}}
+      {{ if and (reflect.IsImageResource $res) (ne $res.MediaType.SubType "svg") -}}
+<meta property="og:image:width" content="{{ $res.Width }}">
+<meta property="og:image:height" content="{{ $res.Height }}">
+      {{ end -}}
+      {{ with site.Params.socialImageAlt -}}
+<meta property="og:image:alt" content="{{ . }}">
+<meta name="twitter:image:alt" content="{{ . }}">
+      {{ end -}}
+    {{ end -}}
+  {{ end -}}
+{{ end -}}

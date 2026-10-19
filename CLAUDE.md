@@ -193,6 +193,18 @@ the navigation keeps failing. Pin the package with `AFDOCS_PACKAGE`.
 
 `layouts/_partials/structured-data.html` adds JSON-LD: a `TechArticle` per content page (`WebSite` on the home page) and a `BreadcrumbList` from the site home down to the current page. Taxonomy pages get neither. `description` is only set from front matter, and `version` comes from the build's `buildVersion`, with `latest` resolved to the `latest` entry of `data/versions.yaml`. `params.publisher_name` overrides the publisher (default: Axoflow).
 
+## Social preview image
+
+Off until a site sets it, per site (the image differs between products):
+
+```toml
+[params]
+  images = ["images/social-card.png"]   # 1200x630; under assets/ for og:image:width/height
+  socialImageAlt = "Axoflow documentation"
+```
+
+`params.images` is Hugo's own: its embedded `opengraph.html` and `twitter_cards.html` then emit `og:image` and `twitter:image` and switch `twitter:card` from `summary` to `summary_large_image`. A page's front matter `images`, or a page resource named `*feature*`, `*cover*` or `*thumbnail*`, overrides it. `layouts/_partials/social-image.html` adds what those templates leave out, only while the page shows the site-wide image: `og:image:width`/`height` (only when the path resolves under `assets/`, not `static/`) and `og:image:alt`/`twitter:image:alt` from `socialImageAlt`.
+
 ## Glossary
 
 A filterable glossary page plus an inline tooltip shortcode, shared by every site using this theme. Descended from `kubernetes/website`'s glossary by way of `falcosecurity/falco-website`, and rewritten to carry **no JavaScript** — Docsy drops jQuery in 0.18, and all four behaviours the original needed a script for are things the platform now does on its own.

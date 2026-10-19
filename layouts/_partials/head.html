@@ -113,6 +113,7 @@
 {{ partial "structured-data.html" . -}}
 {{ end -}}
 {{ partial "twitter_cards.html" . -}}
+{{ partial "social-image.html" . -}}
 {{ partialCached "head-css.html" . "head-css-cache-key" -}}
 <!-- jQuery loaded with `defer` only (no `async`) so it executes in document
      order with the deferred main.js at the bottom of <body>. Using `async`
