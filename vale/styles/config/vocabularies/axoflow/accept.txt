@@ -202,6 +202,7 @@ separate_extensions
 Severities
 SIEM
 SIEMs
+SLES
 slogencrypt
 slogkey
 slogverify
@@ -225,6 +226,7 @@ subpatterns
 substring
 Sudo
 Superna
+SUSE
 Symantec
 syscalls
 syslog
