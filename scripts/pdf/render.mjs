@@ -155,6 +155,9 @@ const elapsed = () => `${((Date.now() - started) / 1000).toFixed(1)}s`;
 
 const browser = await puppeteer.launch({
   headless: true,
+  // waitForFunction polls through a single long-running CDP call, so the
+  // default 180s protocol timeout would cut the layout wait short.
+  protocolTimeout: timeoutMs,
   // Ubuntu 24.04 runners restrict unprivileged user namespaces, which is what
   // Chrome's own sandbox needs. The content is our own build output.
   args: [
