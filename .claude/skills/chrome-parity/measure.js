@@ -107,8 +107,13 @@
       subHeading: '.axo-nav-group-title',
       groupTitle: '.axo-nav-group-title',
       groupDesc: '.axo-nav-group-desc',
-      link: '.axo-nav-links a',
-      describedLink: 'li:has(.axo-nav-link-desc) a',
+      // A described row is live's `_nested` product row (22px), not one of its
+      // `_dropdown_link`s; counting it as a link put Products' rows into
+      // `linkType` and `linkPitch` with nothing on live to compare them to.
+      // `> a` under the link body, not `li:has(...) a`: the bar's own
+      // `.axo-nav-item` is an `li` and has every description in its panel.
+      link: '.axo-nav-link-body:not(:has(> .axo-nav-link-desc)) > a',
+      describedLink: '.axo-nav-link-body:has(> .axo-nav-link-desc) > a',
       linkDesc: '.axo-nav-link-desc',
       banner: '.axo-announcement',
       footerColumn: '.td-footer__column',
@@ -173,8 +178,16 @@
     return round(content(b, origin).x - content(a, origin).right);
   };
 
+  /* Live wraps some text in a block whose own type is not what renders: its
+     blurb's `.text-size-tiny` computes 18px and draws 22.8px lines, its
+     sub-column heading computes 400/21px and draws 25.2. Read the innermost
+     element that still holds all of the text. */
   const type = (el) => {
     if (!el) return null;
+    while (el.children.length === 1
+      && el.children[0].textContent.trim() === el.textContent.trim()) {
+      el = el.children[0];
+    }
     const s = getComputedStyle(el);
     return {
       fontSize: s.fontSize,

@@ -62,7 +62,7 @@ items:
       href: https://axoflow.com/ai-soc-data-layer?utm_source=docs&utm_medium=menu
     - label: Log Management
       href: https://axoflow.com/log-management?utm_source=docs&utm_medium=menu
-    - label: Cut Your Anthropic Bill, Autonomously
+    - label: Cut AI Token Costs
       href: https://axoflow.com/cut-ai-token-costs?utm_source=docs&utm_medium=menu
     - label: For Managed Security Service Providers
       href: https://axoflow.com/mssp-soc-automation?utm_source=docs&utm_medium=menu
@@ -121,6 +121,9 @@ items:
     - label: AxoLake
       href: https://axoflow.com/axolake-petabyte-security-data-storage?utm_source=docs&utm_medium=menu
       description: Multi-tier storage
+    - label: AxoLocker
+      href: https://axoflow.com/axolocker?utm_source=docs&utm_medium=menu
+      description: Log management appliance
     label: Storage
   - kind: links
     column: '1'
@@ -368,7 +371,7 @@ mobile:
         href: https://axoflow.com/ai-soc-data-layer?utm_source=docs&utm_medium=menu
       - label: Log Management
         href: https://axoflow.com/log-management?utm_source=docs&utm_medium=menu
-      - label: Cut Your Anthropic Bill, Autonomously
+      - label: Cut AI Token Costs
         href: https://axoflow.com/cut-ai-token-costs?utm_source=docs&utm_medium=menu
       - label: For Managed Security Service Providers
         href: https://axoflow.com/mssp-soc-automation?utm_source=docs&utm_medium=menu
@@ -407,6 +410,8 @@ mobile:
         href: https://axoflow.com/axostore?utm_source=docs&utm_medium=menu
       - label: AxoLake
         href: https://axoflow.com/axolake-petabyte-security-data-storage?utm_source=docs&utm_medium=menu
+      - label: AxoLocker
+        href: https://axoflow.com/axolocker?utm_source=docs&utm_medium=menu
       - label: AxoDetect (Beta)
         href: https://axoflow.com/axodetect?utm_source=docs&utm_medium=menu
     - kind: links

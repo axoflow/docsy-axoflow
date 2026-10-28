@@ -1332,14 +1332,13 @@ html[data-axo-wide] {
 // =============================================================================
 
 $axo-strip-height: 28px;
-// The bar has two heights: 113px at the top of the page and 85px once the reader
-// has scrolled past it. axoflow.com does the same — measured on the live
-// marketing bar, `.v3-navbar-component` goes 141 -> 113 — and this build carries
-// it over the documentation. `--axo-bar-height` is the current one and
-// `$axo-bar-height` the one at rest; which of the two a rule should use is the
-// whole of this section, and it is decided per consumer below.
-$axo-bar-height: 113px;
-$axo-bar-height-scrolled: 85px;
+// The bar is a flat 85px. It had two heights, 113px at the top of the page and
+// 85 once scrolled, after axoflow.com's own 141 -> 113; measured on axoflow.com
+// in October 2026, its bar no longer shrinks and is 85 at rest and scrolled
+// alike. The live / at-rest / as-landed split below is kept because the three
+// are still three questions, but all of them now get the same answer.
+$axo-bar-height: 85px;
+$axo-bar-height-scrolled: $axo-bar-height;
 $axo-chrome-height: $axo-strip-height + $axo-bar-height;
 
 // The strip is one line at 1440 and two at 390, because the sentence wraps: 28px
@@ -1387,10 +1386,7 @@ $axo-chrome-rest: calc(#{$axo-bar-bottom-rest} + var(--axo-notice-height, 0px));
 // bar is 85px by the time the heading comes to rest under it. Measured with the
 // resting height instead, the heading landed 193px down rather than 165 and the
 // clear space under the bar read 80px rather than 52 — on every click and every
-// deep link on the page.
-//
-// The same number can be reached from the other end, as the frozen 141 plus 24
-// minus the shrink. This states the reader's number directly instead.
+// deep link on the page. With the flat bar it equals `$axo-chrome-rest`.
 $axo-chrome-landed: calc(
     #{$axo-strip} + #{$axo-bar-height-scrolled} + var(--axo-notice-height, 0px)
 );

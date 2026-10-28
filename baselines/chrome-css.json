@@ -263,7 +263,7 @@
     ],
     ".v3-navbar_component": [
       "align-items: center",
-      "background-color: var(--_colors-v2---background-color--background-secondary)",
+      "background-color: var(--_colors-v2---background-color--background-primary)",
       "border-bottom: 1px solid #141d621a",
       "color: var(--text-color--text-alternate)",
       "display: flex",
@@ -642,8 +642,8 @@
       "inset: auto 0% auto auto"
     ],
     "@media screen and (max-width:991px) | .v3-navbar_component": [
-      "padding-bottom: 1.25rem",
-      "padding-top: 1.25rem"
+      "padding-bottom: .875rem",
+      "padding-top: .875rem"
     ],
     "@media screen and (max-width:991px) | .v3-navbar_container": [
       "position: static"

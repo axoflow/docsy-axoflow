@@ -336,33 +336,3 @@ document.querySelectorAll('#mainNavOffcanvas').forEach((drawer) => {
 });
 
 window.matchMedia('(min-width: 800px)').addEventListener('change', collapseAllMenus);
-
-// The bar's two states.
-//
-// axoflow.com shrinks its bar once the page moves — measured on the live
-// marketing bar at 1440, `.v3-navbar-component` goes 141px at rest to 113px
-// scrolled — and this build carries the same behaviour over the documentation,
-// 113 -> 85. The live *docs* bar does neither: it measures a flat 102px at every
-// scroll position, which is why this is new here.
-//
-// Nothing about how the two states look is decided here. This records which one
-// is current as `data-scrolled` on <html>, and _axo-navbar.scss turns that into
-// the bar's height, its padding and its logo; _styles_project.scss carries the
-// height on to the band and the sticky navigation column, which hang off the
-// bar's bottom edge and have to follow it down.
-//
-// The two edges are not symmetric, and that is the live bar's own behaviour
-// rather than an oversight: it shrinks somewhere between 28 and 29px of scroll
-// and only springs back at the very top — at 10px on the way up it is still
-// small. `<= 0` and not `=== 0` because an overscroll bounce reports a negative
-// scrollY, and the bar should come back for that too.
-const scrollRoot = document.documentElement;
-
-function syncScrollState() {
-  const y = window.scrollY;
-  if (y > 28) scrollRoot.dataset.scrolled = '';
-  else if (y <= 0) delete scrollRoot.dataset.scrolled;
-}
-
-syncScrollState();
-window.addEventListener('scroll', syncScrollState, { passive: true });

@@ -35,19 +35,10 @@
 // The rest have no token: they are the marketing bar's own colours, measured off
 // axoflow.com rather than chosen, and they exist nowhere else on the page.
 .td-navbar {
+    // White scrolled as well: axoflow.com used to repaint its bar
+    // rgb(243, 244, 247) once the page moved, and in October 2026 it stays
+    // rgb(255, 255, 255) at scrollY 600.
     --axo-nav-surface: var(--axo-bg-nav, #fff);
-    // The bar's SCROLLED fill. axoflow.com does not only shrink its bar when the
-    // page moves, it repaints it: measured at 390, `.v3-navbar_component` is
-    // `rgb(255, 255, 255)` at rest with `is-not-scrolled` on it and
-    // `rgb(243, 244, 247)` once that class is dropped, with `background-color
-    // 0.2s ease-out` in its own transition list. This build shrank and stayed
-    // white — its transition named `height` and `padding` and nothing else.
-    //
-    // Light only, deliberately: in dark the resting bar is already `#171c2e`
-    // against a `#0f1425` page, so the separation this creates on white is
-    // there without a second value, and the marketing site has no dark mode to
-    // measure a scrolled one from.
-    --axo-nav-surface-scrolled: #f3f4f7;
     --axo-nav-rule: var(--axo-hairline, #e7e8ef);
     // The bar's link colour. Not one of the properties axoflow.com declares — it
     // is a computed style on the navbar rather than a token — so it is measured:
@@ -124,96 +115,26 @@ $axo-nav-content: unquote("min(#{$axo-grid}, 100% - 2 * #{$axo-nav-gutter})");
 // The bar
 // =============================================================================
 
-// 32px, not the 30.5 in _styles_project.scss: that number was sized against a
-// 32px logo. The live logo is 48 (477x120 viewBox at height 48 is exactly
-// 190.8x48), and 32 + 48 + 32 + the 1px rule is the same
-// 113 total, so the frame's $axo-bar-height does not move. Unconditional, not
-// md-up: below md nothing compensates for the bar's height because the bar is in
-// the flow there, and the live bar is 113 at 390 as well as at 1440.
+// One state, at every width: axoflow.com's `.v3-navbar_component` measured a
+// flat 84.9px at 1440, 1280 and 1100, at scrollY 0 and 600 alike (October
+// 2026), with 20px of padding and a 140x35.22 logo (477x120 viewBox). It used
+// to rest at 113 with a 48px logo and shrink to this once the page moved; this
+// bar did the same through `data-scrolled` until live stopped.
+//
+// An explicit height as well as the padding: 20 + 35 + 20 + the 1px rule is 76,
+// and the live bar is 85. The bar has to land on the measured height, not on
+// whatever the content happens to add up to.
 .td-navbar {
-    // An explicit height as well as the padding: 32 + 48 + 32 + the rule is the
-    // same 113 the padding alone gave,
-    // and in the scrolled state the height is what decides the number — 20 + 35
-    // + 20 + 1 is 76, and the live bar is 85. The two states have to land on
-    // measured heights, not on whatever the content happens to add up to.
     height: var(--axo-bar-height, #{$axo-bar-height});
-    padding-block: var(--axo-bar-pad-y, 2rem);
+    padding-block: var(--axo-bar-pad-y, 1.25rem);
     border-bottom: 1px solid var(--axo-nav-rule);
     background-color: var(--axo-nav-surface);
-    transition: height 0.2s ease-out, padding 0.2s ease-out,
-                background-color 0.2s ease-out;
-
-    @media (prefers-reduced-motion: reduce) {
-        transition: none;
-    }
 }
 
-// The scrolled fill, on `.td-navbar` rather than on `:root[data-scrolled]`: the
-// variable is declared on the bar itself, so a value set on the root would be
-// shadowed by the bar's own declaration and change nothing.
-:root[data-scrolled] .td-navbar {
-    background-color: var(--axo-nav-surface-scrolled);
-}
-
-@if $enable-dark-mode {
-    // Stated so the light-only value cannot leak: see the note beside
-    // `--axo-nav-surface-scrolled`.
-    :root[data-bs-theme="dark"][data-scrolled] .td-navbar {
-        background-color: var(--axo-nav-surface);
-    }
-}
-
-// The bar's two states.
-//
-// axoflow.com shrinks its bar once the page moves, and this build carries that
-// over the documentation. Measured on the live marketing bar at 1440:
-// `.v3-navbar-component` goes 141 -> 113px; here the same change is 113 -> 85,
-// with the padding 32 -> 20 and the logo 48 -> 35.22. The live *docs* bar does
-// neither — it is a flat 102px at every scroll position — so this is new here
-// rather than restored.
-//
-// Only three declarations, and all three are variables the rules above already
-// read: the state is recorded by assets/js/axo-navbar.js on `<html>` and every
-// consequence of it is CSS. `--axo-bar-height` is what the frame's `$axo-bar`
-// reads, which is how the band and the sticky column follow the bar down.
-//
-// The live bar also repaints white -> rgb(243, 244, 247) in this state. This one
-// does not: `--axo-nav-surface` is a themed token that has to hold up in dark
-// mode too, and the marketing site's scrolled grey is a tint of its own page.
-//
-// AT EVERY WIDTH, INCLUDING BELOW md. This was `media-breakpoint-up(md)` only,
-// on the reasoning that below md the bar is in the flow and scrolls away, so
-// there is nothing on screen left to shrink — and that shrinking it anyway took
-// 28px out of the document: measured at 390, a scroll to 120 settled at 111
-// because the page got shorter under the reader as the threshold was crossed.
-//
-// Reported, with axoflow.com named as the reference: on a phone the docs bar
-// works nothing like the site's, and the site's shrinks there too. Measured on
-// axoflow.com at 390 — `.v3-navbar-component` is `position: sticky` at the top
-// of the window, its inner bar goes 113px at rest to 89px scrolled, and the
-// chrome as a whole 159 -> 135. So the reference both keeps the bar on screen at
-// 390 and accepts the same reflow this comment used to refuse; it loses 24px of
-// document height on the threshold and does it anyway. The bar is `sticky` below
-// md now (see `.td-navbar` further down), which is what makes the shrink
-// something a reader on a phone can actually see.
-//
-// 85px scrolled, not the live 89: 113 -> 85 is this chrome's own pair, it is
-// what the bar carries at every width, and `--axo-bar-small` is published from
-// it for assets/js/axo-toc.js. A third number for the phone would have to be
-// answered for in both of those.
-:root[data-scrolled] {
-    --axo-bar-height: #{$axo-bar-height-scrolled};
-    --axo-bar-pad-y: 1.25rem;
-    --axo-logo-height: 2.1875rem;
-}
-
-// The scrolled height, stated as a custom property and never overridden, so
+// The bar's height, stated as a custom property and never overridden, so
 // script can ask for it. assets/js/axo-toc.js needs it: the band it watches the
 // prose through is measured from the bar, and that measurement has to be a
-// constant — the observer's rootMargin cannot be changed once it is built — and
-// the constant has to be the scrolled height, because a reader who is reading has
-// scrolled. The band sits 32px under the scrolled bar; measured from the resting
-// one instead, it would sit 60px under.
+// constant — the observer's rootMargin cannot be changed once it is built.
 :root {
     --axo-bar-small: #{$axo-bar-height-scrolled};
 }
@@ -222,9 +143,8 @@ $axo-nav-content: unquote("min(#{$axo-grid}, 100% - 2 * #{$axo-nav-gutter})");
     max-width: $axo-nav-content;
     // Bootstrap's own 12px would put the logo at x=92 against the live 80.
     padding-inline: 0;
-    // The logo's height, so the row shrinks with it rather than holding the bar
-    // open at 48 in the scrolled state.
-    min-height: var(--axo-logo-height, 48px);
+    // The logo's height, so the row follows it rather than Bootstrap's own.
+    min-height: var(--axo-logo-height, 2.1875rem);
     align-items: center;
 }
 
@@ -232,6 +152,15 @@ $axo-nav-content: unquote("min(#{$axo-grid}, 100% - 2 * #{$axo-nav-gutter})");
 @include media-breakpoint-down(md) {
     .td-navbar > .container-fluid {
         max-width: unquote("min(#{$axo-grid}, 100% - 2.5rem)");
+    }
+
+    // 77 with 14px of padding: live's bar at 390 (October 2026). Live switches
+    // at 991; this one only below md, because from md up the page's reserve and
+    // anchor offsets are SCSS constants for the 85px bar, and 77 there would
+    // leave 8px of page showing under it. Everything below md reads the variable.
+    :root {
+        --axo-bar-height: 77px;
+        --axo-bar-pad-y: 0.875rem;
     }
 
     // The bar stays on screen at this width. It was `position: relative` and
@@ -278,13 +207,13 @@ $axo-nav-content: unquote("min(#{$axo-grid}, 100% - 2 * #{$axo-nav-gutter})");
     // Docsy pins `.td-navbar` to `min-height: $td-navbar-min-height +
     // $td-navbar__main-min-height-mobile` — 4rem + 2.5rem = 104px — and takes it
     // back to 4rem only from md up (themes/docsy/assets/scss/td/_nav.scss:43,99).
-    // So below md the shrunk bar could not go under 104 whatever `height` said:
-    // measured at 390 scrolled, `--axo-bar-height` computed 85px, the content row
-    // 35px, and the bar 104px, because `min-height` was the winner.
+    // So below md the bar could not go under 104 whatever `height` said:
+    // measured at 390, `--axo-bar-height` computed 85px, the content row 35px,
+    // and the bar 104px, because `min-height` was the winner.
     //
     // `0`, not a number: the height is already stated on `.td-navbar` from
     // `--axo-bar-height`, and a second number here would be a second place for
-    // the two states to be written down.
+    // it to be written down.
     .td-navbar {
         min-height: 0;
     }
@@ -455,16 +384,9 @@ html[data-axo-wide] {
 
 .td-navbar .navbar-brand svg {
     display: block;
-    // 48px at the top of the page, 35px once scrolled — the live 192x48.3 ->
-    // 140x35.22. An explicit height rather than a max-height, so the two states
-    // can animate into each other.
-    height: var(--axo-logo-height, 48px);
+    // The live 140x35.22. A variable, so the print sheet can state its own.
+    height: var(--axo-logo-height, 2.1875rem);
     width: auto;
-    transition: height 0.2s ease-out;
-
-    @media (prefers-reduced-motion: reduce) {
-        transition: none;
-    }
 }
 
 // The row that carries the menu and the controls. `.offcanvas-lg` is inline at
@@ -688,7 +610,7 @@ html[data-axo-wide] {
     // 40px-padded box and are separated by 32 | 1px | 32, so their content runs
     // 104..523.5 and 588.5..1008 at 1440. The rule is a border rather than the
     // `max-content` track live gives it, which puts 32 on each side of it and
-    // lands the columns on 104..524 and 588..1008.
+    // lands the columns on 104..524 and 589..1008.
     .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-cols {
         display: grid;
         grid-auto-flow: column;
@@ -696,8 +618,17 @@ html[data-axo-wide] {
         padding: 2.5rem;
     }
 
+    // The 32 before the rule is the left column's padding, not the right one's
+    // margin: with all 65 inside the right column's `1fr`, Solutions rendered
+    // 452 | 387 against live's 419.5 | 419.5, and the rule sat 32.5px right.
+    .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-col:has(+ .axo-nav-col) {
+        padding-inline-end: 2rem;
+    }
+
+    // `margin-block-start: 0` against the 1rem that stacks columns outside the
+    // mega panel, which dropped the right-hand column 16px below the left.
     .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-col + .axo-nav-col {
-        margin-inline-start: 2rem;
+        margin-block-start: 0;
         padding-inline-start: 2rem;
         border-inline-start: 1px solid var(--axo-nav-rule);
     }
@@ -711,10 +642,11 @@ html[data-axo-wide] {
     }
 
     // The product columns side by side. Live's gap has the vertical rule in the
-    // middle of it, so the border takes half of it on each side. Marketing
-    // tightened `.v3-navbar_mega-dropdown-item-wrapper` from 2.5rem to 1rem when
-    // Detection made it three columns; at 2.5rem a column is ~42px too narrow
-    // here and `AxoConsole`'s chevron wraps to its own line.
+    // middle of it, so the border takes half of it on each side: 16 | 1px | 16,
+    // 33 at 1440 and 1280 (October 2026). Marketing tightened
+    // `.v3-navbar_mega-dropdown-item-wrapper` from 2.5rem to 1rem when Detection
+    // made it three columns; at 2.5rem a column is ~42px too narrow here and
+    // `AxoConsole`'s chevron wraps to its own line.
     .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-subcols {
         display: flex;
         align-items: stretch;
@@ -735,17 +667,20 @@ html[data-axo-wide] {
         // `.axo-nav-group`, and the 1rem that stacks groups would otherwise drop
         // the right-hand column a line below the left one.
         margin-block-start: 0;
-        margin-inline-start: 0.5rem;
-        padding-inline-start: 0.5rem;
+        margin-inline-start: 1rem;
+        padding-inline-start: 1rem;
         border-inline-start: 1px solid var(--axo-nav-rule);
     }
 
     // A sub-column heading is not a card title: live gives `Pipeline`, `Storage`
     // and `Detection` `.text-size-small` + `.text-weight-medium` — 14px/1.8 —
     // against the 22px the group cards carry, and paints them the section
-    // orange, not the blurbs' grey.
+    // orange, not the blurbs' grey. Live's wrapper computes 400/21px; the text
+    // is in a child and renders 25.2 tall, so read the child, not the wrapper.
+    // 16 under it: live's sub-column is 260.1 tall at 1440, and 8 left it 7
+    // short and `AxoSyslog commercial version` 9 too high.
     .td-navbar .axo-nav--bar .axo-nav-panel--mega .axo-nav-subcol > .axo-nav-group-title {
-        margin-block-end: 0.5rem;
+        margin-block-end: 1rem;
         color: var(--axo-nav-on-dark, var(--axo-nav-section));
         font-size: 0.875rem;
         line-height: 1.8;
@@ -822,11 +757,14 @@ html[data-axo-wide] {
     align-items: center;
 }
 
-// Live: 12px/300, line-height 22.8px, rgb(101, 119, 128).
+// Live: 12px/300, line-height 22.8px, rgb(101, 119, 128). Its `.text-size-tiny`
+// computes 18px/400, but the text is in a `.text-weight-light` child and a
+// one-line blurb renders 22.8 tall: the child is the truth.
 .td-navbar .axo-nav-panel .axo-nav-group-desc {
     margin: 0 0 0.6rem;
     color: var(--axo-nav-on-dark, var(--axo-nav-desc));
     font-size: 0.75rem;
+    font-weight: 300;
     line-height: 1.4;
 }
 
@@ -834,6 +772,7 @@ html[data-axo-wide] {
     margin: 0;
     color: var(--axo-nav-on-dark, var(--axo-nav-desc));
     font-size: 0.75rem;
+    font-weight: 300;
     line-height: 1.9;
 }
 
@@ -909,6 +848,13 @@ html[data-axo-wide] {
             line-height: 1.9;
         }
 
+        // Only before a list. With no links under it (`Axoflow Platform`) the
+        // 24 collapsed with the 16 between sections and won, which put the
+        // sub-columns 8px below live's.
+        .axo-nav-group-desc:last-child {
+            margin-bottom: 0;
+        }
+
         // Live's mega links are 14px/500 on 37.2px centres. The line-height goes
         // on the list as well as the link, because the anchor is inline and it is
         // the list item's own strut that sets the row height — inherited prose
@@ -930,6 +876,13 @@ html[data-axo-wide] {
         .axo-nav-group a:focus-visible {
             color: var(--axo-nav-on-dark, var(--axo-nav-panel-link));
             text-decoration: underline;
+        }
+
+        // A linked group title keeps its own #141d62, not the links' #0f1425:
+        // `Axoflow Platform` on live stays rgb(20, 29, 98) under the pointer.
+        .axo-nav-group a.axo-nav-group-title:hover,
+        .axo-nav-group a.axo-nav-group-title:focus-visible {
+            color: var(--axo-nav-on-dark, var(--axo-nav-title));
         }
 
         // ---- rows that carry a one-line description -------------------------

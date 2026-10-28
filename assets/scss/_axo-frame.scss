@@ -1280,15 +1280,13 @@ aside.td-sidebar-toc p.small {
     //
     // Before this the bar was hidden outright and the sheet began with the title
     // at 88px, with nothing on it naming the site.
-    // A reader who scrolls to the middle of a page and prints it still carries
-    // `data-scrolled`, and every part of the bar's size is a custom property, so
-    // the sheet would come out with the *scrolled* bar on it — an 85px band with
-    // a 35px wordmark and the title 28px higher, depending on nothing but where
-    // the reader happened to be standing. The state is neutralised here rather
-    // than restating the sizes on `.td-navbar`, which would leave the wordmark
-    // and the container's own min-height reading the small values anyway.
-    :root[data-scrolled] {
-        --axo-bar-height: #{$axo-bar-height};
+    // The sheet keeps the 113px band and 48px wordmark the bar had before it
+    // went to a flat 85 on screen. Every part of the bar's size is a custom
+    // property, so they are restated here once rather than on `.td-navbar`,
+    // which would leave the wordmark and the container's own min-height
+    // reading the screen values anyway.
+    :root {
+        --axo-bar-height: 113px;
         --axo-bar-pad-y: 2rem;
         --axo-logo-height: 48px;
     }

@@ -41,6 +41,10 @@
     <ul class="axo-nav-links">
       {{- range . }}
         {{- $card := ne (index . "icon") nil }}
+        {{- /* Live's described product rows (`_nested`) carry the 24px
+               `chevron-lg` too, icon or not; the 20px one left each Products
+               sub-column 4px narrower than live's. */}}
+        {{- $lg := or $card (ne (index . "description") nil) }}
         <li{{ if $card }} class="axo-nav-card"{{ end }}>
           {{- if $card }}
             <span class="axo-nav-icon axo-nav-icon--sm">
@@ -52,9 +56,11 @@
           <div class="axo-nav-link-body">
             <a href="{{ partial "navbar-href.html" .href }}"
               {{- if ne $host (urls.Parse .href).Host }} target="_blank" rel="noopener"{{ end }}>{{ .label }}
-              {{- if $mega }}
-                <span class="axo-nav-after{{ if $card }} axo-nav-after--lg{{ end }}">
-                  {{- partial "navbar-glyph.html" (dict "name" (cond $card "afterTitle" "afterLink") "menu" $menu) -}}
+              {{- /* `-}}`: a plain link is inline, so the newline would render
+                     as a ~4px space; live's chevron starts where the text ends. */}}
+              {{- if $mega -}}
+                <span class="axo-nav-after{{ if $lg }} axo-nav-after--lg{{ end }}">
+                  {{- partial "navbar-glyph.html" (dict "name" (cond $lg "afterTitle" "afterLink") "menu" $menu) -}}
                 </span>
               {{- end -}}
             </a>
