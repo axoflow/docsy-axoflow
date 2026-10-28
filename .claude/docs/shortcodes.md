@@ -80,6 +80,32 @@ Override with explicit text:
 
 The path is relative to `content/`.
 
+## Content for specific products only
+
+When several doc sets share content (for example, AxoLocker mounts the Axoflow
+Platform docs), show a part of a page only in some of them:
+
+```markdown
+{{% only-in "Axoflow" %}}
+For other platforms, see {{% xref "/provisioning/axorouter/_index.md" %}}.
+{{% /only-in %}}
+
+Inline works too: Deploy {{% only-in "Axoflow" %}}a new{{% /only-in %}} AxoRouter.
+
+{{% only-in "Axoflow, AxoLocker" %}}
+Shown in both doc sets.
+{{% /only-in %}}
+```
+
+- The parameter is a comma-separated list of product names. The content is shown
+  only when one of them matches the site's `product_name` parameter. Matching
+  ignores case and spaces around the names.
+- Always use the `{{% %}}` delimiters, so the inner Markdown is rendered.
+- Content indented under a list item stays in the list item.
+- A missing product list, or a site without `product_name`, fails the build.
+- To hide a whole page, don't use `only-in`: replace the page with a stub in the
+  other project instead.
+
 ## Glossary
 
 Terms live in one leaf bundle, `content/reference/glossary/` by default, with

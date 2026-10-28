@@ -1,0 +1,20 @@
+{{/* Shows the inner content only in the listed doc sets, for example {{% only-in "Axoflow, AxoLocker" %}}...{{% /only-in %}}.
+Matches the comma-separated list against the site's product_name, ignoring case. Call it with % delimiters so Hugo renders the inner Markdown. */ -}}
+{{- $products := .Get 0 -}}
+{{- if not $products -}}
+  {{- errorf "only-in needs a comma-separated list of product names; %s" .Position -}}
+{{- end -}}
+{{- $current := lower (strings.TrimSpace (string site.Params.product_name)) -}}
+{{- if not $current -}}
+  {{- errorf "only-in: the product_name site parameter is not set; %s" .Position -}}
+{{- end -}}
+{{- $match := false -}}
+{{- range split $products "," -}}
+  {{- if eq (lower (strings.TrimSpace .)) $current -}}
+    {{- $match = true -}}
+  {{- end -}}
+{{- end -}}
+{{- if $match -}}
+  {{- /* Not InnerDeindent: that breaks content indented under a list item. */ -}}
+  {{- .Inner -}}
+{{- end -}}
