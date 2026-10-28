@@ -4,17 +4,7 @@ Matches the comma-separated list against the site's product_name, ignoring case.
 {{- if not $products -}}
   {{- errorf "only-in needs a comma-separated list of product names; %s" .Position -}}
 {{- end -}}
-{{- $current := lower (strings.TrimSpace (string site.Params.product_name)) -}}
-{{- if not $current -}}
-  {{- errorf "only-in: the product_name site parameter is not set; %s" .Position -}}
-{{- end -}}
-{{- $match := false -}}
-{{- range split $products "," -}}
-  {{- if eq (lower (strings.TrimSpace .)) $current -}}
-    {{- $match = true -}}
-  {{- end -}}
-{{- end -}}
-{{- if $match -}}
+{{- if partial "only-in-match.html" $products -}}
   {{- /* Not InnerDeindent: that breaks content indented under a list item. */ -}}
   {{- .Inner -}}
 {{- end -}}

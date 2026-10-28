@@ -1,4 +1,29 @@
 {{- $file := .Get 0 -}}
+
+{{- /* A site that mounts another site's content can hide some of its pages
+(build: render: never). Links to them become plain text instead of failing
+the build; a missing page still fails it below. */ -}}
+{{- $path := replaceRE "#.*$" "" $file -}}
+{{- $target := cond (hasPrefix $path "/") (site.GetPage $path) (.Page.GetPage $path) -}}
+{{- if and $target (not $target.RelPermalink) -}}
+  {{- /* Hugo runs nested shortcodes even when the enclosing only-in drops
+  its content, so stay silent there. Walks a few levels for only-in > alert > xref. */ -}}
+  {{- $skipped := false -}}
+  {{- $parent := .Parent -}}
+  {{- range seq 5 -}}
+    {{- with $parent -}}
+      {{- if and (eq .Name "only-in") (not (partial "only-in-match.html" (.Get 0))) -}}
+        {{- $skipped = true -}}
+      {{- end -}}
+      {{- $parent = .Parent -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if not $skipped -}}
+    {{- warnidf "xref-unpublished" "xref: %q isn't published in this site, rendered as plain text; %s" $file .Position -}}
+    {{- $target.Title -}}
+  {{- end -}}
+{{- else -}}
+
 {{- $fullref := (relref . $file) -}}
 {{- $pageref := (replaceRE "#.*$" "" $fullref) -}}
 {{- $scratch := newScratch -}}
@@ -25,4 +50,6 @@
 {{- else -}}
   {{- $page := ($scratch.Get "page") -}}
   {{ print "[" $page.Title "](" $page.RelPermalink ")" | markdownify }}
+{{- end -}}
+
 {{- end -}}

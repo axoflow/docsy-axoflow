@@ -1,0 +1,13 @@
+{{/* Returns true if the comma-separated product list (the context) contains the site's product_name, ignoring case.
+Shared by the only-in shortcode and by xref, which stays silent inside an only-in block that this site skips. */ -}}
+{{- $current := lower (strings.TrimSpace (string site.Params.product_name)) -}}
+{{- if not $current -}}
+  {{- errorf "only-in: the product_name site parameter is not set" -}}
+{{- end -}}
+{{- $match := false -}}
+{{- range split (string .) "," -}}
+  {{- if eq (lower (strings.TrimSpace .)) $current -}}
+    {{- $match = true -}}
+  {{- end -}}
+{{- end -}}
+{{- return $match -}}

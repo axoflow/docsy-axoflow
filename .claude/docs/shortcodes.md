@@ -80,6 +80,12 @@ Override with explicit text:
 
 The path is relative to `content/`.
 
+If the target page exists but isn't published in the current site (for
+example, another doc set hides it with `build: render: never`), `xref` renders
+the page title as plain text and logs an `xref-unpublished` warning. Inside an
+`only-in` block that the site skips, it logs nothing. A target page that
+doesn't exist still fails the build.
+
 ## Content for specific products only
 
 When several doc sets share content (for example, AxoLocker mounts the Axoflow
