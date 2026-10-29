@@ -118,8 +118,17 @@ either of these shortcodes in conjunction with this render hook.
        this hook returns. */}}
 {{- $isShortcodePlaceholder := strings.Contains $u.String "HAHAHUGOSHORTCODE" }}
 
-{{- /* Set common message. */}}
-{{- $msg := printf "The %q render hook was unable to resolve the destination %q at %s (in %s)" $renderHookName $u.String $position $contentPath }}
+{{- /* Context for the "unable to resolve" message. The message is built only
+       when a link fails, because finding the link's source line reads the
+       page's file. */}}
+{{- $msgCtx := dict
+  "contentPath" $contentPath
+  "destination" $u.String
+  "page" .Page
+  "position" $position
+  "renderHookName" $renderHookName
+  "text" .PlainText
+}}
 
 {{- /* Set attributes for anchor element. */}}
 {{- $attrs := dict "href" $u.String }}
@@ -162,12 +171,12 @@ either of these shortcodes in conjunction with this render hook.
       {{- $attrs = dict "href" .RelPermalink }}
     {{- else }}
       {{- if eq $errorLevel "warning" }}
-        {{- warnf $msg }}
+        {{- warnf "%s" (partial "inline/h-rh-l/unresolved-message.html" $msgCtx) }}
         {{- if and $highlightBrokenLinks hugo.IsDevelopment }}
           {{- $attrs = merge $attrs (dict "class" "broken") }}
         {{- end }}
       {{- else if eq $errorLevel "error" }}
-        {{- errorf $msg }}
+        {{- errorf "%s" (partial "inline/h-rh-l/unresolved-message.html" $msgCtx) }}
       {{- end }}
     {{- end }}
   {{- else }}
@@ -203,12 +212,12 @@ either of these shortcodes in conjunction with this render hook.
       {{- $attrs = dict "href" (printf "%s#%s" $.Page.RelPermalink .) }}
     {{- else }}
       {{- if eq $errorLevel "warning" }}
-        {{- warnf $msg }}
+        {{- warnf "%s" (partial "inline/h-rh-l/unresolved-message.html" $msgCtx) }}
         {{- if and $highlightBrokenLinks hugo.IsDevelopment }}
           {{- $attrs = merge $attrs (dict "class" "broken") }}
         {{- end }}
       {{- else if eq $errorLevel "error" }}
-        {{- errorf $msg }}
+        {{- errorf "%s" (partial "inline/h-rh-l/unresolved-message.html" $msgCtx) }}
       {{- end }}
     {{- end }}
   {{- end }}
@@ -411,3 +420,50 @@ either of these shortcodes in conjunction with this render hook.
   Fixing this properly likely needs Hugo's deferred-rendering mechanism
   or a build-time index step that runs before the render-hook phase.
 */ -}}
+
+{{- define "_partials/inline/h-rh-l/unresolved-message.html" }}
+  {{- /*
+  Returns the message for a destination the hook can't resolve.
+
+  Inside a shortcode that renders its own Markdown (alert, for example),
+  .Position counts lines from the start of that shortcode's content, not the
+  file. So the message names the link text, and looks up the line in the
+  page's file by the first words of the text. When the text starts with a
+  shortcode, or the same text appears twice, it falls back to .Position or
+  finds the first occurrence.
+
+  An empty destination is what ref and relref return for a page that the site
+  doesn't publish (build: render: never).
+
+  @context {string} contentPath The page containing the link.
+  @context {string} destination The link destination.
+  @context {page} page The page containing the link.
+  @context {text.Position} position The source location Hugo reports.
+  @context {string} renderHookName The name of the render hook.
+  @context {string} text The link text as plain text.
+  */}}
+  {{- $where := string .position }}
+  {{- $text := strings.TrimSpace .text }}
+  {{- with .page.File }}
+    {{- $rel := strings.TrimPrefix (print hugo.WorkingDir "/") .Filename }}
+    {{- /* "[" + the first words, so a short text like "Storage" matches the
+           link, not any line that mentions the word. */}}
+    {{- $needle := print "[" (delimit (first 4 (split $text " ")) " ") }}
+    {{- if and $text (fileExists $rel) }}
+      {{- $found := 0 }}
+      {{- range $i, $line := split (os.ReadFile $rel) "\n" }}
+        {{- if and (not $found) (strings.Contains $line $needle) }}
+          {{- $found = add $i 1 }}
+        {{- end }}
+      {{- end }}
+      {{- with $found }}
+        {{- $where = printf "%s:%d" $rel . }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- $hint := "" }}
+  {{- if not .destination }}
+    {{- $hint = " (empty destination: probably a ref or relref to a page this site doesn't publish)" }}
+  {{- end }}
+  {{- return printf "The %q render hook was unable to resolve the destination %q of the link %q at %s (in %s)%s" .renderHookName .destination (truncate 60 $text) $where .contentPath $hint }}
+{{- end }}
