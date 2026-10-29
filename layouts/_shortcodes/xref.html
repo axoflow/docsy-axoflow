@@ -19,7 +19,21 @@ the build; a missing page still fails it below. */ -}}
     {{- end -}}
   {{- end -}}
   {{- if not $skipped -}}
-    {{- warnidf "xref-unpublished" "xref: %q isn't published in this site, rendered as plain text; %s" $file .Position -}}
+    {{- /* No warning when the linking page is hidden too: nobody sees either
+    page. Headless snippets have no permalink of their own but end up in
+    published pages, so they still warn. */ -}}
+    {{- $callerHidden := false -}}
+    {{- if not .Page.RelPermalink -}}
+      {{- $callerHidden = true -}}
+      {{- with .Page.File -}}
+        {{- if hasPrefix .Path "headless/" -}}
+          {{- $callerHidden = false -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if not $callerHidden -}}
+      {{- warnidf "xref-unpublished" "xref: %q isn't published in this site, rendered as plain text; %s" $file .Position -}}
+    {{- end -}}
     {{- $target.Title -}}
   {{- end -}}
 {{- else -}}
