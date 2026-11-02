@@ -72,23 +72,56 @@ Then check for:
     ```
 
 12. **Agent readiness.** Agents often fetch one page, or one section cut at a
-    heading, as Markdown. The rules follow the
+    heading, as Markdown. Retrieval pipelines split pages into chunks at the
+    h2 and h3 headings, and the agent often sees one chunk with only the page
+    title and URL. The rules follow the
     [Agent-Friendly Documentation Spec](https://agentdocsspec.com/spec/web/).
+    <!-- The chunking rules (section length, fake and deep headings, long
+    tables, notes after a procedure, code separated from its introduction)
+    come from https://idratherbewriting.com/blog/chunking-content-for-mcp-ingestion-agent-readability -->
+    Run the chunk check first. It reports the length of each section, h4–h6
+    headings, and bold lines used as headings:
+
+    ```
+    python3 themes/docsy-axoflow/scripts/chunk_sections.py <file>
+    ```
+
     Flag:
 
     - **Page size**: the page is over about 50,000 characters of Markdown,
       which agents truncate. Check it with `wc -c <file>` (included snippets
       add to it). Suggest where to split the page.
+    - **Section length**: an h2 or h3 section over about 300 words, so it
+      doesn't fit in one chunk. Code and tables fill a chunk faster than
+      prose. Suggest where to add a specific h3 heading.
+    - **Fake and deep headings**: a bold line used as a heading, like
+      `**Options**`, which becomes plain text after conversion. An h4–h6
+      heading, which a chunker can cut away from its parent heading. Suggest a
+      real h2 or h3 heading.
+    - **Long tables**: a table that spans more than one chunk loses its header
+      row, so later rows lose the column meanings. Suggest splitting it under
+      specific h3 headings, or giving each item its own h3.
+    - **Notes after a procedure**: a note or warning after a numbered list
+      that applies to one step. Move it into that step. Also flag a long
+      procedure that should be split into shorter ones under headings that
+      name the goal.
+    - **Code separated from its introduction**: a code block whose introducing
+      sentence is in a different section. A long sample that should be split
+      into steps, each with a specific heading and a complete snippet.
     - **Headings that don't make sense out of context**: generic headings like
       "Example", "Options", "Step 1", or "Overview". Also headings that repeat
       on the same page. Suggest a specific heading that names the object, for
       example "Options of the `http()` destination".
     - **Sections that depend on earlier text**: "as described above", "the
       previous section", "see below", or a pronoun that points to another
-      section. Suggest naming the object or linking to the section.
+      section. Also a section that starts with "This setting…" or "It…"
+      instead of naming its subject. Suggest naming the object or linking to
+      the section.
     - **Content only in images or screenshots**: a UI step that has only a
       screenshot, a command or configuration shown as an image, or a diagram
-      without alt text.
+      without alt text. A diagram also needs a description in the text around
+      it. For a large diagram, suggest a list of its components and
+      connections. Some pipelines drop SVG images.
     - **Tabs**: the Markdown copy writes the tabs out one after another under
       their tab titles. Flag tabs whose content doesn't make sense that way,
       for example because it doesn't say which option it applies to.

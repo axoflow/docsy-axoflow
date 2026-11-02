@@ -181,6 +181,12 @@ in, after the navbar (171K) and the sidebar tree (348K). What keeps it down:
 Result on axosyslog-core-docs: the bar is 14K, a page is ~220K, and the article
 starts ~24K in.
 
+`scripts/chunk_sections.py <file.md>` splits one page at its h2 and h3
+headings, the way retrieval pipelines chunk it, and prints each section's word
+count (flagging those over 300), plus h4–h6 headings and bold lines used as
+headings. It exits 1 when it flags anything. `/review-page` runs it for its
+agent-readiness check.
+
 `scripts/check_agent_docs.sh` builds the site as deployed, serves it on
 localhost and scores it with [afdocs](https://afdocs.dev); it exits 1 when a
 check fails, so CI can gate on it. It skips the checks a local static server
