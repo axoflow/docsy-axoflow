@@ -10,7 +10,7 @@
 <span class="alert-heading">{{ . | safeHTML }}</span>
 {{- end }}
 {{ if eq .Page.File.Ext "md" -}}
-{{ .Inner | markdownify }}
+{{ .Page.RenderString .Inner }}
 {{- else -}}
 {{ .Inner | htmlUnescape | safeHTML }}
 {{- end }}

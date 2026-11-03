@@ -60,10 +60,12 @@ the build; a missing page still fails it below. */ -}}
     {{- errorf "Failed to extract header title for anchor %q on page %s" $anchor .Position -}}
   {{- end -}}
   {{- $header := (replaceRE (print "<li><a href=\"" $anchor "\">(.*)</a>") "$1" (index $toc_line 0)) | safeHTML -}}
-  [{{- $header }}]({{ print $page.RelPermalink $anchor -}})
+  {{- /* Plain HTML, not a Markdown link: Markdown would send the URL, which
+  already carries the base path, back through the link render hook. */ -}}
+  <a href="{{ print $page.RelPermalink $anchor }}">{{ $header }}</a>
 {{- else -}}
   {{- $page := ($scratch.Get "page") -}}
-  {{ print "[" $page.Title "](" $page.RelPermalink ")" | markdownify }}
+  <a href="{{ $page.RelPermalink }}">{{ $page.Title | $.Page.RenderString }}</a>
 {{- end -}}
 
 {{- end -}}

@@ -37,7 +37,7 @@
     (.HasShortcode "blocks/cover")
     (not .Site.Params.ui.navbar_translucent_over_cover_disable)
 -}}
-{{ $menu := index site.Data "nav-menu" -}}
+{{ $menu := index hugo.Data "nav-menu" -}}
 {{ partial "navbar-glyphs.html" $menu }}
 
 <nav class="navbar navbar-expand-md td-navbar

@@ -140,8 +140,16 @@ either of these shortcodes in conjunction with this render hook.
   {{- /* Destination is a remote resource. */}}
   {{- $attrs = merge $attrs (dict "rel" "external") }}
 {{- else }}
+  {{- /* Permalinks from relref or RelPermalink carry the path of baseURL (for
+         example, /docs/product/); GetPage needs the path without it. */}}
+  {{- $lookup := $u.Path }}
+  {{- with (urls.Parse site.BaseURL).Path }}
+    {{- if and (ne . "/") (strings.HasPrefix $lookup .) }}
+      {{- $lookup = printf "/%s" (strings.TrimPrefix . $lookup) }}
+    {{- end }}
+  {{- end }}
   {{- with $u.Path }}
-    {{- with $p := or ($.PageInner.GetPage .) ($.PageInner.GetPage (strings.TrimRight "/" .)) }}
+    {{- with $p := or ($.PageInner.GetPage $lookup) ($.PageInner.GetPage (strings.TrimRight "/" $lookup)) }}
       {{- /* Destination is a page. */}}
       {{- $href := .RelPermalink }}
       {{- with $u.RawQuery }}
@@ -401,6 +409,12 @@ either of these shortcodes in conjunction with this render hook.
                the `#`). */}}
         {{- range $m := findRESubmatch `\{#([A-Za-z][\w-]*)` . }}
           {{- $set = merge $set (dict (index $m 1) true) }}
+        {{- end }}
+        {{- /* Auto-generated heading IDs, like `## default-facility()`.
+               Headings that contain shortcodes produce wrong IDs here, which
+               only adds unused entries to the set. */}}
+        {{- range $m := findRESubmatch `(?m)^#{1,6}[ \t]+([^{\n]+?)[ \t]*$` . }}
+          {{- $set = merge $set (dict (anchorize (index $m 1)) true) }}
         {{- end }}
       {{- end }}
     {{- end }}
