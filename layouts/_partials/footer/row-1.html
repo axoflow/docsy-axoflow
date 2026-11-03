@@ -1,7 +1,7 @@
 {{/*
   Footer row-1: the five categorised link columns.
 
-  Data is site.Data.footer.columns, not [[menus.footer]]: the menu is the Hugo
+  Data is hugo.Data.footer.columns, not [[menus.footer]]: the menu is the Hugo
   site's own edit of the marketing footer and had drifted from it (four labels
   and one href differ, and the live site's `Capablities` typo had been corrected
   away). data/footer.yaml is the source of truth, so this footer prints the same
@@ -24,7 +24,7 @@
   the tab.
 */ -}}
 <div class="td-footer__row td-footer__row-1">
-  {{ range site.Data.footer.columns -}}
+  {{ range hugo.Data.footer.columns -}}
     <nav class="td-footer__column" aria-label="{{ .title }}">
       <p class="td-footer__column-title">{{ .title }}</p>
       <ul class="td-footer__list list-unstyled">

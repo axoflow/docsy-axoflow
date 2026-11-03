@@ -6,10 +6,10 @@
   site's rendered DOM rather than transcribed, so the wording here is the
   wording a reader sees there.
 */ -}}
-{{ with site.Data.chrome.announcement -}}
+{{ with hugo.Data.chrome.announcement -}}
   {{ with .label -}}
 <div class="axo-announcement d-print-none">
-  <a href="{{ $.Site.Data.chrome.announcement.href }}" target="_blank" rel="noopener">{{ . }}</a>
+  <a href="{{ hugo.Data.chrome.announcement.href }}" target="_blank" rel="noopener">{{ . }}</a>
 </div>
   {{- end }}
 {{- end -}}
