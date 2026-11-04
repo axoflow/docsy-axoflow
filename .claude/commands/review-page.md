@@ -15,8 +15,51 @@ Then check for:
    missing `description`: `llms.txt` lists it as the page summary, and agents
    use it to decide which page to fetch. Suggest one sentence (under 160
    characters) that says what the page covers, not "This page describes…".
-5. **Heading hierarchy** — no skipped levels, sentence case
-6. **Headings containing shortcodes** — warn on every heading that has a
+5. **Page title** — check `title` (and `linkTitle`, if set) against the page.
+   Read the description, the first paragraph, and the h2 headings first, then
+   the titles of the sibling pages:
+
+   ```
+   grep -h '^title:' <section-dir>/*/_index.md <section-dir>/*.md
+   ```
+
+   Flag:
+
+   - **Title that doesn't match the content**: the title promises something
+     the page doesn't cover, or doesn't name the main subject of the page.
+     For example, a page titled "Processing elements" that explains the
+     stages data passes through from source to destination.
+   - **Weak or non-intuitive title**: a vague noun ("Overview", "Details",
+     "Elements", "General", "Basics") that makes sense only inside its
+     section; internal jargon or a component name that a reader doesn't know
+     yet; a title that clashes with a sibling page or another page in the
+     sidebar, for example two pages whose titles both start with
+     "Processing".
+   - **Title that doesn't fit the page type**: a how-to starts with an
+     imperative verb ("Create a Logstore"), a concept page is a noun phrase
+     that names the concept, and a reference page names the object it lists
+     ("Message schema reference").
+   - **SEO problems**: the title doesn't contain the words that readers search
+     for (the feature, the task, or the object); the main keyword isn't near
+     the start; the title isn't unique on the site; or the rendered
+     `<title>` (the page title, then `|` and the site name) is over about 60
+     characters, so search results cut it off. Front matter can't use
+     shortcodes, so a product name in a title is literal text: a page shared
+     by several doc sets needs a title that's true in all of them.
+   - **Link text that breaks**: `{{% xref %}}` uses the title as link text.
+     Find the pages that link to this one, and check that the sentences still
+     read well with the title:
+
+     ```
+     grep -rn '<page-path>' content/
+     ```
+
+   When a title has a problem, suggest 2–4 alternatives in a table, the
+   recommended one first, each with the reason and how the inbound `xref`
+   sentences read with it. Mention that changing the title doesn't change the
+   URL, and suggest a short `linkTitle` for the sidebar if the title is long.
+6. **Heading hierarchy** — no skipped levels, sentence case
+7. **Headings containing shortcodes** — warn on every heading that has a
    shortcode but no explicit `{#custom-anchor}`, for example
    `### {{< console >}} updates`. Hugo derives the heading ID from the
    *unexpanded* shortcode placeholder, producing garbage like
@@ -29,18 +72,18 @@ Then check for:
    hugo --minify && grep -oE '<h[1-4] id="[^"]*"' public/<page-path>/index.html
    ```
 
-7. **Code blocks** — all have language identifiers, and every fence is closed.
+8. **Code blocks** — all have language identifiers, and every fence is closed.
    Flag commands and configuration examples that do not work if copied as-is,
    for example `...` placeholders or a fragment that has no context, unless
    the text explains what to add
-8. **Shortcodes** — only approved shortcodes from .claude/docs/shortcodes.md
-9. **Links** — internal links use the {{< relref >}} shortcode; no hardcoded
+9. **Shortcodes** — only approved shortcodes from .claude/docs/shortcodes.md
+10. **Links** — internal links use the {{< relref >}} shortcode; no hardcoded
    full URLs. Flag `{{% xref %}}` calls that include an `#anchor`: the shortcode
    emits an already-resolved permalink, which the link render hook can't resolve
    back to a page, so the build warns. Use
    `[text]({{< relref "path.md#anchor" >}})` instead.
-10. **Terminology** — correct spelling of AxoSyslog, syslog-ng, etc.
-11. **Glossary terms** — the first mention of a glossary term in running prose
+11. **Terminology** — correct spelling of AxoSyslog, syslog-ng, etc.
+12. **Glossary terms** — the first mention of a glossary term in running prose
     should link to the glossary; later mentions stay plain. Report both
     directions: a first prose mention that is still plain, and any second or
     third tooltip for the same term on one page.
@@ -71,7 +114,7 @@ Then check for:
     grep -n 'glossary_tooltip' <file>
     ```
 
-12. **Agent readiness.** Agents often fetch one page, or one section cut at a
+13. **Agent readiness.** Agents often fetch one page, or one section cut at a
     heading, as Markdown. Retrieval pipelines split pages into chunks at the
     h2 and h3 headings, and the agent often sees one chunk with only the page
     title and URL. The rules follow the
