@@ -15,6 +15,12 @@ Then check for:
    missing `description`: `llms.txt` lists it as the page summary, and agents
    use it to decide which page to fetch. Suggest one sentence (under 160
    characters) that says what the page covers, not "This page describes…".
+   If several doc sets publish the page (for example, AxoLocker mounts the
+   Axoflow Platform docs, and the page has no override in the AxoLocker
+   repo), flag a `title` or `description` that names one product, or a
+   feature that only one of them has. Front matter can't use `only-in`, so
+   suggest wording that's true in every doc set, for example "AxoRouter"
+   or "the pipeline" instead of "Axoflow".
 5. **Page title** — check `title` (and `linkTitle`, if set) against the page.
    Read the description, the first paragraph, and the h2 headings first, then
    the titles of the sibling pages:
