@@ -204,10 +204,14 @@ def html_file_to_markdown(
     md = re.sub(r"[ \t]+\n", "\n", md)
     md = re.sub(r"\n{3,}", "\n\n", md).strip() + "\n"
 
+    # Set only when it differs: a page copied from another doc set names that copy.
+    canonical_link = soup.select_one('link[rel="canonical"]')
+    canonical = canonical_link.get("href") if canonical_link else None
     header = {
         "title": meta(soup, 'meta[property="og:title"]')
         or (soup.title.get_text(strip=True) if soup.title else None),
         "url": page_url,
+        "canonical": canonical if canonical != page_url else None,
         "description": description,
         "last_modified": meta(soup, 'meta[itemprop="dateModified"]'),
     }

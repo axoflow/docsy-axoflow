@@ -103,9 +103,10 @@
 {{/* Self-referencing on every page, archived versions included: those are
      noindex, and pointing their canonical at the latest release would send
      search engines conflicting signals. Pages with a `redirect` have no content
-     of their own. */ -}}
+     of their own. A page copied from another doc set can point at that copy
+     instead: see canonical-url.html. */ -}}
 {{ if not .Params.redirect -}}
-<link rel="canonical" href="{{ .Permalink }}">
+<link rel="canonical" href="{{ partial "canonical-url.html" . }}">
 {{ end -}}
 {{ partial "opengraph.html" . -}}
 {{ partial "schema.html" . -}}

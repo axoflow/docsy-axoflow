@@ -11,11 +11,13 @@
 */ -}}
 {{ $build := partialCached "build-info.html" . "build-info" -}}
 {{ $siteLabel := default site.Title site.Params.breadcrumb_site_label -}}
+{{/* The same URL as the canonical link, so the two signals agree. */ -}}
+{{ $canonical := partial "canonical-url.html" . -}}
 
 {{ $article := dict
   "@context" "https://schema.org"
   "@type" (cond .IsHome "WebSite" "TechArticle")
-  "url" .Permalink
+  "url" $canonical
   "name" (cond .IsHome site.Title .Title)
   "inLanguage" site.Language.LanguageCode
   "publisher" (dict "@type" "Organization" "name" (default "Axoflow" site.Params.publisher_name))
@@ -25,7 +27,7 @@
 {{ if not .IsHome -}}
   {{ $article = merge $article (dict
     "headline" .Title
-    "mainEntityOfPage" .Permalink
+    "mainEntityOfPage" $canonical
     "isPartOf" (dict "@type" "WebSite" "name" site.Title "url" site.Home.Permalink)
   ) -}}
   {{ with .Lastmod }}{{ if not .IsZero }}{{ $article = merge $article (dict "dateModified" (.Format "2006-01-02T15:04:05Z07:00")) }}{{ end }}{{ end -}}

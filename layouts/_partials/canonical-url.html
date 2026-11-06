@@ -1,0 +1,37 @@
+{{- /*
+  The canonical URL of a page: its own permalink, unless the page names another
+  doc set that publishes the same content.
+
+  A site that mounts another site's content (AxoLocker mounts the Axoflow
+  Platform docs) publishes near-identical copies of those pages. Setting
+  `canonical_site: <key>` on a page (usually through a `cascade` on a whole
+  section) points its canonical at the same path under
+  `site.Params.canonical_sites.<key>`, so search engines rank one copy instead
+  of choosing between two.
+
+  Only pages whose source file is under `site.Params.canonical_source_dir`
+  qualify: a page the site overrides with its own file has its own content, and
+  keeps its own canonical even inside a section that points elsewhere.
+  `canonical_site: self` restores the default for a subtree. Archived builds
+  (`dontIndexSite`) keep their own canonical, like head.html explains: they're
+  noindex, and the other site's copy is the latest version, not this one.
+  Sidebar-only `manuallink` stubs keep theirs too: they have no content, and
+  the other site leaves them out of its sitemap.
+
+  Callers: head.html (the canonical link), structured-data.html, sitemap.xml.
+  og:url stays the page's own URL: hugo_to_markdown.py resolves links against it.
+*/ -}}
+{{- $url := .Permalink -}}
+{{- with .Params.canonical_site -}}
+  {{- if and (ne . "self") (not site.Params.dontIndexSite) (not (or $.Params.manuallink $.Params.manuallinkrelref)) -}}
+    {{- $base := index (site.Params.canonical_sites | default dict) . -}}
+    {{- $srcDir := site.Params.canonical_source_dir -}}
+    {{- if not $base -}}
+      {{- warnidf "canonical-site-unknown" "canonical_site %q is not a key of params.canonical_sites: %s" . $.Path -}}
+    {{- else if and $srcDir $.File (strings.Contains (path.Clean $.File.Filename) $srcDir) -}}
+      {{- $path := strings.TrimPrefix site.Home.RelPermalink $.RelPermalink -}}
+      {{- $url = printf "%s/%s" (strings.TrimSuffix "/" $base) $path -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $url -}}
