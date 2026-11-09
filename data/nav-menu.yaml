@@ -150,6 +150,8 @@ items:
       href: https://axoflow.com/integrations/microsoft-sentinel-data-optimization?utm_source=docs&utm_medium=menu
     - label: Axoflow + Dynatrace
       href: https://axoflow.com/integrations/dynatrace-solutions?utm_source=docs&utm_medium=menu
+    - label: Axoflow + Crowdstrike
+      href: https://axoflow.com/integrations/crowdstrike-integration?utm_source=docs&utm_medium=menu
     - label: Other integrations
       href: https://axoflow.com/docs/axoflow/destinations/?utm_source=docs&utm_medium=menu
     label: Integrations
@@ -332,6 +334,8 @@ mobile:
         href: https://axoflow.com/integrations/microsoft-sentinel-data-optimization?utm_source=docs&utm_medium=menu
       - label: Axoflow + Dynatrace
         href: https://axoflow.com/integrations/dynatrace-solutions?utm_source=docs&utm_medium=menu
+      - label: Axoflow + Crowdstrike
+        href: https://axoflow.com/integrations/crowdstrike-integration?utm_source=docs&utm_medium=menu
       - label: Other integrations
         href: https://axoflow.com/docs/axoflow/destinations/?utm_source=docs&utm_medium=menu
       label: Integrations

@@ -90,6 +90,8 @@ columns:
         href: "https://axoflow.com/contact?utm_source=docs&utm_medium=footer"
       - label: "Our partners"
         href: "https://axoflow.com/partners?utm_source=docs&utm_medium=footer"
+      - label: "Trust Center"
+        href: "https://app.conveyor.com/profile/axoflow?utm_source=docs&utm_medium=footer"
 
 badges:
   - label: "SOC2 logo"

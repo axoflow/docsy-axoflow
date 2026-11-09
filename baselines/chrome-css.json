@@ -274,11 +274,6 @@
       "transition: padding .2s ease-out,background-color .2s ease-out",
       "width: 100%"
     ],
-    ".v3-navbar_component.is-not-scrolled": [
-      "background-color: var(--_colors-v2---background-color--background-primary)",
-      "padding-bottom: 2rem",
-      "padding-top: 2rem"
-    ],
     ".v3-navbar_container": [
       "align-items: center",
       "display: flex",
@@ -397,9 +392,6 @@
       "color: inherit",
       "flex: 1",
       "padding-left: 0"
-    ],
-    ".v3-navbar_logo.is-not-scrolled": [
-      "max-width: 12rem"
     ],
     ".v3-navbar_mega-dropdown-col-right": [
       "grid-column-gap: 2rem",
