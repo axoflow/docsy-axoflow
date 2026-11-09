@@ -26,14 +26,17 @@ python3 themes/docsy-axoflow/scripts/check_banner.py
 python3 themes/docsy-axoflow/scripts/check_chrome_css.py
 ```
 
-Exit status is the signal: `0` in sync, `1` drift, `2` a runtime error. A
-`WARNING: attempt 1/4 to fetch … IncompleteRead` line is normal — axoflow.com
-truncates roughly every other response and the scripts retry.
+Exit status is the signal: `0` in sync, `1` drift, `2` a runtime error.
 
-If all three exit 0, say so and stop. Do not run `--write`.
+In the sandbox, the commands need `axoflow.com` and, for `check_chrome_css.py`,
+`cdn.prod.website-files.com` (where live's stylesheets are) in the allowed
+domains. Without the CDN host the CSS check exits 2 with `could not fetch`.
 
-On exit 2, report the error and stop — a scrape that found nothing usually means
-the marketing markup changed, which is a script fix, not a data fix.
+If all four exit 0, say so and stop. Do not run `--write`.
+
+On exit 2, report the error and stop. `could not fetch` or a network error is
+transient: re-run. A scrape that found nothing usually means the marketing
+markup changed, which is a script fix, not a data fix.
 
 ## 2. Show me the drift before writing
 

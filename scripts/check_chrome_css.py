@@ -106,23 +106,24 @@ def inline_styles(html):
 
 
 def fetch_stylesheets(html, page_url, skip_hosts=()):
-    """Return (sources, notes): the CSS text of the page's own stylesheets.
+    """Return (sources, notes, failures): the CSS text of the page's own
+    stylesheets, and one message per sheet that could not be fetched.
 
     Third-party sheets are skipped -- the chrome is Webflow's own output and a
     slider library's stylesheet is not something this site reproduces.
     """
-    sources, notes = [], []
+    sources, notes, failures = [], [], []
     for url in stylesheet_urls(html, page_url):
         if any(host in url for host in skip_hosts):
             notes.append("skipped a third-party stylesheet: %s" % url)
             continue
         try:
             sources.append((url, fetch_html(url)))
-        except Exception as error:  # noqa: BLE001 - reported, not fatal
-            notes.append("could not fetch %s: %s" % (url, error))
+        except Exception as error:  # noqa: BLE001 - the caller decides
+            failures.append("could not fetch %s: %s" % (url, error))
     for index, text in enumerate(inline_styles(html)):
         sources.append(("inline <style> #%d" % (index + 1), text))
-    return sources, notes
+    return sources, notes, failures
 
 
 # --------------------------------------------------------------------------- #
@@ -377,7 +378,16 @@ def main(argv=None):
         print("ERROR: failed to fetch %s: %s" % (args.url, error), file=sys.stderr)
         return 2
 
-    sources, notes = fetch_stylesheets(html, args.url, skip_hosts=("cdn.jsdelivr.net",))
+    sources, notes, failures = fetch_stylesheets(
+        html, args.url, skip_hosts=("cdn.jsdelivr.net",))
+    # A missing sheet takes its rules with it: the report would call them
+    # removed, and --write would record a baseline without them.
+    if failures:
+        for failure in failures:
+            print("ERROR: %s" % failure, file=sys.stderr)
+        print("ERROR: a stylesheet is missing, so the chrome rules are "
+              "incomplete; nothing compared or written. Re-run.", file=sys.stderr)
+        return 2
     if not sources:
         print("ERROR: found no stylesheets on %s." % args.url, file=sys.stderr)
         return 2

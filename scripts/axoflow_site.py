@@ -10,28 +10,30 @@ Not a package: the scripts are run by path, which puts this directory on
 `sys.path`, so a plain `import axoflow_site` resolves.
 """
 
+import base64
 import http.client
 import re
 import sys
 import time
 import urllib.error
 import urllib.request
-from urllib.parse import urlparse
+from urllib.parse import unquote, urljoin, urlparse
 
 # Every run of whitespace except U+00A0 -- see clean_text.
 SPACE_RUN = re.compile("[^\\S\u00a0]+")
 
 USER_AGENT = "axoflow-docs-chrome-check/1.0 (+https://axoflow.com/docs/)"
 
-# axoflow.com truncates the response (IncompleteRead) on roughly every other
-# request, so a single attempt fails often enough to break CI.
+# Retries cover real network trouble. They used to also cover a truncated body
+# (IncompleteRead) on about every other request, which turned out to be Claude
+# Code's sandbox proxy cutting `Connection: close` responses, not axoflow.com;
+# fetch_html avoids that header instead (see _get).
 FETCH_ATTEMPTS = 4
+MAX_REDIRECTS = 5
 FETCH_BACKOFF = 1.0  # seconds before the first retry; doubled after each failure
 RETRYABLE_ERRORS = (
-    http.client.IncompleteRead,
-    http.client.RemoteDisconnected,
-    urllib.error.URLError,  # connection reset/refused, DNS, socket timeout
-    TimeoutError,
+    http.client.HTTPException,  # IncompleteRead, RemoteDisconnected, ...
+    OSError,  # connection reset/refused, DNS, socket timeout; URLError too
 )
 RETRYABLE_STATUS = frozenset({429, 500, 502, 503, 504})
 
@@ -47,6 +49,57 @@ def is_retryable(error):
     return isinstance(error, RETRYABLE_ERRORS)
 
 
+def _connection(url):
+    """An HTTP(S) connection to `url`'s host, tunnelled through the
+    environment's proxy when one applies."""
+    parts = urlparse(url)
+    https = parts.scheme == "https"
+    port = parts.port or (443 if https else 80)
+    cls = http.client.HTTPSConnection if https else http.client.HTTPConnection
+    proxy = urllib.request.getproxies().get(parts.scheme)
+    if not proxy or urllib.request.proxy_bypass(parts.hostname):
+        return cls(parts.hostname, port, timeout=30)
+    proxy = urlparse(proxy if "://" in proxy else "http://" + proxy)
+    conn = cls(proxy.hostname, proxy.port or 8080, timeout=30)
+    headers = {}
+    if proxy.username:
+        cred = "%s:%s" % (unquote(proxy.username), unquote(proxy.password or ""))
+        headers["Proxy-Authorization"] = "Basic " + base64.b64encode(
+            cred.encode()).decode("ascii")
+    conn.set_tunnel(parts.hostname, port, headers=headers)
+    return conn
+
+
+def _get(url):
+    """GET `url` and return the decoded body, following redirects.
+
+    http.client rather than urllib: urlopen always sends `Connection: close`,
+    and Claude Code's sandbox proxy truncates those responses about half the
+    time (measured November 2026; the same request outside the sandbox never
+    was). Without the header the server leaves the connection open, the body
+    is delimited by Content-Length alone, and nothing gets cut.
+    """
+    for _ in range(MAX_REDIRECTS + 1):
+        parts = urlparse(url)
+        path = (parts.path or "/") + ("?" + parts.query if parts.query else "")
+        conn = _connection(url)
+        try:
+            conn.request("GET", path, headers={"User-Agent": USER_AGENT})
+            response = conn.getresponse()
+            body = response.read()
+        finally:
+            conn.close()
+        if response.status in (301, 302, 303, 307, 308):
+            url = urljoin(url, response.getheader("Location", ""))
+            continue
+        if response.status >= 400:
+            raise urllib.error.HTTPError(url, response.status, response.reason,
+                                         response.headers, None)
+        charset = response.headers.get_content_charset() or "utf-8"
+        return body.decode(charset, "replace")
+    raise urllib.error.URLError("too many redirects fetching %s" % url)
+
+
 def fetch_html(url, attempts=FETCH_ATTEMPTS):
     """Fetch `url`, retrying transient failures with exponential backoff.
 
@@ -55,11 +108,8 @@ def fetch_html(url, attempts=FETCH_ATTEMPTS):
     """
     delay = FETCH_BACKOFF
     for attempt in range(1, attempts + 1):
-        request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
         try:
-            with urllib.request.urlopen(request, timeout=30) as response:
-                charset = response.headers.get_content_charset() or "utf-8"
-                return response.read().decode(charset, "replace")
+            return _get(url)
         except Exception as error:  # noqa: BLE001 - re-raised unless retryable
             if attempt == attempts or not is_retryable(error):
                 raise
