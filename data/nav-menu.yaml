@@ -44,6 +44,10 @@ items:
       href: https://axoflow.com/axoflow-platform-vs-sc4s?utm_source=docs&utm_medium=menu
     - label: Axoflow vs syslog-ng PE
       href: https://axoflow.com/axoflow-platform-vs-syslog-ng-pe?utm_source=docs&utm_medium=menu
+    - label: AxoSyslog CV vs syslog-ng PE
+      href: https://axoflow.com/axosyslog-vs-syslog-ng-pe?utm_source=docs&utm_medium=menu
+    - label: AxoLocker vs syslog‑ng Store Box
+      href: https://axoflow.com/axolocker-vs-syslog-ng-store-box?utm_source=docs&utm_medium=menu
     label: Comparisons
     description: Explore side-by-side reviews of Axoflow vs. competing pipeline solutions to pick the right fit
     icon: <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M36 4V36H4V4H36ZM6.66667 33.3333H33.3333V6.66667H6.66667V33.3333Z" fill="#141D62"/> <path d="M26.0449 22.1134L29.8833 18.2751C30.3832 17.775 30.6641 17.0968 30.6641 16.3897C30.6641 15.6826 30.3832 15.0045 29.8833 14.5044L26.0449 10.666L24.1596 12.5513L26.6646 15.0564L19.9974 15.0564L19.9974 17.7231L26.6646 17.7231L24.1596 20.2281L26.0449 22.1134Z" fill="#FF6500"/> <path d="M13.9551 18.6678L10.1167 22.5062C9.61678 23.0063 9.33594 23.6844 9.33594 24.3915C9.33594 25.0986 9.61678 25.7768 10.1167 26.2769L13.9551 30.1152L15.8404 28.2299L13.3354 25.7249L20.0026 25.7249L20.0026 23.0582L13.3354 23.0582L15.8404 20.5531L13.9551 18.6678Z" fill="#FF6500"/> </svg>
@@ -323,6 +327,10 @@ mobile:
         href: https://axoflow.com/axoflow-platform-vs-sc4s?utm_source=docs&utm_medium=menu
       - label: Axoflow Platform vs syslog-ng PE
         href: https://axoflow.com/axoflow-platform-vs-syslog-ng-pe?utm_source=docs&utm_medium=menu
+      - label: AxoSyslog CV vs syslog-ng PE
+        href: https://axoflow.com/axosyslog-vs-syslog-ng-pe?utm_source=docs&utm_medium=menu
+      - label: AxoLocker vs syslog‑ng Store Box
+        href: https://axoflow.com/axolocker-vs-syslog-ng-store-box?utm_source=docs&utm_medium=menu
       label: Comparisons
     - kind: submenu
       links:
