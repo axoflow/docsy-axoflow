@@ -42,8 +42,6 @@ items:
       href: https://axoflow.com/axoflow-platform-vs-nxlog?utm_source=docs&utm_medium=menu
     - label: Axoflow vs SC4S
       href: https://axoflow.com/axoflow-platform-vs-sc4s?utm_source=docs&utm_medium=menu
-    - label: Axoflow vs syslog-ng PE
-      href: https://axoflow.com/axoflow-platform-vs-syslog-ng-pe?utm_source=docs&utm_medium=menu
     - label: AxoSyslog CV vs syslog-ng PE
       href: https://axoflow.com/axosyslog-vs-syslog-ng-pe?utm_source=docs&utm_medium=menu
     - label: AxoLocker vs syslog‑ng Store Box
@@ -325,8 +323,6 @@ mobile:
         href: https://axoflow.com/axoflow-platform-vs-nxlog?utm_source=docs&utm_medium=menu
       - label: Axoflow Platform vs SC4S
         href: https://axoflow.com/axoflow-platform-vs-sc4s?utm_source=docs&utm_medium=menu
-      - label: Axoflow Platform vs syslog-ng PE
-        href: https://axoflow.com/axoflow-platform-vs-syslog-ng-pe?utm_source=docs&utm_medium=menu
       - label: AxoSyslog CV vs syslog-ng PE
         href: https://axoflow.com/axosyslog-vs-syslog-ng-pe?utm_source=docs&utm_medium=menu
       - label: AxoLocker vs syslog‑ng Store Box
