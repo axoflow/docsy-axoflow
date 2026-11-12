@@ -1,41 +1,43 @@
 {{- $file := .Get 0 -}}
 
+{{- /* Hugo runs nested shortcodes even when the enclosing only-in drops
+its content, so stay silent there: the target may be hidden or missing in
+this site. Walks a few levels for only-in > alert > xref. */ -}}
+{{- $skipped := false -}}
+{{- $parent := .Parent -}}
+{{- range seq 5 -}}
+  {{- with $parent -}}
+    {{- if and (eq .Name "only-in") (not (partial "only-in-match.html" (.Get 0))) -}}
+      {{- $skipped = true -}}
+    {{- end -}}
+    {{- $parent = .Parent -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if not $skipped -}}
+
 {{- /* A site that mounts another site's content can hide some of its pages
 (build: render: never). Links to them become plain text instead of failing
 the build; a missing page still fails it below. */ -}}
 {{- $path := replaceRE "#.*$" "" $file -}}
 {{- $target := cond (hasPrefix $path "/") (site.GetPage $path) (.Page.GetPage $path) -}}
 {{- if and $target (not $target.RelPermalink) -}}
-  {{- /* Hugo runs nested shortcodes even when the enclosing only-in drops
-  its content, so stay silent there. Walks a few levels for only-in > alert > xref. */ -}}
-  {{- $skipped := false -}}
-  {{- $parent := .Parent -}}
-  {{- range seq 5 -}}
-    {{- with $parent -}}
-      {{- if and (eq .Name "only-in") (not (partial "only-in-match.html" (.Get 0))) -}}
-        {{- $skipped = true -}}
-      {{- end -}}
-      {{- $parent = .Parent -}}
-    {{- end -}}
-  {{- end -}}
-  {{- if not $skipped -}}
-    {{- /* No warning when the linking page is hidden too: nobody sees either
-    page. Headless snippets have no permalink of their own but end up in
-    published pages, so they still warn. */ -}}
-    {{- $callerHidden := false -}}
-    {{- if not .Page.RelPermalink -}}
-      {{- $callerHidden = true -}}
-      {{- with .Page.File -}}
-        {{- if hasPrefix .Path "headless/" -}}
-          {{- $callerHidden = false -}}
-        {{- end -}}
+  {{- /* No warning when the linking page is hidden too: nobody sees either
+  page. Headless snippets have no permalink of their own but end up in
+  published pages, so they still warn. */ -}}
+  {{- $callerHidden := false -}}
+  {{- if not .Page.RelPermalink -}}
+    {{- $callerHidden = true -}}
+    {{- with .Page.File -}}
+      {{- if hasPrefix .Path "headless/" -}}
+        {{- $callerHidden = false -}}
       {{- end -}}
     {{- end -}}
-    {{- if not $callerHidden -}}
-      {{- warnidf "xref-unpublished" "xref: %q isn't published in this site, rendered as plain text; %s" $file .Position -}}
-    {{- end -}}
-    {{- $target.Title -}}
   {{- end -}}
+  {{- if not $callerHidden -}}
+    {{- warnidf "xref-unpublished" "xref: %q isn't published in this site, rendered as plain text; %s" $file .Position -}}
+  {{- end -}}
+  {{- $target.Title -}}
 {{- else -}}
 
 {{- $fullref := (relref . $file) -}}
@@ -66,6 +68,8 @@ the build; a missing page still fails it below. */ -}}
 {{- else -}}
   {{- $page := ($scratch.Get "page") -}}
   <a href="{{ $page.RelPermalink }}">{{ $page.Title | $.Page.RenderString }}</a>
+{{- end -}}
+
 {{- end -}}
 
 {{- end -}}
