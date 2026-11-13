@@ -2477,6 +2477,12 @@ nav.foldable-nav .ul-1 .with-child > input:checked ~ label:before {
         }
     }
 
+    // The global `.td-content li, span` rule gives a bare `span` 1.62rem, which
+    // made the rows with a span label (print, PDF, Markdown) 10px taller.
+    > span {
+        line-height: inherit;
+    }
+
     &:hover,
     &:focus-visible {
         background-color: var(--axo-surface);
