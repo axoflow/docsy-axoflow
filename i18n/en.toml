@@ -50,3 +50,7 @@ other = "Read %s so I can ask questions about it."
 # The PDF edition of the whole guide (pdf/download-link.html).
 [page_download_pdf]
 other = "Download as PDF"
+
+# window.print() on the current page (page-meta-links.html).
+[page_print]
+other = "Print this page"

@@ -2417,11 +2417,9 @@ nav.foldable-nav .ul-1 .with-child > input:checked ~ label:before {
 // The card stays: it is the site's own, it is above the contents list on the
 // published documentation, and it is wanted there.
 //
-// The page-actions block is open and styled here, and WHAT IT CONTAINS IS A SITE
-// DECISION. `page-meta-links.html` in this repository renders six actions, five
-// of them into the content repository; a site whose content repository is
-// private overrides that partial and renders fewer. The axoflow-docs
-// documentation does exactly that, and leaves one: "Print this page".
+// The page-actions block is open and styled here. Every site renders the same
+// `page-meta-links.html`; the repository links appear only on sites that set
+// `github_repo` / `github_project_repo` (the open-source ones).
 //
 // The block sits directly under the contents list, because `docs/baseof.html`
 // calls that partial straight after `toc.html`.
@@ -2460,10 +2458,16 @@ nav.foldable-nav .ul-1 .with-child > input:checked ~ label:before {
     color: var(--axo-text-accent);
 }
 
-.td-page-meta__icon {
+.td-page-meta--print > svg {
     flex: none;
     width: 16px;
     height: 16px;
+
+    path,
+    circle,
+    rect {
+        fill: currentColor;
+    }
 }
 
 // =============================================================================

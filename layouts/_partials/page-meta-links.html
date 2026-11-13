@@ -1,44 +1,40 @@
-{{ if .File -}}
-{{ $pathFormatted := replace .File.Path "\\" "/" -}}
-{{ $gh_repo := $.Param "github_repo" -}}
-{{ $gh_url := $.Param "github_url" -}}
-{{ $gh_subdir := $.Param "github_subdir" | default "" -}}
-{{ $gh_project_repo := $.Param "github_project_repo" -}}
-{{ $gh_branch := $.Param "github_branch" | default "main" -}}
-<div class="td-page-meta ms-2 pb-1 pt-2 mb-0">
-{{ with .AlternativeOutputFormats.Get "markdown" -}}
-<a href="{{ .RelPermalink }}" class="td-page-meta__markdown"> {{/**/ -}}
-  {{ partial "icon.html" (dict "name" "markdown") }} {{ T "post_view_markdown" -}}
-</a>
-{{ end -}}
+{{- /*
+The page actions under the contents list. Every site gets Print, Download PDF,
+Copy as Markdown, and Open in Claude. The repository links render only when the
+site sets `github_repo` / `github_project_repo`, which only the open-source
+sites (axosyslog-core) do: on a site with a private content repository they
+would 404 for readers.
 
-{{/* Same URL as the `rel="alternate" type="text/markdown"` link in head.html.
-     Without JavaScript, "Copy" opens the Markdown copy instead. */ -}}
-{{ if and site.Params.markdownAlternateLink (in (slice "home" "section" "page") .Kind) -}}
+"Edit this page" and "Create child page" are deliberately absent everywhere.
+*/ -}}
+{{ if .File -}}
+<div class="td-page-meta ms-2 pb-1 pt-2 mb-0">
+  {{- /* A button, not a link: window.print() has no address. */}}
+  <button type="button" class="td-page-meta--print" onclick="window.print()">
+    {{- with resources.Get "icons/meta-links/print.svg" }}{{ (. | minify).Content | safeHTML }}{{ else }}{{ partial "icon.html" (dict "name" "print") }}{{ end -}}
+    <span>{{ T "page_print" }}</span>
+  </button>
+  {{ partial "pdf/download-link.html" . }}
+
+  {{- /* Same URL as the `rel="alternate" type="text/markdown"` link in head.html.
+       Without JavaScript, "Copy" opens the Markdown copy instead. */}}
+  {{ if and site.Params.markdownAlternateLink (in (slice "home" "section" "page") .Kind) -}}
   {{ $mdURL := printf "%sindex.md" (.Permalink | safeURL) -}}
   {{ $claudeURL := printf "https://claude.ai/new?q=%s" (printf (T "page_ask_claude_prompt") $mdURL | urlquery) -}}
-  <a href="{{ $mdURL }}" class="td-page-meta--copy-markdown" role="button" data-axo-copy-markdown data-copied-label="{{ T "page_markdown_copied" }}" data-failed-label="{{ T "page_markdown_copy_failed" }}">{{ with resources.Get "icons/meta-links/copy-markdown.svg" -}}{{ ( . | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "copy") }}{{ end }} <span>{{ T "page_copy_markdown" }}</span></a>
-  <a href="{{ $claudeURL }}" class="td-page-meta--open-in-claude" target="_blank" rel="noopener">{{ with resources.Get "icons/meta-links/open-in-claude.svg" -}}{{ ( . | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "comment") }}{{ end }} {{ T "page_open_in_claude" }}</a>
-{{ end -}}
-
-{{ if $gh_url -}}
-  {{ warnf "Warning: use of `github_url` is deprecated. For details, see https://www.docsy.dev/docs/content/repository-links/#github_url-optional" -}}
-  <a href="{{ $gh_url }}" target="_blank">{{ partial "icon.html" (dict "name" "pen-to-square") }} {{ T "post_edit_this" }}</a>
-{{ else if $gh_repo -}}
-  {{ $gh_repo_path := printf "%s/content/%s" $gh_branch $pathFormatted -}}
-  {{ if and ($gh_subdir) (.Site.Language.Lang) -}}
-    {{ $gh_repo_path = printf "%s/%s/content/%s/%s" $gh_branch $gh_subdir ($.Site.Language.Lang) $pathFormatted -}}
-  {{ else if .Site.Language.Lang -}}
-  <!-- Comment original docsy line and replace it with the one below the comment to remove unneeded /en/ prefix from view/edit page github links
-  {{ $gh_repo_path = printf "%s/content/%s/%s" $gh_branch ($.Site.Language.Lang) $pathFormatted -}}
-  -->
-  {{ $gh_repo_path = printf "%s/content/%s" $gh_branch $pathFormatted -}}
-
-  {{ else if $gh_subdir -}}
-    {{ $gh_repo_path = printf "%s/%s/content/%s" $gh_branch $gh_subdir $pathFormatted -}}
+  <a href="{{ $mdURL }}" class="td-page-meta--copy-markdown" role="button" data-axo-copy-markdown data-copied-label="{{ T "page_markdown_copied" }}" data-failed-label="{{ T "page_markdown_copy_failed" }}">{{ with resources.Get "icons/meta-links/copy-markdown.svg" -}}{{ (. | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "copy") }}{{ end }} <span>{{ T "page_copy_markdown" }}</span></a>
+  <a href="{{ $claudeURL }}" class="td-page-meta--open-in-claude" target="_blank" rel="noopener">{{ with resources.Get "icons/meta-links/open-in-claude.svg" -}}{{ (. | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "comment") }}{{ end }} {{ T "page_open_in_claude" }}</a>
   {{ end -}}
 
-  {{/* Adjust $gh_repo_path based on path_base_for_github_subdir */ -}}
+  {{ with $.Param "github_repo" -}}
+  {{ $gh_repo := . -}}
+  {{ $gh_branch := $.Param "github_branch" | default "main" -}}
+  {{ $gh_subdir := $.Param "github_subdir" | default "" -}}
+  {{ $pathFormatted := replace $.File.Path "\\" "/" -}}
+  {{- /* No language prefix: these sites keep content/ unprefixed. */}}
+  {{ $gh_repo_path := printf "%s/content/%s" $gh_branch $pathFormatted -}}
+  {{ with $gh_subdir -}}
+    {{ $gh_repo_path = printf "%s/%s/content/%s" $gh_branch . $pathFormatted -}}
+  {{ end -}}
   {{ $ghs_base := $.Param "path_base_for_github_subdir" -}}
   {{ $ghs_rename := "" -}}
   {{ if reflect.IsMap $ghs_base -}}
@@ -48,29 +44,13 @@
   {{ with $ghs_base -}}
     {{ $gh_repo_path = replaceRE . $ghs_rename $gh_repo_path -}}
   {{ end -}}
-
   {{ $viewURL := printf "%s/tree/%s" $gh_repo $gh_repo_path -}}
-  {{ $editURL := printf "%s/edit/%s" $gh_repo $gh_repo_path -}}
-  {{ $issuesURL := printf "%s/issues/new?title=%s" $gh_repo (safeURL $.Title ) -}}
-  {{ $newPageStub := resources.Get "stubs/new-page-template.md" -}}
-  {{ $newPageQS := querify "value" $newPageStub.Content "filename" "change-me.md" | safeURL -}}
-  {{ $newPageURL := printf "%s/new/%s?%s"  $gh_repo $gh_repo_path $newPageQS -}}
-
-  <!-- use custom icons if present -->
-  <a href="{{ $viewURL }}" class="td-page-meta--view" target="_blank" rel="noopener">{{ with resources.Get "icons/meta-links/view-page-source.svg" -}}{{ ( . | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "file-lines") }}{{ end }} {{ T "post_view_this" }}</a>
-  <a href="{{ $editURL }}" class="td-page-meta--edit" target="_blank" rel="noopener">{{ with resources.Get "icons/meta-links/edit-page.svg" -}}{{ ( . | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "pen-to-square") }}{{ end }} {{ T "post_edit_this" }}</a>
-  <a href="{{ $newPageURL }}" class="td-page-meta--child" target="_blank" rel="noopener">{{ with resources.Get "icons/meta-links/create-child-page.svg" -}}{{ ( . | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "pen-to-square") }}{{ end }} {{ T "post_create_child_page" }}</a>
-  <a href="{{ $issuesURL }}" class="td-page-meta--issue" target="_blank" rel="noopener">{{ with resources.Get "icons/meta-links/create-doc-issue.svg" -}}{{ ( . | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "list-check") }}{{ end }} {{ T "post_create_issue" }}</a>
-  {{ with $gh_project_repo -}}
-    {{ $project_issueURL := printf "%s/issues/new" . -}}
-    <a href="{{ $project_issueURL }}" class="td-page-meta--project-issue" target="_blank" rel="noopener">{{ with resources.Get "icons/meta-links/create-project-issue.svg" -}}{{ ( . | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "list-check") }}{{ end }} {{ T "post_create_project_issue" }}</a>
+  {{ $issuesURL := printf "%s/issues/new?title=%s" $gh_repo (safeURL $.Title) -}}
+  <a href="{{ $viewURL }}" class="td-page-meta--view" target="_blank" rel="noopener">{{ with resources.Get "icons/meta-links/view-page-source.svg" -}}{{ (. | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "file-lines") }}{{ end }} {{ T "post_view_this" }}</a>
+  <a href="{{ $issuesURL }}" class="td-page-meta--issue" target="_blank" rel="noopener">{{ with resources.Get "icons/meta-links/create-doc-issue.svg" -}}{{ (. | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "list-check") }}{{ end }} {{ T "post_create_issue" }}</a>
   {{ end -}}
-
-{{ end -}}
-{{ partial "pdf/download-link.html" . }}
-{{ with .CurrentSection.AlternativeOutputFormats.Get "print" -}}
- <!-- Replace .Permalink with .RelPermalink, use custom icon if present -->
-  <a id="print" href="{{ .RelPermalink | safeURL }}">{{ with resources.Get "icons/meta-links/print.svg" -}}{{ ( . | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "print") }}{{ end }} {{ T "print_entire_section" }}</a>
-{{ end }}
+  {{ with $.Param "github_project_repo" -}}
+  <a href="{{ printf "%s/issues/new" (strings.TrimSuffix "/" .) }}" class="td-page-meta--project-issue" target="_blank" rel="noopener">{{ with resources.Get "icons/meta-links/create-project-issue.svg" -}}{{ (. | minify).Content | safeHTML -}}{{ else }}{{ partial "icon.html" (dict "name" "list-check") }}{{ end }} {{ T "post_create_project_issue" }}</a>
+  {{ end -}}
 </div>
 {{ end -}}
