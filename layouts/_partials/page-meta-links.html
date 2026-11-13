@@ -8,7 +8,7 @@ would 404 for readers.
 "Edit this page" and "Create child page" are deliberately absent everywhere.
 */ -}}
 {{ if .File -}}
-<div class="td-page-meta ms-2 pb-1 pt-2 mb-0">
+<div class="td-page-meta">
   {{- /* A button, not a link: window.print() has no address. */}}
   <button type="button" class="td-page-meta--print" onclick="window.print()">
     {{- with resources.Get "icons/meta-links/print.svg" }}{{ (. | minify).Content | safeHTML }}{{ else }}{{ partial "icon.html" (dict "name" "print") }}{{ end -}}
