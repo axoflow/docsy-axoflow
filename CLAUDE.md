@@ -123,6 +123,29 @@ Theme-side pieces: `layouts/docs/{baseof,list}.pdf.html`,
 `layouts/_partials/pdf/*`, `assets/scss/pdf.scss`. A project can override the
 cover logo by adding its own `assets/icons/pdf-logo.svg`.
 
+### CI building blocks for the publish workflows
+
+Shared pieces of the sites' `publish-docs.yaml`, so the logic lives here once
+instead of in every repository and release branch. axosyslog-core-docs is the
+reference user.
+
+- `.github/actions/r2-deploy/` — composite action: the multi-pass R2 sync
+  (Cache-Control per file type, charsets for `*.md` and `llms*.txt`, `--delete`
+  that leaves `protect`ed version dirs and the PDF edition alone).
+- `scripts/ci/versions.py` — all `data/versions.yaml` handling: `plan` (target
+  URL and bucket prefix, dirs to protect and to pull into the unified search
+  index, the version list to overlay onto an archived ref), `matrix`, and
+  `branch-version`. Supports `hidden` (preview) versions.
+
+**Load both from the theme commit the workflow file pins, not from the
+submodule of the ref being built.** "Publish versions" runs main's workflow on a
+release branch whose theme predates them. axosyslog-core-docs does it with a
+`plan` job that checks out the workflow's own commit (no `ref`), runs
+`versions.py plan`, and outputs the theme commit; the build job checks that
+commit out into `.pipeline-theme/` for the action. Its `pdf.yaml` takes the
+plan's results as inputs (`ref`, `destination`, `versions_yaml`, `publish`),
+the interface every site's `pdf.yaml` should share.
+
 ### hugo_to_markdown.py
 
 Converts the built Hugo site to Markdown for LLM consumption. Run after a full build:
