@@ -37,6 +37,13 @@
   # after the build by scripts/hugo_to_markdown.py.
   markdownAlternateLink = true
 
+  # The legal line on the PDF edition's cover (_partials/pdf/cover.html):
+  # "© <copyright_from>–<this year> <copyright> All rights reserved." The web
+  # footer does not read these; its line comes from data/footer.yaml. A site
+  # whose docs started in another year overrides `copyright_from`.
+  copyright = "Axoflow Inc."
+  copyright_from = 2023
+
   # The copy button on code blocks is this theme's assets/js/axo-code-copy.js
   # (loaded from _partials/hooks/body-end.html). Docsy's scripts.html loads its
   # own click-to-copy.js whenever Prism is off and this is unset, and it finds
