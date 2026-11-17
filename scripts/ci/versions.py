@@ -37,6 +37,10 @@ import yaml
 
 
 def load(path):
+    # A site without versions yet runs the same pipeline: plan gives the root
+    # deploy with nothing to protect, matrix and branch-version come back empty.
+    if not os.path.exists(path):
+        return []
     with open(path, encoding="utf-8") as f:
         data = yaml.safe_load(f) or []
     if not isinstance(data, list):

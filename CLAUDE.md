@@ -135,7 +135,9 @@ reference user.
 - `scripts/ci/versions.py` — all `data/versions.yaml` handling: `plan` (target
   URL and bucket prefix, dirs to protect and to pull into the unified search
   index, the version list to overlay onto an archived ref), `matrix`, and
-  `branch-version`. Supports `hidden` (preview) versions.
+  `branch-version`. Supports `hidden` (preview) versions. A site with no
+  `data/versions.yaml` yet gets the root deploy with nothing to protect and
+  empty lists, so it can run the full pipeline before its first archived version.
 
 **Load both from the theme commit the workflow file pins, not from the
 submodule of the ref being built.** "Publish versions" runs main's workflow on a
