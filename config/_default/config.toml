@@ -37,6 +37,17 @@
   # after the build by scripts/hugo_to_markdown.py.
   markdownAlternateLink = true
 
+  # The copy button on code blocks is this theme's assets/js/axo-code-copy.js
+  # (loaded from _partials/hooks/body-end.html). Docsy's scripts.html loads its
+  # own click-to-copy.js whenever Prism is off and this is unset, and it finds
+  # the same Chroma blocks: two copy buttons per block, the Docsy one drawn with
+  # a FontAwesome class neither site has a font for.
+  disable_click2copy_chroma = true
+
+  # tocbot for the page's table of contents, read by _partials/scripts.html.
+  [params.jstoc]
+  enable = true
+
   # Markdown link render hook (layouts/_markup/render-link.html). Validates that
   # every internal link in markdown points to a real page or resource AND that
   # the anchor fragment, if any, matches a heading on the target page. Emits a
@@ -66,3 +77,13 @@
   # is also what an unset key evaluates to in _partials/sidebar-tree.html and
   # _partials/sidebar.html -- this line is the record that the switch exists.
   sidebar_root_enabled = false
+  # The sidebar this theme's _partials/sidebar-tree.html is built around.
+  # Compact: branches off the current path load from js/sidebar/<chapter>.*.html
+  # when unfolded (see "Page weight and agents" in CLAUDE.md).
+  sidebar_menu_compact = true
+  sidebar_menu_foldable = true
+  # Search is the brand bar's magnifier, not a sidebar box...
+  sidebar_search_disable = true
+  # ...but this one stays on: it also gates the sidebar's mobile menu toggle
+  # (the offcanvas button in sidebar-tree.html). Off, phones get no menu button.
+  sidebar_search_below_title = true
