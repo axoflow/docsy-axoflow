@@ -63,6 +63,17 @@
   dropdown makes for a click — so nothing here reaches past the component. The
   whole argument, and every alternative that was rejected, is in the header
   comment of assets/js/axo-search-version.js.
+
+  THIS FILE HAS A TWIN: docs/baseof.404.html, which must stay byte-identical
+  (`cmp layouts/docs/baseof.html layouts/docs/baseof.404.html`). Hugo renders
+  404.html with its built-in `404` output format, and a site whose home cascade
+  sets `type: docs` sends it to the docs/ base templates. None of them is for
+  that format, so this file, baseof.pdf.html and Docsy's baseof.print.html tie
+  on media type (all text/html), and Hugo picks one at random per build.
+  Measured on locker-docs with Hugo 0.160.1: 6 of 12 builds got this file, 4
+  the PDF base (pdf.min.css, no navbar), 2 the print base (no sidebar); with
+  the twin in place, 12 of 12 got the right page. A symlink does not work:
+  Hugo skips symlinked layout files.
 */ -}}
 <!doctype html>
 <html itemscope itemtype="http://schema.org/WebPage"

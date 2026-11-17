@@ -119,6 +119,14 @@ site's HTML section pages with the PDF layout (measured on axosyslog-core-docs:
 493 of 543 pages). Declare `[outputFormats.pdf]` in `config/_default/` and leave
 it out of every `outputs` list; axosyslog-core-docs has the canonical copy.
 
+**`layouts/docs/baseof.404.html` is a byte-identical copy of
+`layouts/docs/baseof.html`; edit both, or copy one over the other.** Hugo
+renders `404.html` with its own `404` output format, and on a site whose home
+cascade sets `type: docs` the docs/ base templates for `html`, `pdf` and
+`print` all tie for it, so each build picked one at random (a third of builds
+shipped a 404 with the PDF layout). The twin is the exact match that ends the
+tie. Check with `cmp layouts/docs/baseof.html layouts/docs/baseof.404.html`.
+
 Theme-side pieces: `layouts/docs/{baseof,list}.pdf.html`,
 `layouts/_partials/pdf/*`, `assets/scss/pdf.scss`. A project can override the
 cover logo by adding its own `assets/icons/pdf-logo.svg`.
