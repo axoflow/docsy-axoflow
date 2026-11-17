@@ -51,6 +51,12 @@
   # a FontAwesome class neither site has a font for.
   disable_click2copy_chroma = true
 
+  # The company name in content, through {{% param "product.companyname" %}}.
+  # The rest of [params.product] names the product and stays in each site.
+  [params.product]
+  companyname = "Axoflow"
+  companyabbrev = "Axoflow"
+
   # tocbot for the page's table of contents, read by _partials/scripts.html.
   [params.jstoc]
   enable = true
