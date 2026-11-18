@@ -210,6 +210,7 @@ def html_file_to_markdown(
     header = {
         "title": meta(soup, 'meta[property="og:title"]')
         or (soup.title.get_text(strip=True) if soup.title else None),
+        "product": product_line(soup),
         "url": page_url,
         "canonical": canonical if canonical != page_url else None,
         "description": description,
@@ -221,6 +222,17 @@ def html_file_to_markdown(
     if site_prefix:
         md = f"{LLMS_DIRECTIVE}({site_prefix}llms.txt).\n\n" + md
     return "---\n" + "\n".join(lines) + "\n---\n\n" + md
+
+
+def product_line(soup) -> str | None:
+    """
+    "AxoSyslog Commercial Version 4.29": the product and documentation version
+    from the theme's head-end.html, so an agent holding only this copy knows
+    what it documents. Sites built with an older theme fall back to og:site_name.
+    """
+    product = meta(soup, 'meta[name="docs-product"]', 'meta[property="og:site_name"]')
+    version = meta(soup, 'meta[name="docs-version"]')
+    return " ".join(p for p in (product, version) if p) or None
 
 
 def site_prefix_for(html_path: Path, input_dir: Path) -> str | None:
@@ -260,6 +272,9 @@ LLMS_LINK_RE = re.compile(r"\]\((\S+?/index\.md)\)")
 
 LLMS_SECTION_RE = re.compile(r"^- \[([^\]]+)\]\((\S+?/llms\.txt)\)")
 
+# The other versions' llms.txt files: separate sites, not sections of this one.
+LLMS_VERSIONS_HEADING = "Other versions"
+
 
 def parse_llms_index(path: Path, input_dir: Path, site_prefix: str):
     """
@@ -269,7 +284,12 @@ def parse_llms_index(path: Path, input_dir: Path, site_prefix: str):
     """
     title = summary = None
     sections = []
+    in_versions = False
     for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("## "):
+            in_versions = line[3:].strip() == LLMS_VERSIONS_HEADING
+        if in_versions:
+            continue
         if line.startswith("# ") and title is None:
             title = line[2:].strip()
         elif line.startswith("> ") and summary is None:
@@ -320,6 +340,11 @@ def write_full_texts(input_dir: Path, output_dir: Path, site_prefix: str) -> Non
         return
     title, summary, sections = parse_llms_index(index, input_dir, site_prefix)
     index_url = site_prefix + "llms.txt"
+    # Said once per file, not per page: a full-text file is one version of one product.
+    home = input_dir / "index.html"
+    product = (
+        product_line(BeautifulSoup(home.read_text(encoding="utf-8"), "html.parser")) if home.exists() else None
+    ) or title
 
     def write(path: Path, header: str, blocks: list[str]) -> None:
         text = header + "\n\n" + "\n\n".join(blocks) + "\n"
@@ -349,14 +374,14 @@ def write_full_texts(input_dir: Path, output_dir: Path, site_prefix: str) -> Non
             continue
         write(
             section_dir.parent / "llms-full.txt",
-            f"# {section} (full text)\n\n> The full text of the {section} section of {title}. "
+            f"# {section} (full text)\n\n> The full text of the {section} section of the {product} documentation. "
             f"Index of the whole site: {index_url}",
             blocks,
         )
 
     write(
         output_dir / "llms-full.txt",
-        f"# {title} (full text)\n\n> {summary}\n\nThe full text of every page. "
+        f"# {title} (full text)\n\n> {summary}\n\nThe full text of every page of the {product} documentation. "
         f"Index with links to each page and section: {index_url}",
         all_blocks,
     )

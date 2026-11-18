@@ -1,0 +1,36 @@
+{{/* The documentation version this build is, as its id in data/versions.yaml
+     ("4.29"), for llms.txt, the <meta name="docs-version"> that the Markdown
+     copies read, and the JSON-LD, so the three always agree.
+
+     Detected the same way as navbar-version-selector.html: an archived version
+     is the last segment of the baseURL, otherwise the `latest` entry. Without
+     data/versions.yaml, the build's buildVersion is used unless it is "latest".
+     Empty when nothing names a version.
+
+     Call with partialCached "docs-version.html" site.Home "docs-version".
+     Returns:
+       version   the version id, or ""
+       current   the data/versions.yaml entry, or false
+       rootBase  the permalink of the site root, where the latest version lives
+*/ -}}
+{{- $versions := hugo.Data.versions -}}
+{{- $current := false -}}
+{{- $rootBase := site.Home.Permalink -}}
+{{- with $versions -}}
+  {{- $segs := split (strings.Trim (urls.Parse site.BaseURL).Path "/") "/" -}}
+  {{- $lastSeg := index $segs (sub (len $segs) 1) -}}
+  {{- range $versions }}{{ if and (not .latest) (eq (printf "%v" .version) $lastSeg) }}{{ $current = . }}{{ end }}{{ end -}}
+  {{- if $current -}}
+    {{- $rootBase = strings.TrimSuffix (printf "%v/" $current.version) $rootBase -}}
+  {{- else -}}
+    {{- range $versions }}{{ if .latest }}{{ $current = . }}{{ end }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- $version := "" -}}
+{{- with $current }}{{ $version = printf "%v" .version }}{{ end -}}
+{{- if not $version -}}
+  {{- with (partialCached "build-info.html" . "build-info").version -}}
+    {{- if ne . "latest" }}{{ $version = . }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- return dict "version" $version "current" $current "rootBase" $rootBase -}}

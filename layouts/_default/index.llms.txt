@@ -10,12 +10,29 @@
   llms-full.txt files linked here, and reads the page order from these files.
   Top-level pages outside any section (the legal notice) are listed under
   Optional, so llms.txt covers every sitemap page. Empty stubs are left out.
+  The index names the version it covers (_partials/docs-version.html), and with
+  data/versions.yaml it lists the other versions' indexes.
 */ -}}
 {{- $summary := or site.Home.Description site.Params.description | replaceRE `\s+` " " | strings.TrimSpace -}}
+{{- $docsVersion := partialCached "docs-version.html" site.Home "docs-version" -}}
+{{- $versions := hugo.Data.versions -}}
+{{- $current := $docsVersion.current -}}
+{{- $rootBase := $docsVersion.rootBase -}}
+{{- $version := $docsVersion.version -}}
 # {{ site.Title }}
 
 > {{ $summary }}
-
+{{ with $current }}
+{{ if .latest -}}
+This index covers version {{ $version }}, the current release.
+{{- else if .hidden -}}
+This index covers version {{ $version }}, a preview that can change before release. The current release is indexed at {{ $rootBase }}llms.txt.
+{{- else -}}
+This index covers version {{ $version }}, which is no longer current. The current release is indexed at {{ $rootBase }}llms.txt.
+{{- end }}
+{{ else }}{{ with $version }}
+This index covers version {{ . }}.
+{{ end }}{{ end }}
 Each section below links to its own index, which lists every page of the section as Markdown. For the HTML version of a page, drop `index.md` from the end of its URL.
 
 The full text of every page is in [llms-full.txt]({{ site.Home.Permalink }}llms-full.txt), and each section index links the full text of just that section.
@@ -31,12 +48,29 @@ The full text of every page is in [llms-full.txt]({{ site.Home.Permalink }}llms-
 - [{{ .LinkTitle }}]({{ .Permalink }}llms.txt){{ with $notes }}: {{ . }}{{ end }}
 {{ $pages := "" -}}
   {{- range .Pages.ByWeight }}{{ $pages = print $pages (partial "inline/llms-tree.txt" (dict "page" . "depth" 1)) }}{{ end -}}
-  {{- $body := printf "# %s\n\n> %s\n\nPart of the %s documentation. Index of all sections: %sllms.txt\n\nEvery page listed here is Markdown. For the HTML version, drop `index.md` from the end of the URL. The full text of this section is in [llms-full.txt](%sllms-full.txt).\n\n## Pages\n\n%s%s"
-      .LinkTitle ($notes | default .LinkTitle) site.Title site.Home.Permalink .Permalink
+  {{- $body := printf "# %s\n\n> %s\n\nPart of the %s documentation%s. Index of all sections: %sllms.txt\n\nEvery page listed here is Markdown. For the HTML version, drop `index.md` from the end of the URL. The full text of this section is in [llms-full.txt](%sllms-full.txt).\n\n## Pages\n\n%s%s"
+      .LinkTitle ($notes | default .LinkTitle) site.Title (cond (ne $version "") (printf ", version %s" $version) "") site.Home.Permalink .Permalink
       (partial "inline/llms-entry.txt" (dict "page" . "depth" 0)) $pages -}}
   {{- $path := printf "%sllms.txt" (strings.TrimPrefix site.Home.RelPermalink .RelPermalink) -}}
   {{- $_ := (resources.FromString $path $body).Publish -}}
 {{- end -}}
+
+{{- /* Previews (`hidden`) are left out, as in the version switcher.
+       hugo_to_markdown.py skips this heading: these are other sites. */ -}}
+{{- $others := slice -}}
+{{- range $versions -}}
+  {{- if and (not .hidden) (ne (printf "%v" .version) $version) -}}
+    {{- $base := cond (eq .latest true) $rootBase (printf "%s%v/" $rootBase .version) -}}
+    {{- $others = $others | append (printf "- [Version %v](%sllms.txt)%s" .version $base (cond (eq .latest true) ": The current release." "")) -}}
+  {{- end -}}
+{{- end -}}
+{{- with $others }}
+
+## Other versions
+
+{{/* Printed, not template text: the {{- below would trim a literal newline. */}}
+{{- print (delimit . "\n") "\n" }}
+{{- end }}
 
 {{- $loose := where (where site.Home.RegularPages "Sitemap.Disable" "ne" true) "WordCount" "gt" 0 -}}
 {{- with $loose }}

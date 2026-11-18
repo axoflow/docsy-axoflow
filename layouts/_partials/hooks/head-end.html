@@ -15,6 +15,13 @@
 <meta name="docs-build-time" content="{{ $build.time }}">
 {{ end -}}
 
+{{/* Product and documentation version, for the `product:` line that
+     scripts/hugo_to_markdown.py writes into each Markdown copy's header. */ -}}
+<meta name="docs-product" content="{{ site.Params.product_name | default site.Title }}">
+{{ with (partialCached "docs-version.html" site.Home "docs-version").version -}}
+<meta name="docs-version" content="{{ . }}">
+{{ end -}}
+
 {{/* The PDF edition's file name. publish-docs.yaml reads it from the built home
      page to keep the separately uploaded PDF out of its --delete sync. */ -}}
 {{ if .IsHome -}}{{ with partialCached "pdf/file.html" . "pdf-file" -}}

@@ -9,7 +9,6 @@
 
   `params.publisher_name` overrides the publisher (default: Axoflow).
 */ -}}
-{{ $build := partialCached "build-info.html" . "build-info" -}}
 {{ $siteLabel := default site.Title site.Params.breadcrumb_site_label -}}
 {{/* The same URL as the canonical link, so the two signals agree. */ -}}
 {{ $canonical := partial "canonical-url.html" . -}}
@@ -32,13 +31,8 @@
   ) -}}
   {{ with .Lastmod }}{{ if not .IsZero }}{{ $article = merge $article (dict "dateModified" (.Format "2006-01-02T15:04:05Z07:00")) }}{{ end }}{{ end -}}
   {{ with .PublishDate }}{{ if not .IsZero }}{{ $article = merge $article (dict "datePublished" (.Format "2006-01-02T15:04:05Z07:00")) }}{{ end }}{{ end -}}
-  {{/* CI builds the current release as "latest"; name its real number instead. */ -}}
-  {{ $version := $build.version -}}
-  {{ if eq $version "latest" -}}
-    {{ $version = "" -}}
-    {{ range hugo.Data.versions }}{{ if .latest }}{{ $version = printf "%v" .version }}{{ end }}{{ end -}}
-  {{ end -}}
-  {{ with $version }}{{ $article = merge $article (dict "version" .) }}{{ end -}}
+  {{/* Same id as llms.txt and the Markdown copies. */ -}}
+  {{ with (partialCached "docs-version.html" site.Home "docs-version").version }}{{ $article = merge $article (dict "version" .) }}{{ end -}}
 {{ end -}}
 <script type="application/ld+json">{{ $article | jsonify | safeJS }}</script>
 
