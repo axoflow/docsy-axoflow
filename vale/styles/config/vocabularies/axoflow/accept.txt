@@ -106,7 +106,7 @@ kafka
 keepalive
 Kerberos
 keystore
-keytab
+[Kk]eytab
 Kibana
 Kubernetes
 le
