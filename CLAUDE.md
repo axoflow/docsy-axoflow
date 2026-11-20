@@ -383,6 +383,7 @@ The `.claude/` directory here contains commands and reference docs shared across
 
 - `.claude/skills/chrome-parity/` — review whether the chrome still *looks* like axoflow.com's, and decide what to change when it does not. The visual half the four checkers deliberately do not cover: it carries `measure.js`, a console snippet that measures rendered geometry and type on either site, plus the tolerances for judging the diff. Needs a browser the user drives — Chrome cannot start under Claude Code's sandbox.
 - `.claude/skills/docs-ia/` — information-architecture audit: Diátaxis classification, mixed pages, reader-journey gaps, and sidebar structure (weights, duplicate titles, orphans, dead ends, unused snippets). `scripts/ia_inventory.py` does the deterministic part (front matter, Hugo-style link and include resolution, per-page type signals); the skill decides what to change and hands moves to `/move-page`.
+- `.claude/skills/upstream-sync/` — for a site that mounts an upstream doc set from `upstream/` (AxoSyslog CV, AxoLocker): review the upstream changes since the pinned submodule commit (default: a preview up to upstream `origin/main`), check the local override pages against them, and decide for the rest whether they apply, need an `only-in` block upstream, an override, or a stub. `scripts/upstream_changes.py` reads the `[module]` mounts and sorts the changed files into buckets (overridden, orphaned override, shared snippet/layout, new, changed, deleted); the skill writes the report and edits nothing until approved.
 
 ### Commands
 
