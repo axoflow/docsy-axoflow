@@ -63,6 +63,9 @@ Rules that bite:
 - **`short_description` is front matter, so no shortcodes.** Write
   "Axoflow Platform", "AxoRouter" literally — a `{{< product >}}` there ships as
   raw text into the tooltip.
+- **Wrap anything containing `--` in backticks in `short_description`**, for
+  example `` `--feature-gates` ``, not --feature-gates. Bare `--` doesn't
+  render correctly in the tooltip.
 - **The body is markdown, so use the shortcodes.** `{{< product >}}`,
   `{{< router >}}`, `{{< console >}}`, `{{< edge >}}`, `{{< lake >}}`,
   `{{< router-store >}}` for product names, and `{{< glossary_tooltip >}}` for

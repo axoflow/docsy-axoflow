@@ -324,7 +324,7 @@ A site supplies the content and the tags. Nothing in the theme touches the bundl
    | --- | --- |
    | `title` | Required. Sorts the list, and is the tooltip's default link text. |
    | `id` | Required. Must equal the filename stem. |
-   | `short_description` | Required. The hover text. **Front matter, so no shortcodes** — write product names out literally. |
+   | `short_description` | Required. The hover text. **Front matter, so no shortcodes** — write product names out literally. Wrap anything containing `--` in backticks (`` `--feature-gates` ``), or it renders incorrectly. |
    | `full_link` | Optional. Where the tooltip links instead of the glossary entry. Use it wherever a real concept page exists. Site-relative, and validated — see below. |
    | `aka` | Optional list. Renders as "Also known as". |
    | `tags` | Required. Must match ids in `data/canonical-tags/`. A term with no matching checked tag is invisible. |
