@@ -62,6 +62,7 @@ extraVolumes
 Fabien
 failover
 fd
+Filebeat
 FilterX
 firewalld
 Flowmon
