@@ -218,6 +218,10 @@ SonicWall
 sourcetype
 Splunk
 Splunk Connect for Syslog
+splunk-hec
+splunk-hec-event
+splunk-hec-raw
+splunk-s2s
 SQL
 srcip
 srcport
