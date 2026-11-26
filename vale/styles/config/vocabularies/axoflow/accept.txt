@@ -75,7 +75,7 @@ FortiProxy
 fullnameOverride
 GDPR
 ge
-geoip
+(?i)geoip
 globbing
 GMarkup
 GNU
